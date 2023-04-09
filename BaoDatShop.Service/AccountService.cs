@@ -13,7 +13,8 @@ namespace BaoDatShop.Service
     public interface IAccountService
     {
         public Task<string> SignIn(LoginModel model);
-        public Task<IdentityResult> SignUp(RegisterRequest model); 
+        public Task<IdentityResult> SignUp(RegisterRequest model);
+        public Task<IdentityResult> SignUpAdmin(RegisterRequest model);
     }
     public class AccountService:IAccountService
     {
@@ -32,6 +33,11 @@ namespace BaoDatShop.Service
         public Task<IdentityResult> SignUp(RegisterRequest model)
         {
             return accountResponsitories.SignUp(model);
+        }
+
+        public Task<IdentityResult> SignUpAdmin(RegisterRequest model)
+        {
+            return accountResponsitories.SignUpAdmin(model);
         }
     }
 }

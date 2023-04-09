@@ -18,12 +18,14 @@ using BaoDatShop.DTO;
 using Microsoft.Extensions.Hosting;
 using static System.Net.Mime.MediaTypeNames;
 using Microsoft.AspNetCore.Hosting;
+using BaoDatShop.DTO.Role;
 
 namespace BaoDatShop.Responsitories
 {
     public interface IAccountResponsitories
     {
         public Task<IdentityResult> SignUp(RegisterRequest model);
+        public Task<IdentityResult> SignUpAdmin(RegisterRequest model);
         public Task<string> SignIn(LoginModel model);
     }
     public class AccountResponsitories : IAccountResponsitories
@@ -32,14 +34,16 @@ namespace BaoDatShop.Responsitories
         private readonly IConfiguration configuration;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
-      public AccountResponsitories
+        private readonly RoleManager<IdentityRole> _roleManager;
+        public AccountResponsitories
             (UserManager<ApplicationUser> userManager, IWebHostEnvironment _environment,
-            SignInManager<ApplicationUser> signInManager,IConfiguration configuration )
+            SignInManager<ApplicationUser> signInManager,IConfiguration configuration, RoleManager<IdentityRole> roleManager)
         {
             this.configuration = configuration;
-            this.userManager=userManager;
+            this.userManager = userManager;
             this._environment = _environment;
             this.signInManager = signInManager;
+            _roleManager = roleManager;
         }
         public async Task<string> SignIn(LoginModel model)
         {
@@ -93,6 +97,46 @@ namespace BaoDatShop.Responsitories
             };
            return  await userManager.CreateAsync(user, model.Password);
             
+        }
+        public async Task<IdentityResult> SignUpAdmin(RegisterRequest model)
+        {
+            var userExists = await userManager.FindByNameAsync(model.Username);
+            var fileName = model.image.FileName;
+            var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Avatar");
+            var uploadPath = Path.Combine(uploadFolder, fileName);
+
+            using (FileStream fs = System.IO.File.Create(uploadPath))
+            {
+                model.image.CopyTo(fs);
+                fs.Flush();
+            }
+            var user = new ApplicationUser()
+            {
+                FullName = model.FullName,
+                Address = model.Address,
+                Email = model.Email,
+                UserName = model.Username,
+                Password = model.Password,
+                Phone = model.Phone,
+                Avatar = fileName,
+                Status = true,
+                Permission = 0,
+            };
+            var result= await userManager.CreateAsync(user, model.Password);
+            if (!await _roleManager.RoleExistsAsync(UserRole.Admin))
+                await _roleManager.CreateAsync(new IdentityRole(UserRole.Admin));
+            if (!await _roleManager.RoleExistsAsync(UserRole.User))
+                await _roleManager.CreateAsync(new IdentityRole(UserRole.User));
+
+            if (await _roleManager.RoleExistsAsync(UserRole.Admin))
+            {
+                await userManager.AddToRoleAsync(user, UserRole.Admin);
+            }
+            if (await _roleManager.RoleExistsAsync(UserRole.Admin))
+            {
+                await userManager.AddToRoleAsync(user, UserRole.User);
+            }
+            return result;
         }
         private JwtSecurityToken GetToken(List<Claim> authClaims)
         {

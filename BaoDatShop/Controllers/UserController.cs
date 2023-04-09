@@ -8,9 +8,13 @@ namespace BaoDatShop.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = UserRole.User)]
+    [Authorize]
     public class UserController : ControllerBase
     {
-
+         [HttpGet("signup")]
+        public async Task<IActionResult> signup()
+        {
+            return Ok();
+        }
     }
 }

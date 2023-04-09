@@ -11,5 +11,10 @@ namespace BaoDatShop.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
+        [HttpGet("signup")]
+        public async Task<IActionResult> signup()
+        {
+            return Ok();
+        }
     }
 }
