@@ -13,7 +13,7 @@ namespace BaoDatShop.Responsitories
         public bool Create(InvoiceDetail model);
         public bool Update(InvoiceDetail model);
         public InvoiceDetail GetById(int id);
-        public List<InvoiceDetail> GetAll();
+        public List<InvoiceDetail> GetAll(int id);
     }
     public class InvoiceDetailResponsitories : IInvoiceDetailResponsitories
     {
@@ -29,10 +29,10 @@ namespace BaoDatShop.Responsitories
             return check > 0 ? true : false;
         }
 
-        public List<InvoiceDetail> GetAll()
+        public List<InvoiceDetail> GetAll(int id)
         {
-            if (context.InvoiceDetail.ToList() == null) return null;
-            return context.InvoiceDetail.ToList();
+            if (context.InvoiceDetail.Where(a=>a.InvoiceId==id).ToList() == null) return null;
+            return context.InvoiceDetail.Where(a => a.InvoiceId == id).ToList();
         }
 
         public InvoiceDetail GetById(int id)

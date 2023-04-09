@@ -31,14 +31,14 @@ namespace BaoDatShop.Responsitories
 
         public List<Invoice> GetAll()
         {
-            if (context.Invoice.ToList() == null) return null;
-            return context.Invoice.ToList();
+            if (context.Invoice.Where(a => a.Status == true).ToList() == null) return null;
+            return context.Invoice.Where(a => a.Status == true).ToList();
         }
 
         public Invoice GetById(int id)
         {
-            if (context.Invoice.Where(a => a.Id == id).FirstOrDefault() == null) return null;
-            return context.Invoice.Where(a => a.Id == id).FirstOrDefault();
+            if (context.Invoice.Where(a => a.Id == id).Where(a=>a.Status==true).FirstOrDefault() == null) return null;
+            return context.Invoice.Where(a => a.Id == id).Where(a => a.Status == true).FirstOrDefault();
         }
 
         public bool Update(Invoice model)

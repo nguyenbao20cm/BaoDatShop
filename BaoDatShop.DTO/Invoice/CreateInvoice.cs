@@ -1,28 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel;
+using System.Linq;
+using System.Security.Principal;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Eshop.Models
+namespace BaoDatShop.DTO.Invoice
 {
-    public class Invoice
+    public class CreateInvoice
     {
-        public int Id { get; set; }
+       
 
         [DisplayName("Mã HĐ")]
         public string Code { get; set; }
 
         public int AccountId { get; set; }
 
-        // Navigation reference property cho khóa ngoại đến Account 
-        [DisplayName("Khách hàng")]
-        public Account Account { get; set; }
-
-        [DisplayName("Ngày lập")]
-        [DataType(DataType.DateTime)]
+       
         public DateTime IssuedDate { get; set; } = DateTime.Now;
 
         [DisplayName("Địa chỉ giao hàng")]
@@ -38,12 +34,11 @@ namespace Eshop.Models
 
         [DisplayName("Còn hiệu lực")]
         [DefaultValue(true)]
-        public bool Status { get; set; } = true;
 
         public bool Pay { get; set; }// Thanh toán
         public int OrderStatus { get; set; }//1 chưa xác nhận //2 la chua đang chuẩn bị //3 đang giao//6 đã giao//4 đã hủy,//5hoàn tất
 
         // Collection reference property cho khóa ngoại từ InvoiceDetail
-        public List<InvoiceDetail> InvoiceDetails { get; set; }
+        
     }
 }

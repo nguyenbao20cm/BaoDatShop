@@ -4,15 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BaoDatShop.Model.Model
+namespace BaoDatShop.DTO.News
 {
-    public class News
+    public class CreateNews
     {
-        public int NewsId { get; set; }
         public string NewsName { get; set; }
         public DateTime DateTime { get; set; }
         public string Content { get; set; }
-        public bool Status { get; set; }
-        public ICollection<NewDetail> NewDetail { get; set; }
     }
 }

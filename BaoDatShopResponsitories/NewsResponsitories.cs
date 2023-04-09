@@ -31,13 +31,13 @@ namespace BaoDatShop.Responsitories
 
         public List<News> GetAll()
         {
-            if (context.News.ToList() == null) return null;
+            if (context.News.Where(a=>a.Status==true).ToList() == null) return null;
             return context.News.ToList();
         }
 
         public News GetById(int id)
         {
-            if (context.News.Where(a => a.NewsId == id).FirstOrDefault() == null) return null;
+            if (context.News.Where(a => a.NewsId == id).Where(a => a.Status == true).FirstOrDefault() == null) return null;
             return context.News.Where(a => a.NewsId == id).FirstOrDefault();
         }
 
