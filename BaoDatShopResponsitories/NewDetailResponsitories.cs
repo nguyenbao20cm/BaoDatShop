@@ -13,6 +13,7 @@ namespace BaoDatShop.Responsitories
     {
         public bool Create(NewDetail model);
         public bool Update(NewDetail model);
+       
         public NewDetail GetById(int id);
         public List<NewDetail> GetAll();
     }
@@ -30,16 +31,18 @@ namespace BaoDatShop.Responsitories
             return check > 0 ? true : false;
         }
 
+ 
+
         public List<NewDetail> GetAll()
         {
-            if (context.NewDetail.ToList() == null) return null;
-            return context.NewDetail.ToList();
+            if (context.NewDetail.Where(a=>a.Status==true).ToList() == null) return null;
+            return context.NewDetail.Where(a => a.Status == true).ToList();
         }
 
         public NewDetail GetById(int id)
         {
-            if (context.NewDetail.Where(a => a.NewDetailId == id).FirstOrDefault() == null) return null;
-            return context.NewDetail.Where(a => a.NewDetailId == id).FirstOrDefault();
+            if (context.NewDetail.Where(a => a.NewDetailId == id).Where(a => a.Status == true).FirstOrDefault() == null) return null;
+            return context.NewDetail.Where(a => a.NewDetailId == id).Where(a => a.Status == true).FirstOrDefault();
         }
 
         public bool Update(NewDetail model)

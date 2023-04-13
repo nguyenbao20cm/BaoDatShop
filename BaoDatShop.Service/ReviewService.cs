@@ -16,6 +16,7 @@ namespace BaoDatShop.Service
         public bool Create(CreateReview model);
         public bool Update(int id, CreateReview model);
         public bool Delete(int id);
+        public List<Review> GetByIdProduct(int IdProduct);
         public Review GetById(int id);
         public List<Review> GetAll();
     }
@@ -54,6 +55,12 @@ namespace BaoDatShop.Service
         public Review GetById(int id)
         {
             return reviewResponsitories.GetById(id);
+        }
+
+        public List<Review> GetByIdProduct(int IdProduct)
+        {
+            return   reviewResponsitories.GetAll().Where(a=>a.ProductId==IdProduct).ToList();
+
         }
 
         public bool Update(int id, CreateReview model)

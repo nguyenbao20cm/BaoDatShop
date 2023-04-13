@@ -1,24 +1,16 @@
-﻿using BaoDatShop.DTO.AccountRequest;
+﻿using BaoDatShop.DTO;
+using BaoDatShop.DTO.AccountRequest;
 using BaoDatShop.DTO.LoginRequest;
+using BaoDatShop.DTO.Role;
+using BaoDatShop.Model.Context;
+using Eshop.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
-using BaoDatShop.DTO.Response;
-using Microsoft.AspNetCore.Http;
-using BaoDatShop.DTO;
-using Microsoft.Extensions.Hosting;
-using static System.Net.Mime.MediaTypeNames;
-using Microsoft.AspNetCore.Hosting;
-using BaoDatShop.DTO.Role;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace BaoDatShop.Responsitories
 {
@@ -27,9 +19,12 @@ namespace BaoDatShop.Responsitories
         public Task<IdentityResult> SignUp(RegisterRequest model);
         public Task<IdentityResult> SignUpAdmin(RegisterRequest model);
         public Task<string> SignIn(LoginModel model);
+        public Task<IdentityResult> SignUpCustomer(RegisterRequest model);
+
     }
     public class AccountResponsitories : IAccountResponsitories
     {
+        private readonly AppDbContext context;
         private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration configuration;
         private readonly UserManager<ApplicationUser> userManager;
@@ -37,8 +32,10 @@ namespace BaoDatShop.Responsitories
         private readonly RoleManager<IdentityRole> _roleManager;
         public AccountResponsitories
             (UserManager<ApplicationUser> userManager, IWebHostEnvironment _environment,
-            SignInManager<ApplicationUser> signInManager,IConfiguration configuration, RoleManager<IdentityRole> roleManager)
+            AppDbContext context,
+            SignInManager<ApplicationUser> signInManager, IConfiguration configuration, RoleManager<IdentityRole> roleManager)
         {
+            this.context = context;
             this.configuration = configuration;
             this.userManager = userManager;
             this._environment = _environment;
@@ -47,7 +44,7 @@ namespace BaoDatShop.Responsitories
         }
         public async Task<string> SignIn(LoginModel model)
         {
-             var user = await userManager.FindByNameAsync(model.Username);
+            var user = await userManager.FindByNameAsync(model.Username);
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
                 var userRoles = await userManager.GetRolesAsync(user);
@@ -55,6 +52,8 @@ namespace BaoDatShop.Responsitories
                 var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Name, user.Id.ToString()),
+                    new Claim("UserId", user.Id.ToString()),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
 
@@ -68,9 +67,9 @@ namespace BaoDatShop.Responsitories
                 return new JwtSecurityTokenHandler().WriteToken(token);
             }
             return String.Empty;
-          
+
         }
-       
+
         public async Task<IdentityResult> SignUp(RegisterRequest model)
         {
             var userExists = await userManager.FindByNameAsync(model.Username);
@@ -83,7 +82,7 @@ namespace BaoDatShop.Responsitories
                 model.image.CopyTo(fs);
                 fs.Flush();
             }
-            var  user = new ApplicationUser()
+            var user = new ApplicationUser()
             {
                 FullName = model.FullName,
                 Address = model.Address,
@@ -93,10 +92,30 @@ namespace BaoDatShop.Responsitories
                 Phone = model.Phone,
                 Avatar = fileName,
                 Status = true,
-                Permission =0,
+                Permission = 0,
             };
-           return  await userManager.CreateAsync(user, model.Password);
-            
+            var result = await userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+                var user1 = await userManager.FindByNameAsync(model.Username);
+                Account tamp = new();
+                tamp.Id = user1.Id;
+                tamp.FullName = model.FullName;
+                tamp.Address = model.Address;
+                tamp.Email = model.Email;
+                tamp.Username = model.Username;
+                tamp.Password = model.Password;
+                tamp.Phone = model.Phone;
+                tamp.Avatar = fileName;
+                tamp.Status = true;
+                tamp.Permission = 2;
+                tamp.Level = 0;
+                context.Account.Add(tamp);
+                context.SaveChanges();
+            }
+            return result;
+
+
         }
         public async Task<IdentityResult> SignUpAdmin(RegisterRequest model)
         {
@@ -122,7 +141,7 @@ namespace BaoDatShop.Responsitories
                 Status = true,
                 Permission = 0,
             };
-            var result= await userManager.CreateAsync(user, model.Password);
+            var result = await userManager.CreateAsync(user, model.Password);
             if (!await _roleManager.RoleExistsAsync(UserRole.Admin))
                 await _roleManager.CreateAsync(new IdentityRole(UserRole.Admin));
             if (!await _roleManager.RoleExistsAsync(UserRole.User))
@@ -135,6 +154,77 @@ namespace BaoDatShop.Responsitories
             if (await _roleManager.RoleExistsAsync(UserRole.Admin))
             {
                 await userManager.AddToRoleAsync(user, UserRole.User);
+            }
+            if (result.Succeeded)
+            {
+                var user1 = await userManager.FindByNameAsync(model.Username);
+                Account tamp = new();
+                tamp.Id = user1.Id;
+                tamp.FullName = model.FullName;
+                tamp.Address = model.Address;
+                tamp.Email = model.Email;
+                tamp.Username = model.Username;
+                tamp.Password = model.Password;
+                tamp.Phone = model.Phone;
+                tamp.Avatar = fileName;
+                tamp.Status = true;
+                tamp.Permission = 1;
+                tamp.Level = 0;
+                context.Account.Add(tamp);
+                context.SaveChanges();
+            }
+            return result;
+        }
+        public async Task<IdentityResult> SignUpCustomer(RegisterRequest model)
+        {
+            var userExists = await userManager.FindByNameAsync(model.Username);
+            var fileName = model.image.FileName;
+            var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Avatar");
+            var uploadPath = Path.Combine(uploadFolder, fileName);
+
+            using (FileStream fs = System.IO.File.Create(uploadPath))
+            {
+                model.image.CopyTo(fs);
+                fs.Flush();
+            }
+            var user = new ApplicationUser()
+            {
+                FullName = model.FullName,
+                Address = model.Address,
+                Email = model.Email,
+                UserName = model.Username,
+                Password = model.Password,
+                Phone = model.Phone,
+                Avatar = fileName,
+                Status = true,
+                Permission = 0,
+            };
+            var result = await userManager.CreateAsync(user, model.Password);
+            if (!await _roleManager.RoleExistsAsync(UserRole.Costumer))
+                await _roleManager.CreateAsync(new IdentityRole(UserRole.Costumer));
+
+
+            if (await _roleManager.RoleExistsAsync(UserRole.Costumer))
+            {
+                await userManager.AddToRoleAsync(user, UserRole.Costumer);
+            }
+            if (result.Succeeded)
+            {
+                var user1 = await userManager.FindByNameAsync(model.Username);
+                Account tamp = new();
+                tamp.Id = user1.Id;
+                tamp.FullName = model.FullName;
+                tamp.Address = model.Address;
+                tamp.Email = model.Email;
+                tamp.Username = model.Username;
+                tamp.Password = model.Password;
+                tamp.Phone = model.Phone;
+                tamp.Avatar = fileName;
+                tamp.Status = true;
+                tamp.Permission = 3;
+                tamp.Level = 1;
+                context.Account.Add(tamp);
+                context.SaveChanges();
             }
             return result;
         }

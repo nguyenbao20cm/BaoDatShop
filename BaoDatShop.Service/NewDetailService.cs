@@ -1,5 +1,6 @@
 ﻿using BaoDatShop.DTO.Invoice;
 using BaoDatShop.DTO.NewDetail;
+using BaoDatShop.DTO.News;
 using BaoDatShop.Model.Model;
 using BaoDatShop.Responsitories;
 using Eshop.Models;
@@ -18,9 +19,9 @@ namespace BaoDatShop.Service
     {
         public bool Create(CreateNewDetail model);
         public bool Update(int id, CreateNewDetail model);
-        //public bool Delete(int id);
-        public NewDetail GetById(int id);
-        public List<NewDetail> GetAll();
+        public bool Delete(int id);
+        public GetAllNewDetail GetById(int id);
+        public List<GetAllNewDetail> GetAll();
     }
     public class NewDetailService : INewDetailService
     {
@@ -45,18 +46,45 @@ namespace BaoDatShop.Service
             }
             NewDetail result = new();
             result.NewId = model.NewId;
+            result.Content = model.Content;
             result.Image = fileName;
             return newDetailResponsitories.Create(result);
         }
 
-        public List<NewDetail> GetAll()
+        public bool Delete(int id)
         {
-           return newDetailResponsitories.GetAll();
+            NewDetail result = newDetailResponsitories.GetById(id);
+            result.Status = false;
+            return newDetailResponsitories.Update(result);
         }
 
-        public NewDetail GetById(int id)
+        public List<GetAllNewDetail> GetAll()
         {
-            return newDetailResponsitories.GetById(id);
+           
+            var tamp = newDetailResponsitories.GetAll();
+            List<GetAllNewDetail> reslut = new();
+            foreach (var item in tamp)
+            {
+                GetAllNewDetail a = new();
+                a.Image = item.Image;
+                a.Status = item.Status;
+                a.Content = item.Content;
+                a.NewDetailId=item.NewDetailId;
+                a.NewId = item.NewId;
+                reslut.Add(a);
+            }
+            return reslut;
+        }
+        public GetAllNewDetail GetById(int id)
+        {
+            var item = newDetailResponsitories.GetById(id);
+            GetAllNewDetail reslut = new();
+            reslut.Image = item.Image;
+            reslut.Status = item.Status;
+            reslut.Content = item.Content;
+            reslut.NewDetailId = item.NewDetailId;
+            reslut.NewId = item.NewId;
+            return reslut;
         }
 
         public bool Update(int id, CreateNewDetail model)
@@ -71,7 +99,8 @@ namespace BaoDatShop.Service
                 fs.Flush();
             }
             NewDetail result = newDetailResponsitories.GetById(id);
-            result.NewId = model.NewId;
+            result.NewId = model.NewId; 
+            result.Content = model.Content;
             result.Image = fileName;
             return newDetailResponsitories.Update(result);
         }

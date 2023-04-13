@@ -10,12 +10,12 @@ namespace BaoDatShop.Responsitories
 {   
     public interface ICartResponsitories
     {
-        public bool DeleteAll(int id);
+        public bool DeleteAll(string id);
         public bool Delete(int id);
         public bool Create(Cart model);
         public bool Update(Cart model);
         public Cart GetById(int id);
-        public List<Cart> GetAll();
+        public List<Cart> GetAll(string id);
     }
     public class CartResponsitories : ICartResponsitories
     {
@@ -39,7 +39,7 @@ namespace BaoDatShop.Responsitories
             int check = context.SaveChanges();
             return check > 0 ? true : false;
         }
-        public bool DeleteAll(int id)
+        public bool DeleteAll(string id)
         {
           var a=  context.Cart.ToList();
             foreach(var item in a)
@@ -50,10 +50,10 @@ namespace BaoDatShop.Responsitories
            return true;
         }
 
-        public List<Cart> GetAll()
+        public List<Cart> GetAll(string id)
         {
-            if (context.Cart.ToList() == null) return null;
-            return context.Cart.ToList();
+            if (context.Cart.Where(a=>a.AccountId==id).ToList() == null) return null;
+            return context.Cart.Where(a => a.AccountId == id).ToList();
         }
 
         public Cart GetById(int id)

@@ -15,7 +15,7 @@ namespace Eshop.Models
         [DisplayName("Mã HĐ")]
         public string Code { get; set; }
 
-        public int AccountId { get; set; }
+        public string AccountId { get; set; }
 
         // Navigation reference property cho khóa ngoại đến Account 
         [DisplayName("Khách hàng")]

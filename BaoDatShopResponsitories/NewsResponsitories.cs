@@ -32,7 +32,7 @@ namespace BaoDatShop.Responsitories
         public List<News> GetAll()
         {
             if (context.News.Where(a=>a.Status==true).ToList() == null) return null;
-            return context.News.ToList();
+            return context.News.Where(a => a.Status == true).ToList();
         }
 
         public News GetById(int id)

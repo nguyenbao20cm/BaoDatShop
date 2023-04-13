@@ -5,6 +5,7 @@ using Eshop.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,14 +13,15 @@ namespace BaoDatShop.Service
 {
     public interface ICartService
     {
+       
         public bool Create(CreateCart model);
         public bool Update(int id, CreateCart model);
         public bool Delete(int id);
         public Cart GetById(int id);
-        public List<Cart> GetAll();
+        public List<GetAllCart> GetAll(string id);
         public bool Up(int id);
         public bool Down(int id);
-        public bool DeleteAll(int id);
+        public bool DeleteAll(string id);
     }
     public class CartService : ICartService
     {
@@ -43,7 +45,7 @@ namespace BaoDatShop.Service
             return cartResponsitories.Delete(id);
         }
 
-        public bool DeleteAll(int id)
+        public bool DeleteAll(string id)
         {
             return cartResponsitories.DeleteAll(id);
         }
@@ -51,13 +53,25 @@ namespace BaoDatShop.Service
         public bool Down(int id)
         {
             var result = cartResponsitories.GetById(id);
+            if(result.Quantity==0) return cartResponsitories.Delete(id);
             result.Quantity--;
             return cartResponsitories.Update(result);
         }
 
-        public List<Cart> GetAll()
-        {
-            return cartResponsitories.GetAll();
+        public List<GetAllCart> GetAll(string id)
+        { 
+            var tamp= cartResponsitories.GetAll(id); 
+            List<GetAllCart> result = new ();
+            foreach (var item in tamp)
+            {
+                GetAllCart createCart = new();
+                createCart.CartId = item.Id;
+                createCart.ProductId = item.ProductId;  
+                createCart.AccountId = item.AccountId;
+                createCart.Quantity = item.Quantity;
+                result.Add(createCart);
+            }
+            return result;
         }
 
         public Cart GetById(int id)

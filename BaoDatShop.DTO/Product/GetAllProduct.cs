@@ -5,12 +5,13 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
 namespace BaoDatShop.DTO.Product
 {
-    public class CreateProduct
+    public class GetAllProduct
     {
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "{0} không được bỏ trống")]
         public string SKU { get; set; }
 
@@ -29,14 +30,15 @@ namespace BaoDatShop.DTO.Product
         [DisplayName("Tồn kho")]
         [DefaultValue(0)]
         public int Stock { get; set; } = 0;
-        [DisplayName("Loại sản phẩm")]
+
         public int ProductTypeId { get; set; }
-        
-        // Navigation reference property cho khóa ngoại đến ProductType
+
         [DisplayName("Ảnh minh họa")]
-        public IFormFile Image { get; set; }
+        public string Image { get; set; }
+
+    
 
      
-      
+    
     }
 }

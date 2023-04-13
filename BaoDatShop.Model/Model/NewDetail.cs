@@ -11,7 +11,9 @@ namespace BaoDatShop.Model.Model
         public int NewDetailId { get; set; }
         public int NewId { get; set; }
         public News New { get; set; }
+        public string Content { get; set; }
         public string Image { get; set; }
+        public bool Status  { get; set; }
 
     }
 }

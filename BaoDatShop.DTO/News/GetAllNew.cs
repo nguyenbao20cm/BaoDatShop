@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BaoDatShop.Model.Model
+namespace BaoDatShop.DTO.News
 {
-    public class News
+    public class GetAllNew
     {
         public int NewsId { get; set; }
         public string NewsName { get; set; }
@@ -14,6 +15,5 @@ namespace BaoDatShop.Model.Model
         public string Content { get; set; }
         public string Image { get; set; }
         public bool Status { get; set; }
-        public ICollection<NewDetail> NewDetail { get; set; }
     }
 }

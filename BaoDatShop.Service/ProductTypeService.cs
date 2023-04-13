@@ -1,4 +1,5 @@
-﻿using BaoDatShop.DTO.ProductType;
+﻿using BaoDatShop.DTO.Product;
+using BaoDatShop.DTO.ProductType;
 using BaoDatShop.Responsitories;
 using Eshop.Models;
 using System;
@@ -14,8 +15,8 @@ namespace BaoDatShop.Service
         public bool Create(CreateProductType model);
         public bool Update(int id,CreateProductType model);
         public bool Delete(int id);
-        public ProductTypes GetById(int id);
-        public List<ProductTypes> GetAll();
+        public GetAllProductType GetById(int id);
+        public List<GetAllProductType> GetAll();
     }
     public class ProductTypeService : IProductTypeService
     {
@@ -39,14 +40,30 @@ namespace BaoDatShop.Service
             return productTypeResponsitories.Update(result);
         }
 
-        public List<ProductTypes> GetAll()
+        public List<GetAllProductType> GetAll()
         {
-            return productTypeResponsitories.GetAll();
+         
+            var tamp = productTypeResponsitories.GetAll();
+            List<GetAllProductType> reslut = new();
+            foreach (var item in tamp)
+            {
+                GetAllProductType a = new();
+                a.Name = item.Name;
+                a.Id=item.Id;
+                a.Status = item.Status;
+                reslut.Add(a);
+            }
+            return reslut;
         }
 
-        public ProductTypes GetById(int id)
+        public GetAllProductType GetById(int id)
         {
-            return productTypeResponsitories.GetById(id);
+            var tamp = productTypeResponsitories.GetById(id);
+            GetAllProductType reslut = new();
+            reslut.Name = tamp.Name;
+            reslut.Id = tamp.Id;
+            reslut.Status = tamp.Status;
+            return reslut;
         }
 
         public bool Update(int id,CreateProductType model)

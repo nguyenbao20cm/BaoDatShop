@@ -34,10 +34,10 @@ namespace BaoDatShop.Controllers
         {
             var result = await _accountService.SignUp(model);
             if (result.Succeeded) return Ok(result.Succeeded);
-            return Unauthorized();
+            return Unauthorized(result);
         }
         [HttpPost("Signin")]
-        public async Task<IActionResult> signin(LoginModel model)
+        public async Task<IActionResult> signin([FromForm] LoginModel model)
         {
             var result = await _accountService.SignIn(model);
             if (string.IsNullOrEmpty( result)) return Unauthorized();
@@ -45,13 +45,20 @@ namespace BaoDatShop.Controllers
         }
         [HttpPost]
         [Route("register-Admin")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterRequest model)
+        public async Task<IActionResult> RegisterAdmin([FromForm] RegisterRequest model)
         {
             var result = await _accountService.SignUpAdmin(model);
             if (result.Succeeded) return Ok(result.Succeeded);
             return Unauthorized();
         }
-
+        [HttpPost]
+        [Route("register-Customer")]
+        public async Task<IActionResult> RegisterCustomer([FromForm] RegisterRequest model)
+        {
+            var result = await _accountService.SignUpCustomer(model);
+            if (result.Succeeded) return Ok(result.Succeeded);
+            return Unauthorized();
+        }
 
     }
 }

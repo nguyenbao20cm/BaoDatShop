@@ -1,43 +1,47 @@
 ﻿using BaoDatShop.DTO.Product;
-using BaoDatShop.DTO.ProductType;
 using BaoDatShop.Responsitories;
 using Eshop.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 
 namespace BaoDatShop.Service
 {
     public interface IProductService
     {
         public bool Create(CreateProduct model);
-        public bool Update(int id,CreateProduct model);
+        public bool Update(int id, CreateProduct model);
         public bool Delete(int id);
-        public Product GetById(int id);
-        public List<Product> GetAll();
+        public GetAllProduct GetById(int id);
+        public List<GetAllProduct> GetAll();
     }
     public class ProductService : IProductService
     {
         private readonly IProductResponsitories productResponsitories;
-        public ProductService(IProductResponsitories productResponsitories)
+        private readonly IWebHostEnvironment _environment;
+        public ProductService(IProductResponsitories productResponsitories, IWebHostEnvironment _environment)
         {
             this.productResponsitories = productResponsitories;
+            this._environment = _environment;
         }
-    
+
         public bool Create(CreateProduct model)
         {
+            var fileName = model.Image.FileName;
+            var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "NewDetail");
+            var uploadPath = Path.Combine(uploadFolder, fileName);
+
+            using (FileStream fs = System.IO.File.Create(uploadPath))
+            {
+                model.Image.CopyTo(fs);
+                fs.Flush();
+            }
             Product result = new();
-            result.SKU=model.SKU;
-            result.Name = model.Name; 
+            result.SKU = model.SKU;
+            result.Name = model.Name;
             result.Description = model.Description;
             result.Price = model.Price;
             result.Stock = model.Stock;
             result.ProductTypeId = model.ProductTypeId;
-            result.Image = model.Image;
+            result.Image = fileName;
             result.Status = true;
             return productResponsitories.Create(result);
         }
@@ -49,18 +53,52 @@ namespace BaoDatShop.Service
             return productResponsitories.Update(result);
         }
 
-        public List<Product> GetAll()
+        public List<GetAllProduct> GetAll()
         {
-            return productResponsitories.GetAll();
+            var tamp = productResponsitories.GetAll();
+            List<GetAllProduct> reslut = new();
+            foreach (var item in tamp)
+            {
+                GetAllProduct a = new();
+                a.Id = item.Id;
+                a.SKU = item.SKU;
+                a.Name = item.Name;
+                a.Description = item.Description;
+                a.Price = item.Price;
+                a.Stock = item.Stock;
+                a.ProductTypeId = item.ProductTypeId;
+                a.Image = item.Image;
+                reslut.Add(a);
+            }
+            return reslut;
         }
 
-        public Product GetById(int id)
+        public GetAllProduct GetById(int id)
         {
-            return productResponsitories.GetById(id);
+            var item = productResponsitories.GetById(id);
+            GetAllProduct a = new();
+            a.Id = item.Id;
+            a.SKU = item.SKU;
+            a.Name = item.Name;
+            a.Description = item.Description;
+            a.Price = item.Price;
+            a.Stock = item.Stock;
+            a.ProductTypeId = item.ProductTypeId;
+            a.Image = item.Image;
+            return a;
         }
 
-        public bool Update(int id,CreateProduct model)
+        public bool Update(int id, CreateProduct model)
         {
+            var fileName = model.Image.FileName;
+            var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "NewDetail");
+            var uploadPath = Path.Combine(uploadFolder, fileName);
+
+            using (FileStream fs = System.IO.File.Create(uploadPath))
+            {
+                model.Image.CopyTo(fs);
+                fs.Flush();
+            }
             Product result = productResponsitories.GetById(id);
             result.SKU = model.SKU;
             result.Name = model.Name;
@@ -68,7 +106,7 @@ namespace BaoDatShop.Service
             result.Price = model.Price;
             result.Stock = model.Stock;
             result.ProductTypeId = model.ProductTypeId;
-            result.Image = model.Image;
+            result.Image = fileName;
             return productResponsitories.Update(result);
         }
     }

@@ -12,7 +12,7 @@ namespace BaoDatShop.Model.Model
         public int ReviewId { get; set; } 
         public int ProductId { get; set; }
         public Product Product { get; set; }
-        public int AccountId { get; set; }
+        public string AccountId { get; set; }
         public Account Account { get; set; }
         public string Content { get; set; }
         public DateTime DateTime { get; set; }

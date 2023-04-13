@@ -25,6 +25,8 @@ namespace BaoDatShop.Model.Context
         public DbSet<Review> Review { get; set; }
         public DbSet<NewDetail> NewDetail { get; set; }
         public DbSet<News> News { get; set; }
+        public DbSet<AdvertisingPanel> AdvertisingPanel { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -51,6 +51,30 @@ builder.Services.AddSwaggerGen();
 //
 builder.Services.AddTransient<IAccountResponsitories, AccountResponsitories>();
 builder.Services.AddTransient<IAccountService, AccountService>();
+
+builder.Services.AddTransient<ICartResponsitories, CartResponsitories>();
+builder.Services.AddTransient<ICartService, CartService>();
+
+builder.Services.AddTransient<IInvoiceDetailResponsitories, InvoiceDetailResponsitories>();
+builder.Services.AddTransient<IInvoiceDetailService, InvoiceDetailService>();
+
+builder.Services.AddTransient<IInvoiceService, InvoiceService>();
+builder.Services.AddTransient<IInvoiceResponsitories, InvoiceResponsitories>();
+
+builder.Services.AddTransient<INewDetailResponsitories, NewDetailResponsitories>();
+builder.Services.AddTransient<INewDetailService, NewDetailService>();
+
+builder.Services.AddTransient<INewsResponsitories, NewsResponsitories>();
+builder.Services.AddTransient<INewsService, NewsService>();
+
+builder.Services.AddTransient<IProductResponsitories, ProductResponsitories>();
+builder.Services.AddTransient<IProductService, ProductService>();
+
+builder.Services.AddTransient<IProductTypeResponsitories, ProductTypeResponsitories>();
+builder.Services.AddTransient<IProductTypeService, ProductTypeService>();
+
+builder.Services.AddTransient<IReviewResponsitories, ReviewResponsitories>();
+builder.Services.AddTransient<IReviewService, ReviewService>();
 // For Enity
 builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("LMS")));

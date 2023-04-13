@@ -4,13 +4,13 @@
 
 namespace BaoDatShop.Model.Migrations
 {
-    public partial class _3 : Migration
+    public partial class _1232132 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<bool>(
                 name: "Status",
-                table: "Review",
+                table: "NewDetail",
                 type: "bit",
                 nullable: false,
                 defaultValue: false);
@@ -20,7 +20,7 @@ namespace BaoDatShop.Model.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "Status",
-                table: "Review");
+                table: "NewDetail");
         }
     }
 }

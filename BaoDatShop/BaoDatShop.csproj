@@ -26,6 +26,8 @@
   <ItemGroup>
     <Folder Include="wwwroot\Image\Avatar\" />
     <Folder Include="wwwroot\Image\NewDetail\" />
+    <Folder Include="wwwroot\Image\AdvertisingPanel\" />
+    <Folder Include="wwwroot\Image\New\" />
   </ItemGroup>
 
 </Project>
