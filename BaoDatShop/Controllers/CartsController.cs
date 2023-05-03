@@ -1,56 +1,30 @@
 ﻿using BaoDatShop.DTO.Cart;
-using BaoDatShop.DTO.Invoice;
-using BaoDatShop.DTO.Product;
 using BaoDatShop.DTO.Role;
 using BaoDatShop.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
 using System.Data;
 using System.Security.Claims;
-using BaoDatShop.DTO.InvoiceDetail;
 
 namespace BaoDatShop.Controllers
 {
     [Route("api/[controller]")]
     [Authorize(Roles = UserRole.Costumer)]
     [ApiController]
-    public class CustomerController : ControllerBase
+    public class CartsController : ControllerBase
     {
-        private readonly IProductTypeService productypeService;
-        private readonly IProductService productService;
         private readonly ICartService cartService;
-        private readonly IInvoiceService invoiceService;
-        private readonly IInvoiceDetailService invoiceDetailService;
-        public CustomerController(
-            IInvoiceDetailService invoiceDetailService,
-            IInvoiceService invoiceService,
-            IProductTypeService productypeService,
-            IProductService productService,
-            ICartService cartService
-            )
+        public CartsController(ICartService cartService)
         {
-            this.invoiceService= invoiceService;
-            this.invoiceDetailService=  invoiceDetailService;
-            this.productypeService = productypeService;
-            this.productService = productService;
             this.cartService = cartService;
         }
 
-        //Invoice
-        [HttpPost("CreateInvoice")]
-        public async Task<IActionResult> CreateInvoice([FromForm] CreateInvoice model)
-        {
-            return Ok(invoiceService.Create(GetCorrectUserId(),model));
-        }
-        //Cart
         [HttpPost("CreateCart")]
-        public async Task<IActionResult> CreateCart([FromForm] CreateCartNoAccId  model)
+        public async Task<IActionResult> CreateCart(CreateCartNoAccId model)
         {
-         
-            CreateCart result = new();
+
+            CreateCartRequest result = new();
             result.ProductId = model.ProductId;
             result.AccountId = GetCorrectUserId();
             result.Quantity = model.Quantity;

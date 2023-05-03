@@ -7,11 +7,13 @@ namespace BaoDatShop.Service
 {
     public interface IProductService
     {
-        public bool Create(CreateProduct model);
-        public bool Update(int id, CreateProduct model);
+        public bool Create(CreateProductRequest model);
+        public bool Update(int id, CreateProductRequest model);
         public bool Delete(int id);
-        public GetAllProduct GetById(int id);
-        public List<GetAllProduct> GetAll();
+        public GetAllProductResponse GetById(int id);
+        public List<GetAllProductResponse> GetAll();
+        
+        public List<GetAllProductResponse> GetAllProductInProductType(int id);
     }
     public class ProductService : IProductService
     {
@@ -23,7 +25,7 @@ namespace BaoDatShop.Service
             this._environment = _environment;
         }
 
-        public bool Create(CreateProduct model)
+        public bool Create(CreateProductRequest model)
         {
             var fileName = model.Image.FileName;
             var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "NewDetail");
@@ -53,13 +55,13 @@ namespace BaoDatShop.Service
             return productResponsitories.Update(result);
         }
 
-        public List<GetAllProduct> GetAll()
+        public List<GetAllProductResponse> GetAll()
         {
             var tamp = productResponsitories.GetAll();
-            List<GetAllProduct> reslut = new();
+            List<GetAllProductResponse> reslut = new();
             foreach (var item in tamp)
             {
-                GetAllProduct a = new();
+                GetAllProductResponse a = new();
                 a.Id = item.Id;
                 a.SKU = item.SKU;
                 a.Name = item.Name;
@@ -73,10 +75,30 @@ namespace BaoDatShop.Service
             return reslut;
         }
 
-        public GetAllProduct GetById(int id)
+        public List<GetAllProductResponse> GetAllProductInProductType(int id)
+        {
+            var tamp = productResponsitories.GetAll().Where(a=>a.ProductTypeId==id);
+            List<GetAllProductResponse> reslut = new();
+            foreach (var item in tamp)
+            {
+                GetAllProductResponse a = new();
+                a.Id = item.Id;
+                a.SKU = item.SKU;
+                a.Name = item.Name;
+                a.Description = item.Description;
+                a.Price = item.Price;
+                a.Stock = item.Stock;
+                a.ProductTypeId = item.ProductTypeId;
+                a.Image = item.Image;
+                reslut.Add(a);
+            }
+            return reslut;
+        }
+
+        public GetAllProductResponse GetById(int id)
         {
             var item = productResponsitories.GetById(id);
-            GetAllProduct a = new();
+            GetAllProductResponse a = new();
             a.Id = item.Id;
             a.SKU = item.SKU;
             a.Name = item.Name;
@@ -88,7 +110,7 @@ namespace BaoDatShop.Service
             return a;
         }
 
-        public bool Update(int id, CreateProduct model)
+        public bool Update(int id, CreateProductRequest model)
         {
             var fileName = model.Image.FileName;
             var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "NewDetail");

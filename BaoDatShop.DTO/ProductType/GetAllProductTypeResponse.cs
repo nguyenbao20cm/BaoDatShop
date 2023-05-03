@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace BaoDatShop.DTO.ProductType
 {
-    public class CreateProductType
+    public class GetAllProductTypeResponse
     {
+        public int Id { get; set; }
         public string Name { get; set; }
+        public bool Status { get; set; }
     }
 }

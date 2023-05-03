@@ -15,11 +15,14 @@ namespace BaoDatShop.Service
 {
     public interface IInvoiceService
     {
-        public bool Create(string AccountId, CreateInvoice model);
-        public bool Update(int id, CreateInvoice model);
+        public bool Create(string AccountId, CreateInvoiceRequest model);
+        public bool Update(int id, CreateInvoiceRequest model);
         public bool Delete(int id);
         public Invoice GetById(int id);
         public List<Invoice> GetAll();
+        public bool UpdateInovicePrepare(int id);
+   //     public bool UpdateInoviceDelivering(int id);
+        
     }
     public class InvoiceService : IInvoiceService
     {
@@ -35,7 +38,7 @@ namespace BaoDatShop.Service
             this.invoiceDetailResponsitories = invoiceDetailResponsitories;
         }
 
-        public bool Create(string AccountId, CreateInvoice model)
+        public bool Create(string AccountId, CreateInvoiceRequest model)
         {
             var Cart = cartResponsitories.GetAll(AccountId);
             if (Cart == null) return false;
@@ -93,7 +96,7 @@ namespace BaoDatShop.Service
             return invoiceResponsitories.GetById(id);
         }
         // dang lam
-        public bool Update(int id, CreateInvoice model)
+        public bool Update(int id, CreateInvoiceRequest model)
         {
             Invoice result = invoiceResponsitories.GetById(id);
             result.Code = model.Code;
@@ -104,6 +107,13 @@ namespace BaoDatShop.Service
             //result.Total = model.Total;
             //result.Pay = model.Pay;
             //result.OrderStatus = model.OrderStatus;
+            return invoiceResponsitories.Update(result);
+        }
+
+        public bool UpdateInovicePrepare(int id)
+        {
+            Invoice result = invoiceResponsitories.GetById(id);
+            result.OrderStatus = 2;
             return invoiceResponsitories.Update(result);
         }
     }

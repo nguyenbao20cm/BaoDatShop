@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BaoDatShop.DTO.NewDetail
 {
-    public class GetAllNewDetail
+    public class GetAllNewDetailResponse
     {
         public int NewDetailId { get; set; }
         public int NewId { get; set; }

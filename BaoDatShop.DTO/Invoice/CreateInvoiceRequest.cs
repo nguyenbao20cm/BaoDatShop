@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BaoDatShop.DTO.Invoice
 {
-    public class CreateInvoice
+    public class CreateInvoiceRequest
     {
        
 

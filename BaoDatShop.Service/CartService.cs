@@ -14,11 +14,11 @@ namespace BaoDatShop.Service
     public interface ICartService
     {
        
-        public bool Create(CreateCart model);
-        public bool Update(int id, CreateCart model);
+        public bool Create(CreateCartRequest model);
+        public bool Update(int id, CreateCartRequest model);
         public bool Delete(int id);
         public Cart GetById(int id);
-        public List<GetAllCart> GetAll(string id);
+        public List<GetAllCartResponse> GetAll(string id);
         public bool Up(int id);
         public bool Down(int id);
         public bool DeleteAll(string id);
@@ -31,7 +31,7 @@ namespace BaoDatShop.Service
             this.cartResponsitories = cartResponsitories;
         }
 
-        public bool Create(CreateCart model)
+        public bool Create(CreateCartRequest model)
         {
            Cart result = new();
             result.ProductId = model.ProductId;
@@ -58,13 +58,13 @@ namespace BaoDatShop.Service
             return cartResponsitories.Update(result);
         }
 
-        public List<GetAllCart> GetAll(string id)
+        public List<GetAllCartResponse> GetAll(string id)
         { 
             var tamp= cartResponsitories.GetAll(id); 
-            List<GetAllCart> result = new ();
+            List<GetAllCartResponse> result = new ();
             foreach (var item in tamp)
             {
-                GetAllCart createCart = new();
+                GetAllCartResponse createCart = new();
                 createCart.CartId = item.Id;
                 createCart.ProductId = item.ProductId;  
                 createCart.AccountId = item.AccountId;
@@ -86,7 +86,7 @@ namespace BaoDatShop.Service
             return cartResponsitories.Update(result);
         }
 
-        public bool Update(int id, CreateCart model)
+        public bool Update(int id, CreateCartRequest model)
         {
             Cart result = cartResponsitories.GetById(id);
             result.ProductId = model.ProductId;

@@ -12,7 +12,7 @@ namespace BaoDatShop.Service
 {
     public interface IInvoiceDetailService
     {
-        public bool Create(CreateInvoiceDetail model);
+        public bool Create(CreateInvoiceDetailRequest model);
         //public bool Update(int id, CreateInvoiceDetail model);
         //public bool Delete(int id);
         //public InvoiceDetail GetById(int id);
@@ -25,7 +25,7 @@ namespace BaoDatShop.Service
         {
             this.invoiceDetailResponsitories = invoiceDetailResponsitories;
         }
-        public bool Create(CreateInvoiceDetail model)
+        public bool Create(CreateInvoiceDetailRequest model)
         {
             InvoiceDetail result = new();
             result.ProductId = model.ProductId;

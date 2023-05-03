@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BaoDatShop.DTO.LoginRequest
 {
-    public class LoginModel
+    public class LoginRequest
     {
         [Required(ErrorMessage = "User Name is required")]
         public string? Username { get; set; }

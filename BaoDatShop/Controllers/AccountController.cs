@@ -29,18 +29,18 @@ namespace BaoDatShop.Controllers
             _configuration = configuration;
             _accountService = accountService;
         }
-        [HttpPost("SignupUser")]
-        public async Task<IActionResult> signup([FromForm] RegisterRequest model)
-        {
-            var result = await _accountService.SignUp(model);
-            if (result.Succeeded) return Ok(result.Succeeded);
-            return Unauthorized(result);
-        }
+        //[HttpPost("SignupUser")]
+        //public async Task<IActionResult> signup( RegisterRequest model)
+        //{
+        //    var result = await _accountService.SignUp(model);
+        //    if (result.Succeeded) return Ok(result.Succeeded);
+        //    return Unauthorized(result);
+        //}
         [HttpPost("Signin")]
-        public async Task<IActionResult> signin([FromForm] LoginModel model)
+        public async Task<IActionResult> signin(LoginRequest model)
         {
             var result = await _accountService.SignIn(model);
-            if (string.IsNullOrEmpty( result)) return Unauthorized();
+            if (string.IsNullOrEmpty(result)) return Unauthorized();
             return Ok(result);
         }
         [HttpPost]

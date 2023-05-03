@@ -17,11 +17,11 @@ namespace BaoDatShop.Service
 {
     public interface INewDetailService
     {
-        public bool Create(CreateNewDetail model);
-        public bool Update(int id, CreateNewDetail model);
+        public bool Create(CreateNewDetailRequest model);
+        public bool Update(int id, CreateNewDetailRequest model);
         public bool Delete(int id);
-        public GetAllNewDetail GetById(int id);
-        public List<GetAllNewDetail> GetAll();
+        public GetAllNewDetailResponse GetById(int id);
+        public List<GetAllNewDetailResponse> GetAll();
     }
     public class NewDetailService : INewDetailService
     {
@@ -33,7 +33,7 @@ namespace BaoDatShop.Service
             this._environment = _environment;
         }
 
-        public bool Create(CreateNewDetail model)
+        public bool Create(CreateNewDetailRequest model)
         {
             var fileName = model.Image.FileName;
             var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "NewDetail");
@@ -58,14 +58,14 @@ namespace BaoDatShop.Service
             return newDetailResponsitories.Update(result);
         }
 
-        public List<GetAllNewDetail> GetAll()
+        public List<GetAllNewDetailResponse> GetAll()
         {
            
             var tamp = newDetailResponsitories.GetAll();
-            List<GetAllNewDetail> reslut = new();
+            List<GetAllNewDetailResponse> reslut = new();
             foreach (var item in tamp)
             {
-                GetAllNewDetail a = new();
+                GetAllNewDetailResponse a = new();
                 a.Image = item.Image;
                 a.Status = item.Status;
                 a.Content = item.Content;
@@ -75,10 +75,10 @@ namespace BaoDatShop.Service
             }
             return reslut;
         }
-        public GetAllNewDetail GetById(int id)
+        public GetAllNewDetailResponse GetById(int id)
         {
             var item = newDetailResponsitories.GetById(id);
-            GetAllNewDetail reslut = new();
+            GetAllNewDetailResponse reslut = new();
             reslut.Image = item.Image;
             reslut.Status = item.Status;
             reslut.Content = item.Content;
@@ -87,7 +87,7 @@ namespace BaoDatShop.Service
             return reslut;
         }
 
-        public bool Update(int id, CreateNewDetail model)
+        public bool Update(int id, CreateNewDetailRequest model)
         {
             var fileName = model.Image.FileName;
             var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "NewDetail");

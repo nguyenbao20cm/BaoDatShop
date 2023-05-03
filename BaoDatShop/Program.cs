@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Serialization;
 using System.Text;
 
 
@@ -16,6 +17,16 @@ ConfigurationManager configuration = builder.Configuration;
 // Add services to the container.
 
 builder.Services.AddControllers();
+//
+
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowOrigin", options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+//});
+//builder.Services.AddControllersWithViews().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+//    .AddNewtonsoftJson(options=>options.SerializerSettings.ContractResolver=new DefaultContractResolver());
+
+builder.Services.AddCors();
 //Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
@@ -75,6 +86,9 @@ builder.Services.AddTransient<IProductTypeService, ProductTypeService>();
 
 builder.Services.AddTransient<IReviewResponsitories, ReviewResponsitories>();
 builder.Services.AddTransient<IReviewService, ReviewService>();
+
+builder.Services.AddTransient<IAdvertisingPanelResponsitories, AdvertisingPanelResponsitories>();
+builder.Services.AddTransient<IAdvertisingPanelService, AdvertisingPanelService>();
 // For Enity
 builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("LMS")));
@@ -115,6 +129,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+
+app.UseCors(options=>options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 app.UseAuthorization();
 

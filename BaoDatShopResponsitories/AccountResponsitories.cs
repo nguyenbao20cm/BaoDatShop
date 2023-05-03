@@ -18,7 +18,7 @@ namespace BaoDatShop.Responsitories
     {
         public Task<IdentityResult> SignUp(RegisterRequest model);
         public Task<IdentityResult> SignUpAdmin(RegisterRequest model);
-        public Task<string> SignIn(LoginModel model);
+        public Task<string> SignIn(LoginRequest model);
         public Task<IdentityResult> SignUpCustomer(RegisterRequest model);
 
     }
@@ -42,7 +42,7 @@ namespace BaoDatShop.Responsitories
             this.signInManager = signInManager;
             _roleManager = roleManager;
         }
-        public async Task<string> SignIn(LoginModel model)
+        public async Task<string> SignIn(LoginRequest model)
         {
             var user = await userManager.FindByNameAsync(model.Username);
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
@@ -114,8 +114,6 @@ namespace BaoDatShop.Responsitories
                 context.SaveChanges();
             }
             return result;
-
-
         }
         public async Task<IdentityResult> SignUpAdmin(RegisterRequest model)
         {
@@ -144,17 +142,12 @@ namespace BaoDatShop.Responsitories
             var result = await userManager.CreateAsync(user, model.Password);
             if (!await _roleManager.RoleExistsAsync(UserRole.Admin))
                 await _roleManager.CreateAsync(new IdentityRole(UserRole.Admin));
-            if (!await _roleManager.RoleExistsAsync(UserRole.User))
-                await _roleManager.CreateAsync(new IdentityRole(UserRole.User));
-
+           
             if (await _roleManager.RoleExistsAsync(UserRole.Admin))
             {
                 await userManager.AddToRoleAsync(user, UserRole.Admin);
             }
-            if (await _roleManager.RoleExistsAsync(UserRole.Admin))
-            {
-                await userManager.AddToRoleAsync(user, UserRole.User);
-            }
+           
             if (result.Succeeded)
             {
                 var user1 = await userManager.FindByNameAsync(model.Username);

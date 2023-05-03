@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace BaoDatShop.DTO.Review
 {
-    public class CreateReview
+    public class ReviewRequest
     {
         public int ProductId { get; set; }
-        public string AccountId { get; set; }
         public string Content { get; set; }
         public DateTime DateTime { get; set; }
         public int Star { get; set; }

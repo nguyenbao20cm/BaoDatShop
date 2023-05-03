@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace BaoDatShop.DTO.Product
 {
-    public class CreateProduct
+    public class CreateProductRequest
     {
         [Required(ErrorMessage = "{0} không được bỏ trống")]
         public string SKU { get; set; }

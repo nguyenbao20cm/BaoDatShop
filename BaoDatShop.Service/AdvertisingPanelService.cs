@@ -15,9 +15,9 @@ namespace BaoDatShop.Service
 {
     public interface IAdvertisingPanelService
     {
-        public bool Create(CreateAdvertisingPanel model);
+        public bool Create(CreateAdvertisingPanelRequest model);
         public bool Delete(int id);
-        public bool Update(int id, CreateAdvertisingPanel model);
+        public bool Update(int id, CreateAdvertisingPanelRequest model);
         public List<AdvertisingPanel> GetAll();
     }
     public class AdvertisingPanelService : IAdvertisingPanelService
@@ -30,7 +30,7 @@ namespace BaoDatShop.Service
             this.advertisingPanelResponsitories = advertisingPanelResponsitories;
         }
 
-        public bool Create(CreateAdvertisingPanel model)
+        public bool Create(CreateAdvertisingPanelRequest model)
         {
             var fileName = model.Image.FileName;
             var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "AdvertisingPanel");
@@ -59,7 +59,7 @@ namespace BaoDatShop.Service
             return advertisingPanelResponsitories.GetAll();
         }
 
-        public bool Update(int id, CreateAdvertisingPanel model)
+        public bool Update(int id, CreateAdvertisingPanelRequest model)
         {
             var fileName = model.Image.FileName;
             var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "AdvertisingPanel");

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BaoDatShop.DTO.Cart
 {
-    public class GetAllCart
+    public class GetAllCartResponse
     {
         public int CartId { get; set; }
         public string AccountId { get; set; }

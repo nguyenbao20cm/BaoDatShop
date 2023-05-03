@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BaoDatShop.DTO.News
 {
-    public class GetAllNew
+    public class GetAllNewResponse
     {
         public int NewsId { get; set; }
         public string NewsName { get; set; }

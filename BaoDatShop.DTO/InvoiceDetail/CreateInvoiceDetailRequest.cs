@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BaoDatShop.DTO.InvoiceDetail
 {
-    public class CreateInvoiceDetail
+    public class CreateInvoiceDetailRequest
     {
         public int InvoiceId { get; set; }
 

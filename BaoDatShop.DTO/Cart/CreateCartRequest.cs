@@ -13,7 +13,7 @@ using System.Text.Json.Serialization;
 
 namespace BaoDatShop.DTO.Cart
 {
-    public class CreateCart
+    public class CreateCartRequest
     {
        
         public string AccountId { get; set; }

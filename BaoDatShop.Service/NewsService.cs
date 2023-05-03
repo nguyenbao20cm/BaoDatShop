@@ -15,11 +15,11 @@ namespace BaoDatShop.Service
 {
     public interface INewsService
     {
-        public bool Create(CreateNews model);
-        public bool Update(int id, CreateNews model);
+        public bool Create(CreateNewsRequest model);
+        public bool Update(int id, CreateNewsRequest model);
         public bool Delete(int id);
-        public GetAllNew GetById(int id);
-        public List<GetAllNew> GetAll();
+        public GetAllNewResponse GetById(int id);
+        public List<GetAllNewResponse> GetAll();
     }
     public class NewsService: INewsService
     {
@@ -31,7 +31,7 @@ namespace BaoDatShop.Service
             this.INewsResponsitories = INewsResponsitories;
         }
 
-        public bool Create(CreateNews model)
+        public bool Create(CreateNewsRequest model)
         {
             var fileName = model.Image.FileName;
             var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "New");
@@ -58,13 +58,13 @@ namespace BaoDatShop.Service
             return INewsResponsitories.Update(result);
         }
 
-        public List<GetAllNew> GetAll()
+        public List<GetAllNewResponse> GetAll()
         {
             var tamp = INewsResponsitories.GetAll();
-            List<GetAllNew> reslut = new();
+            List<GetAllNewResponse> reslut = new();
             foreach (var item in tamp)
             {
-                GetAllNew a = new();
+                GetAllNewResponse a = new();
                 a.Image = item.Image;
                 a.Status = item.Status;
                 a.Content = item.Content;
@@ -77,10 +77,10 @@ namespace BaoDatShop.Service
         
         }
 
-        public GetAllNew GetById(int id)
+        public GetAllNewResponse GetById(int id)
         {
             var tamp = INewsResponsitories.GetById(id);
-            GetAllNew result = new();
+            GetAllNewResponse result = new();
             result.Status = tamp.Status;
             result.Content = tamp.Content;
             result.DateTime = tamp.DateTime;
@@ -89,7 +89,7 @@ namespace BaoDatShop.Service
             return result;
         }
 
-        public bool Update(int id, CreateNews model)
+        public bool Update(int id, CreateNewsRequest model)
         {
             var fileName = model.Image.FileName;
             var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "New");

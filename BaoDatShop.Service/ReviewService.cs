@@ -13,8 +13,8 @@ namespace BaoDatShop.Service
 {
     public interface IReviewService
     {
-        public bool Create(CreateReview model);
-        public bool Update(int id, CreateReview model);
+        public bool Create(string AccountID,ReviewRequest model);
+        public bool Update(string AccountId,int IdReview, ReviewRequest model);
         public bool Delete(int id);
         public List<Review> GetByIdProduct(int IdProduct);
         public Review GetById(int id);
@@ -28,12 +28,12 @@ namespace BaoDatShop.Service
             this.reviewResponsitories = reviewResponsitories;
         }
 
-        public bool Create(CreateReview model)
+        public bool Create(string AccountID,ReviewRequest model)
         {
             Review result = new();
             result.Star = model.Star;
             result.ProductId = model.ProductId;
-            result.AccountId = model.AccountId;
+            result.AccountId = AccountID;
             result.Content = model.Content;
             result.DateTime = model.DateTime;
             result.Status = true;
@@ -63,12 +63,12 @@ namespace BaoDatShop.Service
 
         }
 
-        public bool Update(int id, CreateReview model)
+        public bool Update(string AccountId,int IdReview, ReviewRequest model)
         {
-            Review result = reviewResponsitories.GetById(id);
+            Review result = reviewResponsitories.GetById(IdReview);
             result.Star = model.Star;
             result.ProductId = model.ProductId;
-            result.AccountId = model.AccountId;
+            result.AccountId = AccountId;
             result.Content = model.Content;
             result.DateTime = model.DateTime;
             return reviewResponsitories.Update(result);

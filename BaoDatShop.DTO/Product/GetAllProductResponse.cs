@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BaoDatShop.DTO.Product
 {
-    public class GetAllProduct
+    public class GetAllProductResponse
     {
         public int Id { get; set; }
 
