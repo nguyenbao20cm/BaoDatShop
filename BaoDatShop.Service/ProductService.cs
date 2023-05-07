@@ -2,11 +2,14 @@
 using BaoDatShop.Responsitories;
 using Eshop.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace BaoDatShop.Service
 {
     public interface IProductService
     {
+        
+        public bool CreateImageProduct(IFormFile model);
         public bool Create(CreateProductRequest model);
         public bool Update(int id, CreateProductRequest model);
         public bool Delete(int id);
@@ -28,7 +31,7 @@ namespace BaoDatShop.Service
         public bool Create(CreateProductRequest model)
         {
             var fileName = model.Image.FileName;
-            var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "NewDetail");
+            var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Product");
             var uploadPath = Path.Combine(uploadFolder, fileName);
 
             using (FileStream fs = System.IO.File.Create(uploadPath))
@@ -46,6 +49,25 @@ namespace BaoDatShop.Service
             result.Image = fileName;
             result.Status = true;
             return productResponsitories.Create(result);
+        }
+
+        public bool CreateImageProduct(IFormFile Image)
+        {
+            if (Image == null)
+            {
+                var fileName = Image.FileName;
+                var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Product");
+                var uploadPath = Path.Combine(uploadFolder, fileName);
+
+                using (FileStream fs = System.IO.File.Create(uploadPath))
+                {
+                    Image.CopyTo(fs);
+                    fs.Flush();
+                }
+                return true;
+            }
+            return false;
+        
         }
 
         public bool Delete(int id)
@@ -113,7 +135,7 @@ namespace BaoDatShop.Service
         public bool Update(int id, CreateProductRequest model)
         {
             var fileName = model.Image.FileName;
-            var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "NewDetail");
+            var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Product");
             var uploadPath = Path.Combine(uploadFolder, fileName);
 
             using (FileStream fs = System.IO.File.Create(uploadPath))

@@ -35,6 +35,11 @@ namespace BaoDatShop.Model.Context
                 builder.ToTable(nameof(News));
                 builder.HasKey(x => x.NewsId);
             });
+            modelBuilder.Entity<Product>(builder =>
+            {
+              
+                builder.HasKey(x => new {x.Id,x.SKU});
+            });
             modelBuilder.Entity<NewDetail>(builder =>
             {
                 builder.ToTable(nameof(NewDetail));

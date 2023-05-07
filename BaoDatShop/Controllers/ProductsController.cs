@@ -31,21 +31,26 @@ namespace BaoDatShop.Controllers
         [HttpGet("GetProductById/{id}")]
         public async Task<IActionResult> GetProductById(int id)
         {
-            return Ok(productService.GetById(id));
+            return Ok( productService.GetById(id));
         }
-        [Authorize(Roles = UserRole.Admin)]
-        [HttpPost("CreateProduct")]
-        public async Task<IActionResult> CreateProduct([FromForm]CreateProductRequest model)
+        [HttpPost("CreateImageProduct")]
+        public async Task<IActionResult> CreateImageProduct(IFormFile model)
         {
-            return Ok(productService.Create(model));
+            return Ok(productService.CreateImageProduct(model));
         }
-        [Authorize(Roles = UserRole.Admin)]
+        //  [Authorize(Roles = UserRole.Admin)]
+        [HttpPost("CreateProduct")]
+        public async Task<IActionResult> CreateProduct( CreateProductRequest model)
+        {
+             return  Ok( productService.Create(model));
+        }
+      //  [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateProduct/{id}")]
         public async Task<IActionResult> UpdateProduct(int id, [FromForm] CreateProductRequest model)
         {
             return Ok(productService.Update(id, model));
         }
-        [Authorize(Roles = UserRole.Admin)]
+        //[Authorize(Roles = UserRole.Admin)]
         [HttpPut("DeleteProduct/{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {

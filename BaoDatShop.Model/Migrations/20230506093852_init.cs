@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BaoDatShop.Model.Migrations
 {
-    public partial class _123444 : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,12 +15,12 @@ namespace BaoDatShop.Model.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Username = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Avatar = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<bool>(type: "bit", nullable: false),
                     Permission = table.Column<int>(type: "int", nullable: false),
                     Level = table.Column<int>(type: "int", nullable: false)
@@ -28,6 +28,20 @@ namespace BaoDatShop.Model.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Account", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AdvertisingPanel",
+                columns: table => new
+                {
+                    AdvertisingPanelID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AdvertisingPanel", x => x.AdvertisingPanelID);
                 });
 
             migrationBuilder.CreateTable(
@@ -51,10 +65,10 @@ namespace BaoDatShop.Model.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Avatar = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<bool>(type: "bit", nullable: false),
                     Permission = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -82,9 +96,10 @@ namespace BaoDatShop.Model.Migrations
                 {
                     NewsId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NewsName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NewsName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -98,7 +113,7 @@ namespace BaoDatShop.Model.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -112,11 +127,11 @@ namespace BaoDatShop.Model.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AccountId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AccountId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     IssuedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ShippingAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ShippingPhone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ShippingAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ShippingPhone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Total = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
                     Pay = table.Column<bool>(type: "bit", nullable: false),
@@ -129,8 +144,7 @@ namespace BaoDatShop.Model.Migrations
                         name: "FK_Invoice_Account_AccountId",
                         column: x => x.AccountId,
                         principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -246,7 +260,9 @@ namespace BaoDatShop.Model.Migrations
                     NewDetailId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NewId = table.Column<int>(type: "int", nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -263,20 +279,19 @@ namespace BaoDatShop.Model.Migrations
                 name: "Product",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SKU = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    SKU = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<int>(type: "int", nullable: false),
                     Stock = table.Column<int>(type: "int", nullable: false),
                     ProductTypeId = table.Column<int>(type: "int", nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Product", x => x.Id);
+                    table.PrimaryKey("PK_Product", x => new { x.Id, x.SKU });
                     table.ForeignKey(
                         name: "FK_Product_ProductType_ProductTypeId",
                         column: x => x.ProductTypeId,
@@ -291,8 +306,10 @@ namespace BaoDatShop.Model.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AccountId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ProductId = table.Column<int>(type: "int", nullable: false),
+                    ProductId1 = table.Column<int>(type: "int", nullable: false),
+                    ProductSKU = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -302,13 +319,12 @@ namespace BaoDatShop.Model.Migrations
                         name: "FK_Cart_Account_AccountId",
                         column: x => x.AccountId,
                         principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Cart_Product_ProductId",
-                        column: x => x.ProductId,
+                        name: "FK_Cart_Product_ProductId1_ProductSKU",
+                        columns: x => new { x.ProductId1, x.ProductSKU },
                         principalTable: "Product",
-                        principalColumn: "Id",
+                        principalColumns: new[] { "Id", "SKU" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -320,6 +336,8 @@ namespace BaoDatShop.Model.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     InvoiceId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
+                    ProductId1 = table.Column<int>(type: "int", nullable: false),
+                    ProductSKU = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     UnitPrice = table.Column<int>(type: "int", nullable: false)
                 },
@@ -333,10 +351,10 @@ namespace BaoDatShop.Model.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_InvoiceDetail_Product_ProductId",
-                        column: x => x.ProductId,
+                        name: "FK_InvoiceDetail_Product_ProductId1_ProductSKU",
+                        columns: x => new { x.ProductId1, x.ProductSKU },
                         principalTable: "Product",
-                        principalColumn: "Id",
+                        principalColumns: new[] { "Id", "SKU" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -347,8 +365,10 @@ namespace BaoDatShop.Model.Migrations
                     ReviewId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    AccountId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductId1 = table.Column<int>(type: "int", nullable: false),
+                    ProductSKU = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AccountId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Star = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false)
@@ -360,13 +380,12 @@ namespace BaoDatShop.Model.Migrations
                         name: "FK_Review_Account_AccountId",
                         column: x => x.AccountId,
                         principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Review_Product_ProductId",
-                        column: x => x.ProductId,
+                        name: "FK_Review_Product_ProductId1_ProductSKU",
+                        columns: x => new { x.ProductId1, x.ProductSKU },
                         principalTable: "Product",
-                        principalColumn: "Id",
+                        principalColumns: new[] { "Id", "SKU" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -415,9 +434,9 @@ namespace BaoDatShop.Model.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cart_ProductId",
+                name: "IX_Cart_ProductId1_ProductSKU",
                 table: "Cart",
-                column: "ProductId");
+                columns: new[] { "ProductId1", "ProductSKU" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invoice_AccountId",
@@ -430,9 +449,9 @@ namespace BaoDatShop.Model.Migrations
                 column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InvoiceDetail_ProductId",
+                name: "IX_InvoiceDetail_ProductId1_ProductSKU",
                 table: "InvoiceDetail",
-                column: "ProductId");
+                columns: new[] { "ProductId1", "ProductSKU" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_NewDetail_NewId",
@@ -450,13 +469,16 @@ namespace BaoDatShop.Model.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Review_ProductId",
+                name: "IX_Review_ProductId1_ProductSKU",
                 table: "Review",
-                column: "ProductId");
+                columns: new[] { "ProductId1", "ProductSKU" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AdvertisingPanel");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 

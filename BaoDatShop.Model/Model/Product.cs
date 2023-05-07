@@ -37,11 +37,9 @@ namespace Eshop.Models
         [DisplayName("Loại sản phẩm")]
         public ProductTypes ProductType { get; set; }
 
-        [DisplayName("Ảnh minh họa")]
+      
         public string Image { get; set; }
 
-        [DisplayName("Còn hiệu lực")]
-        [DefaultValue(true)]
         public bool Status { get; set; } = true;
 
         // Collection reference property cho khóa ngoại từ Cart

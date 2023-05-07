@@ -31,11 +31,9 @@ namespace BaoDatShop.Model.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Avatar")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -50,7 +48,6 @@ namespace BaoDatShop.Model.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -77,7 +74,6 @@ namespace BaoDatShop.Model.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
@@ -121,7 +117,6 @@ namespace BaoDatShop.Model.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AdvertisingPanelID"), 1L, 1);
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")
@@ -141,11 +136,9 @@ namespace BaoDatShop.Model.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NewDetailId"), 1L, 1);
 
                     b.Property<string>("Content")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NewId")
@@ -170,18 +163,15 @@ namespace BaoDatShop.Model.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NewsId"), 1L, 1);
 
                     b.Property<string>("Content")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NewsName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")
@@ -201,11 +191,9 @@ namespace BaoDatShop.Model.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReviewId"), 1L, 1);
 
                     b.Property<string>("AccountId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Content")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateTime")
@@ -213,6 +201,13 @@ namespace BaoDatShop.Model.Migrations
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
+
+                    b.Property<int>("ProductId1")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductSKU")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Star")
                         .HasColumnType("int");
@@ -224,7 +219,7 @@ namespace BaoDatShop.Model.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductId1", "ProductSKU");
 
                     b.ToTable("Review");
                 });
@@ -235,26 +230,21 @@ namespace BaoDatShop.Model.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Avatar")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Level")
                         .HasColumnType("int");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
@@ -262,7 +252,6 @@ namespace BaoDatShop.Model.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")
@@ -287,11 +276,17 @@ namespace BaoDatShop.Model.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("AccountId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
+
+                    b.Property<int>("ProductId1")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductSKU")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -300,7 +295,7 @@ namespace BaoDatShop.Model.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductId1", "ProductSKU");
 
                     b.ToTable("Cart");
                 });
@@ -314,11 +309,9 @@ namespace BaoDatShop.Model.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("AccountId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("IssuedDate")
@@ -331,11 +324,9 @@ namespace BaoDatShop.Model.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ShippingAddress")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShippingPhone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")
@@ -365,6 +356,13 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ProductId1")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductSKU")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -375,7 +373,7 @@ namespace BaoDatShop.Model.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductId1", "ProductSKU");
 
                     b.ToTable("InvoiceDetail");
                 });
@@ -383,17 +381,15 @@ namespace BaoDatShop.Model.Migrations
             modelBuilder.Entity("Eshop.Models.Product", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<string>("SKU")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -406,17 +402,13 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<int>("ProductTypeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("SKU")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
                     b.Property<int>("Stock")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id", "SKU");
 
                     b.HasIndex("ProductTypeId");
 
@@ -432,7 +424,6 @@ namespace BaoDatShop.Model.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")
@@ -591,13 +582,11 @@ namespace BaoDatShop.Model.Migrations
                 {
                     b.HasOne("Eshop.Models.Account", "Account")
                         .WithMany("Review")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AccountId");
 
                     b.HasOne("Eshop.Models.Product", "Product")
                         .WithMany("Review")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductId1", "ProductSKU")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -610,13 +599,11 @@ namespace BaoDatShop.Model.Migrations
                 {
                     b.HasOne("Eshop.Models.Account", "Account")
                         .WithMany("Carts")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AccountId");
 
                     b.HasOne("Eshop.Models.Product", "Product")
                         .WithMany("Carts")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductId1", "ProductSKU")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -629,9 +616,7 @@ namespace BaoDatShop.Model.Migrations
                 {
                     b.HasOne("Eshop.Models.Account", "Account")
                         .WithMany("Invoices")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AccountId");
 
                     b.Navigation("Account");
                 });
@@ -646,7 +631,7 @@ namespace BaoDatShop.Model.Migrations
 
                     b.HasOne("Eshop.Models.Product", "Product")
                         .WithMany("InvoiceDetails")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductId1", "ProductSKU")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
