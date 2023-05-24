@@ -3,6 +3,7 @@ using BaoDatShop.Responsitories;
 using Eshop.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BaoDatShop.Service
 {
@@ -30,15 +31,17 @@ namespace BaoDatShop.Service
 
         public bool Create(CreateProductRequest model)
         {
-            var fileName = model.Image.FileName;
-            var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Product");
-            var uploadPath = Path.Combine(uploadFolder, fileName);
+            //var fileName = model.Image.FileName;
+            ////var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Product");
 
-            using (FileStream fs = System.IO.File.Create(uploadPath))
-            {
-                model.Image.CopyTo(fs);
-                fs.Flush();
-            }
+            //var uploadFolder = Path.Combine("C:\\Users\\ADMIN\\OneDrive\\Desktop\\AdminBaoDatShop\\my-app\\src\\Assets\\images");
+            //var uploadPath = Path.Combine(uploadFolder, fileName);
+
+            //using (FileStream fs = System.IO.File.Create(uploadPath))
+            //{
+            //    model.Image.CopyTo(fs);
+            //    fs.Flush();
+            //}
             Product result = new();
             result.SKU = model.SKU;
             result.Name = model.Name;
@@ -46,17 +49,19 @@ namespace BaoDatShop.Service
             result.Price = model.Price;
             result.Stock = model.Stock;
             result.ProductTypeId = model.ProductTypeId;
-            result.Image = fileName;
+            result.Image = model.Image;
             result.Status = true;
             return productResponsitories.Create(result);
         }
 
         public bool CreateImageProduct(IFormFile Image)
         {
-            if (Image == null)
+            if (Image != null)
             {
                 var fileName = Image.FileName;
-                var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Product");
+                //var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Product");
+           
+                      var uploadFolder = Path.Combine("C:\\Users\\ADMIN\\OneDrive\\Desktop\\AdminBaoDatShop\\my-app\\src\\Assets\\images");
                 var uploadPath = Path.Combine(uploadFolder, fileName);
 
                 using (FileStream fs = System.IO.File.Create(uploadPath))
@@ -134,15 +139,27 @@ namespace BaoDatShop.Service
 
         public bool Update(int id, CreateProductRequest model)
         {
-            var fileName = model.Image.FileName;
-            var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Product");
-            var uploadPath = Path.Combine(uploadFolder, fileName);
+            ////var fileName = model.Image.FileName;
+            ////var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Product");
+            ////var uploadPath = Path.Combine(uploadFolder, fileName);
 
-            using (FileStream fs = System.IO.File.Create(uploadPath))
-            {
-                model.Image.CopyTo(fs);
-                fs.Flush();
-            }
+            ////using (FileStream fs = System.IO.File.Create(uploadPath))
+            ////{
+            ////    model.Image.CopyTo(fs);
+            ////    fs.Flush();
+            ////}
+
+            //var fileName = model.Image.FileName;
+            ////var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Product");
+
+            //var uploadFolder = Path.Combine("C:\\Users\\ADMIN\\OneDrive\\Desktop\\AdminBaoDatShop\\my-app\\src\\Assets\\images");
+            //var uploadPath = Path.Combine(uploadFolder, fileName);
+
+            //using (FileStream fs = System.IO.File.Create(uploadPath))
+            //{
+            //    model.Image.CopyTo(fs);
+            //    fs.Flush();
+            //}
             Product result = productResponsitories.GetById(id);
             result.SKU = model.SKU;
             result.Name = model.Name;
@@ -150,7 +167,7 @@ namespace BaoDatShop.Service
             result.Price = model.Price;
             result.Stock = model.Stock;
             result.ProductTypeId = model.ProductTypeId;
-            result.Image = fileName;
+            result.Image = model.Image;
             return productResponsitories.Update(result);
         }
     }

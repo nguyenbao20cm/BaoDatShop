@@ -23,7 +23,7 @@ namespace BaoDatShop.DTO.Product
        
         [Required(ErrorMessage = "{0} không được bỏ trống")]
         public int ProductTypeId { get; set; }
-        public IFormFile Image { get; set; }
+        public string Image { get; set; }
 
      
       
