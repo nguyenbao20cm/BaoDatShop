@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace BaoDatShop.Service
 {
     public interface IInvoiceService
@@ -20,9 +21,10 @@ namespace BaoDatShop.Service
         public bool Delete(int id);
         public Invoice GetById(int id);
         public List<Invoice> GetAll();
-        public bool UpdateInovicePrepare(int id);
-   //     public bool UpdateInoviceDelivering(int id);
-        
+        public List<Invoice> GetAllInoviceFilterByDate(string startDate, string endDate);
+        public bool UpdateInovicePrepare(int id); 
+        //     public bool UpdateInoviceDelivering(int id);
+
     }
     public class InvoiceService : IInvoiceService
     {
@@ -43,7 +45,7 @@ namespace BaoDatShop.Service
             var Cart = cartResponsitories.GetAll(AccountId);
             if (Cart == null) return false;
             Invoice result = new();
-            result.Code = model.Code;
+           
             result.AccountId = AccountId;
             result.IssuedDate = model.IssuedDate;
             result.ShippingAddress = model.ShippingAddress;
@@ -91,6 +93,12 @@ namespace BaoDatShop.Service
             return invoiceResponsitories.GetAll();
         }
 
+        public List<Invoice> GetAllInoviceFilterByDate(string startDate, string endDate)
+        {
+           
+            return invoiceResponsitories.GetAll().Where(a=>a.IssuedDate >= DateTime.Parse(startDate) && a.IssuedDate <= DateTime.Parse(endDate)).ToList();
+        }
+
         public Invoice GetById(int id)
         {
             return invoiceResponsitories.GetById(id);
@@ -99,7 +107,7 @@ namespace BaoDatShop.Service
         public bool Update(int id, CreateInvoiceRequest model)
         {
             Invoice result = invoiceResponsitories.GetById(id);
-            result.Code = model.Code;
+            
             //result.AccountId = AccountId;
             result.IssuedDate = model.IssuedDate;
             result.ShippingAddress = model.ShippingAddress;

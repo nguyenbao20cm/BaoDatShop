@@ -66,7 +66,7 @@ namespace BaoDatShop.Responsitories
 
                 return new JwtSecurityTokenHandler().WriteToken(token);
             }
-            return String.Empty;
+            return "Failed";
 
         }
 
@@ -228,7 +228,7 @@ namespace BaoDatShop.Responsitories
             var token = new JwtSecurityToken(
                 issuer: configuration["JWT:ValidIssuer"],
                 audience: configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddHours(3),
+                expires: DateTime.Now.AddDays(7),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );

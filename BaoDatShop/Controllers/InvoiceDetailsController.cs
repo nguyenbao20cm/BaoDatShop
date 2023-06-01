@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BaoDatShop.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class InvoiceDetailsController : ControllerBase
     {
@@ -15,7 +16,7 @@ namespace BaoDatShop.Controllers
         {
             this.invoiceDetailService = invoiceDetailService;
         }
-        [Authorize(Roles = UserRole.Costumer)]
+     
         [HttpGet("GetAllInvoiceDetails/{id}")]
         public async Task<IActionResult> GetAllNewDetail(int id)
         {

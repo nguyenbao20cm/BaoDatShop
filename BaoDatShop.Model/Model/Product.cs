@@ -11,12 +11,7 @@ namespace Eshop.Models
     public class Product
     {
         public int Id { get; set; }
-
-        [Required(ErrorMessage = "{0} không được bỏ trống")]
-        public string SKU { get; set; }
-
-        [DisplayName("Tên sản phẩm")]
-        [Required(ErrorMessage = "{0} không được bỏ trống")]
+  
         public string Name { get; set; }
 
         [DisplayName("Mô tả")]

@@ -15,6 +15,7 @@ namespace BaoDatShop.Responsitories
         public InvoiceDetail GetById(int id);
         public List<InvoiceDetail> GetAll(int id);
     }
+
     public class InvoiceDetailResponsitories : IInvoiceDetailResponsitories
     {
         private readonly AppDbContext context;
@@ -34,6 +35,8 @@ namespace BaoDatShop.Responsitories
             if (context.InvoiceDetail.Where(a=>a.InvoiceId==id).ToList() == null) return null;
             return context.InvoiceDetail.Where(a => a.InvoiceId == id).ToList();
         }
+
+      
 
         public InvoiceDetail GetById(int id)
         {

@@ -14,6 +14,8 @@ namespace BaoDatShop.Responsitories
         public bool Update(ProductTypes model);
         public ProductTypes GetById(int id);
         public List<ProductTypes> GetAll();
+
+        
     }
     public class ProductTypeResponsitories: IProductTypeResponsitories
     {
@@ -31,13 +33,15 @@ namespace BaoDatShop.Responsitories
 
         public List<ProductTypes> GetAll()
         {
-            if (context.ProductType.Where(a=>a.Status==true).ToList() == null) return null;
-            return context.ProductType.Where(a => a.Status == true).ToList();
+            if (context.ProductType.ToList() == null) return null;
+            return context.ProductType.ToList();
         }
+
+        
 
         public ProductTypes GetById(int id)
         {
-            if (context.ProductType.Where(a => a.Id == id).Where(a => a.Status == true).FirstOrDefault() == null) return null;
+            if (context.ProductType.Where(a => a.Id == id).FirstOrDefault() == null) return null;
             return context.ProductType.Where(a => a.Id == id).FirstOrDefault();
         }
 

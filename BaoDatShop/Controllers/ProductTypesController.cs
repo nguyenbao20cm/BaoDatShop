@@ -17,11 +17,22 @@ namespace BaoDatShop.Controllers
         {
             this.productypeService = productypeService;
         }
-        [HttpGet("GetAllProductType")]
+        [HttpGet("GetAllProductTypeStatusTrue")]//status true
+        public async Task<IActionResult> GetProductType()
+        {
+            return Ok(productypeService.GetAllProductTypeStatusTrue());
+        }
+        [HttpGet("GetAllProductType")]// all status
         public async Task<IActionResult> GetAllProductType()
         {
             return Ok(productypeService.GetAll());
         }
+        [HttpGet("GetAllProductTypeStatusFalse")]//  status false
+        public async Task<IActionResult> GetAllProductTypeStatusFalse()
+        {
+            return Ok(productypeService.GetAllProductTypeStatusFalse());
+        }
+
         [HttpGet("GetProductTypeById/{id}")]
         public async Task<IActionResult> GetProductTypeById(int id)
         {
@@ -31,19 +42,30 @@ namespace BaoDatShop.Controllers
         [HttpPost("CreateProductType")]
         public async Task<IActionResult> CreateProductType(CreateProductTypeRequest model)
         {
+            if (model.Name == string.Empty) return Ok("Không được để trống");
+            if (productypeService.Create(model) == true) return Ok("Thành công");
+            else return Ok("Thất bại");
+            
             return Ok(productypeService.Create(model));
         }
        // [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateProductType/{id}")]
         public async Task<IActionResult> UpdateProductType(int id, CreateProductTypeRequest model)
         {
-            return Ok(productypeService.Update(id, model));
+         
+            if (productypeService.Update(id, model) == true)
+                return Ok("Thành công");
+            else
+                return Ok("Thất bại");
         }
        // [Authorize(Roles = UserRole.Admin)]
         [HttpPut("DeleteProductType/{id}")]
         public async Task<IActionResult> DeleteProductType(int id)
         {
-            return Ok(productypeService.Delete(id));
+            if(productypeService.Delete(id)==true)
+            return Ok("Thành công");
+            else
+                return Ok("Thất bại");
         }
     }
 }

@@ -37,6 +37,13 @@ namespace BaoDatShop.Controllers
         {
             return Ok(invoiceService.UpdateInovicePrepare(id));
         }
+        
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetAllInoviceFilterByDate/{startDate},{endDate}")]
+        public async Task<IActionResult> GetAllInoviceFilterByDate(string startDate,string endDate)
+        {
+            return Ok(invoiceService.GetAllInoviceFilterByDate(startDate, endDate));
+        }
         private string GetCorrectUserId()
         {
             var a = (ClaimsIdentity)User.Identity;

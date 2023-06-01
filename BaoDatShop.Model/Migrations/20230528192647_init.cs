@@ -127,7 +127,6 @@ namespace BaoDatShop.Model.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AccountId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     IssuedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ShippingAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -279,9 +278,9 @@ namespace BaoDatShop.Model.Migrations
                 name: "Product",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    SKU = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<int>(type: "int", nullable: false),
                     Stock = table.Column<int>(type: "int", nullable: false),
@@ -291,7 +290,7 @@ namespace BaoDatShop.Model.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Product", x => new { x.Id, x.SKU });
+                    table.PrimaryKey("PK_Product", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Product_ProductType_ProductTypeId",
                         column: x => x.ProductTypeId,
@@ -308,8 +307,6 @@ namespace BaoDatShop.Model.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AccountId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    ProductId1 = table.Column<int>(type: "int", nullable: false),
-                    ProductSKU = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -321,10 +318,10 @@ namespace BaoDatShop.Model.Migrations
                         principalTable: "Account",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Cart_Product_ProductId1_ProductSKU",
-                        columns: x => new { x.ProductId1, x.ProductSKU },
+                        name: "FK_Cart_Product_ProductId",
+                        column: x => x.ProductId,
                         principalTable: "Product",
-                        principalColumns: new[] { "Id", "SKU" },
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -336,8 +333,6 @@ namespace BaoDatShop.Model.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     InvoiceId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    ProductId1 = table.Column<int>(type: "int", nullable: false),
-                    ProductSKU = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     UnitPrice = table.Column<int>(type: "int", nullable: false)
                 },
@@ -351,10 +346,10 @@ namespace BaoDatShop.Model.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_InvoiceDetail_Product_ProductId1_ProductSKU",
-                        columns: x => new { x.ProductId1, x.ProductSKU },
+                        name: "FK_InvoiceDetail_Product_ProductId",
+                        column: x => x.ProductId,
                         principalTable: "Product",
-                        principalColumns: new[] { "Id", "SKU" },
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -365,8 +360,6 @@ namespace BaoDatShop.Model.Migrations
                     ReviewId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    ProductId1 = table.Column<int>(type: "int", nullable: false),
-                    ProductSKU = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AccountId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -382,10 +375,10 @@ namespace BaoDatShop.Model.Migrations
                         principalTable: "Account",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Review_Product_ProductId1_ProductSKU",
-                        columns: x => new { x.ProductId1, x.ProductSKU },
+                        name: "FK_Review_Product_ProductId",
+                        column: x => x.ProductId,
                         principalTable: "Product",
-                        principalColumns: new[] { "Id", "SKU" },
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -434,9 +427,9 @@ namespace BaoDatShop.Model.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cart_ProductId1_ProductSKU",
+                name: "IX_Cart_ProductId",
                 table: "Cart",
-                columns: new[] { "ProductId1", "ProductSKU" });
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invoice_AccountId",
@@ -449,9 +442,9 @@ namespace BaoDatShop.Model.Migrations
                 column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InvoiceDetail_ProductId1_ProductSKU",
+                name: "IX_InvoiceDetail_ProductId",
                 table: "InvoiceDetail",
-                columns: new[] { "ProductId1", "ProductSKU" });
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NewDetail_NewId",
@@ -469,9 +462,9 @@ namespace BaoDatShop.Model.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Review_ProductId1_ProductSKU",
+                name: "IX_Review_ProductId",
                 table: "Review",
-                columns: new[] { "ProductId1", "ProductSKU" });
+                column: "ProductId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

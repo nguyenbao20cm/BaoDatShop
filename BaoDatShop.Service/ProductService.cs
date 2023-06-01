@@ -15,7 +15,10 @@ namespace BaoDatShop.Service
         public bool Update(int id, CreateProductRequest model);
         public bool Delete(int id);
         public GetAllProductResponse GetById(int id);
-        public List<GetAllProductResponse> GetAll();
+        public List<Product> GetAll();
+        public Product GetByName(string name);
+        public List<Product> GetAllProductStatusFalse();
+        public List<Product> GetAllProductStatusTrue();
         
         public List<GetAllProductResponse> GetAllProductInProductType(int id);
     }
@@ -29,6 +32,15 @@ namespace BaoDatShop.Service
             this._environment = _environment;
         }
 
+        public List<Product> GetAllProductStatusFalse()
+        {
+            return productResponsitories.GetAll().Where(a => a.Status == false).ToList();
+        }
+
+        public List<Product> GetAllProductStatusTrue()
+        {
+            return productResponsitories.GetAll().Where(a => a.Status == true).ToList();
+        }
         public bool Create(CreateProductRequest model)
         {
             //var fileName = model.Image.FileName;
@@ -43,7 +55,7 @@ namespace BaoDatShop.Service
             //    fs.Flush();
             //}
             Product result = new();
-            result.SKU = model.SKU;
+      
             result.Name = model.Name;
             result.Description = model.Description;
             result.Price = model.Price;
@@ -61,7 +73,7 @@ namespace BaoDatShop.Service
                 var fileName = Image.FileName;
                 //var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Product");
            
-                      var uploadFolder = Path.Combine("C:\\Users\\ADMIN\\OneDrive\\Desktop\\AdminBaoDatShop\\my-app\\src\\Assets\\images");
+                      var uploadFolder = Path.Combine("C:\\Users\\ADMIN\\OneDrive\\Desktop\\admin\\src\\assets\\images\\products");
                 var uploadPath = Path.Combine(uploadFolder, fileName);
 
                 using (FileStream fs = System.IO.File.Create(uploadPath))
@@ -82,24 +94,9 @@ namespace BaoDatShop.Service
             return productResponsitories.Update(result);
         }
 
-        public List<GetAllProductResponse> GetAll()
+        public List<Product> GetAll()
         {
-            var tamp = productResponsitories.GetAll();
-            List<GetAllProductResponse> reslut = new();
-            foreach (var item in tamp)
-            {
-                GetAllProductResponse a = new();
-                a.Id = item.Id;
-                a.SKU = item.SKU;
-                a.Name = item.Name;
-                a.Description = item.Description;
-                a.Price = item.Price;
-                a.Stock = item.Stock;
-                a.ProductTypeId = item.ProductTypeId;
-                a.Image = item.Image;
-                reslut.Add(a);
-            }
-            return reslut;
+            return productResponsitories.GetAll();
         }
 
         public List<GetAllProductResponse> GetAllProductInProductType(int id)
@@ -110,7 +107,7 @@ namespace BaoDatShop.Service
             {
                 GetAllProductResponse a = new();
                 a.Id = item.Id;
-                a.SKU = item.SKU;
+             
                 a.Name = item.Name;
                 a.Description = item.Description;
                 a.Price = item.Price;
@@ -122,12 +119,14 @@ namespace BaoDatShop.Service
             return reslut;
         }
 
+
+
         public GetAllProductResponse GetById(int id)
         {
             var item = productResponsitories.GetById(id);
             GetAllProductResponse a = new();
             a.Id = item.Id;
-            a.SKU = item.SKU;
+          
             a.Name = item.Name;
             a.Description = item.Description;
             a.Price = item.Price;
@@ -161,7 +160,7 @@ namespace BaoDatShop.Service
             //    fs.Flush();
             //}
             Product result = productResponsitories.GetById(id);
-            result.SKU = model.SKU;
+        
             result.Name = model.Name;
             result.Description = model.Description;
             result.Price = model.Price;
@@ -169,6 +168,11 @@ namespace BaoDatShop.Service
             result.ProductTypeId = model.ProductTypeId;
             result.Image = model.Image;
             return productResponsitories.Update(result);
+        }
+
+        public Product GetByName(string name)
+        {
+            return productResponsitories.GetAll().Where(a => a.Name == name).FirstOrDefault();
         }
     }
 }

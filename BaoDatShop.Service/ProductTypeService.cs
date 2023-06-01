@@ -16,7 +16,9 @@ namespace BaoDatShop.Service
         public bool Update(int id, CreateProductTypeRequest model);
         public bool Delete(int id);
         public GetAllProductTypeResponse GetById(int id);
-        public List<GetAllProductTypeResponse> GetAll();
+        public List<ProductTypes> GetAll();
+        public List<ProductTypes> GetAllProductTypeStatusTrue();
+        public List<ProductTypes> GetAllProductTypeStatusFalse();
     }
     public class ProductTypeService : IProductTypeService
     {
@@ -26,6 +28,15 @@ namespace BaoDatShop.Service
         {
             this.productTypeResponsitories=productTypeResponsitories;
             this.productResponsitories= productResponsitories;
+        }
+        public List<ProductTypes> GetAllProductTypeStatusFalse()
+        {
+            return productTypeResponsitories.GetAll().Where(a => a.Status == false).ToList();
+        }
+
+        public List<ProductTypes> GetAllProductTypeStatusTrue()
+        {
+            return productTypeResponsitories.GetAll().Where(a=>a.Status==true).ToList();
         }
         public bool Create(CreateProductTypeRequest model)
         {
@@ -49,21 +60,12 @@ namespace BaoDatShop.Service
             return productTypeResponsitories.Update(result);
         }
 
-        public List<GetAllProductTypeResponse> GetAll()
+        public List<ProductTypes> GetAll()
         {
-         
-            var tamp = productTypeResponsitories.GetAll();
-            List<GetAllProductTypeResponse> reslut = new();
-            foreach (var item in tamp)
-            {
-                GetAllProductTypeResponse a = new();
-                a.Name = item.Name;
-                a.Id=item.Id;
-                a.Status = item.Status;
-                reslut.Add(a);
-            }
-            return reslut;
+            return productTypeResponsitories.GetAll();
         }
+
+     
 
         public GetAllProductTypeResponse GetById(int id)
         {

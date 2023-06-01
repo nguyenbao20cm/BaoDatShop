@@ -42,7 +42,7 @@ namespace BaoDatShop.Controllers
             if(model== null) return Ok("Failed");
             await _accountService.SignIn(model);
             var result = await _accountService.SignIn(model);
-            if (string.IsNullOrEmpty(result)) return Ok("Failed");
+            if (result== "Failed") return Ok("Failed");
             return Ok(result);
         }
         [HttpPost]

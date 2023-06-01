@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaoDatShop.Model.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230506093852_init")]
-    partial class init
+    [Migration("20230531183709_i12")]
+    partial class i12
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -204,13 +204,6 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId1")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProductSKU")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("Star")
                         .HasColumnType("int");
 
@@ -221,7 +214,7 @@ namespace BaoDatShop.Model.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.HasIndex("ProductId1", "ProductSKU");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Review");
                 });
@@ -283,13 +276,6 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId1")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProductSKU")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -297,7 +283,7 @@ namespace BaoDatShop.Model.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.HasIndex("ProductId1", "ProductSKU");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Cart");
                 });
@@ -312,9 +298,6 @@ namespace BaoDatShop.Model.Migrations
 
                     b.Property<string>("AccountId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("IssuedDate")
                         .HasColumnType("datetime2");
@@ -358,13 +341,6 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId1")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProductSKU")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -375,7 +351,7 @@ namespace BaoDatShop.Model.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.HasIndex("ProductId1", "ProductSKU");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("InvoiceDetail");
                 });
@@ -383,10 +359,10 @@ namespace BaoDatShop.Model.Migrations
             modelBuilder.Entity("Eshop.Models.Product", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("SKU")
-                        .HasColumnType("nvarchar(450)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -395,8 +371,7 @@ namespace BaoDatShop.Model.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Price")
                         .HasColumnType("int");
@@ -410,7 +385,11 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<int>("Stock")
                         .HasColumnType("int");
 
-                    b.HasKey("Id", "SKU");
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.HasIndex("ProductTypeId");
 
@@ -426,12 +405,16 @@ namespace BaoDatShop.Model.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("ProductType");
                 });
@@ -588,7 +571,7 @@ namespace BaoDatShop.Model.Migrations
 
                     b.HasOne("Eshop.Models.Product", "Product")
                         .WithMany("Review")
-                        .HasForeignKey("ProductId1", "ProductSKU")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -605,7 +588,7 @@ namespace BaoDatShop.Model.Migrations
 
                     b.HasOne("Eshop.Models.Product", "Product")
                         .WithMany("Carts")
-                        .HasForeignKey("ProductId1", "ProductSKU")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -633,7 +616,7 @@ namespace BaoDatShop.Model.Migrations
 
                     b.HasOne("Eshop.Models.Product", "Product")
                         .WithMany("InvoiceDetails")
-                        .HasForeignKey("ProductId1", "ProductSKU")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Xml.Linq;
 
 namespace BaoDatShop.Controllers
 {
@@ -23,6 +24,17 @@ namespace BaoDatShop.Controllers
         {
             return Ok(productService.GetAll());
         }
+        [HttpGet("GetAllProductStatusTrue")]
+        public async Task<IActionResult> GetAllProductStatusTrue()
+        {
+            return Ok(productService.GetAllProductStatusTrue());
+        }
+
+        [HttpGet("GetAllProductStatusFalse")]
+        public async Task<IActionResult> GetAllProductStatusFalse()
+        {
+            return Ok(productService.GetAllProductStatusFalse());
+        }
         [HttpGet("GetAllProductInProductType/{id}")]
         public async Task<IActionResult> GetAllProductInProductType(int id)
         {
@@ -32,29 +44,49 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> GetProductById(int id)
         {
             return Ok( productService.GetById(id));
+
         }
         [HttpPost("CreateImageProduct")]
         public async Task<IActionResult> CreateImageProduct(IFormFile model)
         {
+            var a = productService.CreateImageProduct(model);
             return Ok(productService.CreateImageProduct(model));
         }
+        [HttpGet("GetByName/{name}")]
+        public async Task<IActionResult> GetByName(string name)
+        {
+            var a = productService.GetByName(name);
+            return Ok(productService.GetByName(name));
+
+        }
+        
         //  [Authorize(Roles = UserRole.Admin)]
         [HttpPost("CreateProduct")]
         public async Task<IActionResult> CreateProduct( CreateProductRequest model)
         {
-             return  Ok( productService.Create(model));
+            if (productService.Create(model) == true)
+                return Ok("Thành công");
+            else
+                return Ok("Thất bại");
         }
       //  [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateProduct/{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromForm] CreateProductRequest model)
+        public async Task<IActionResult> UpdateProduct(int id,  CreateProductRequest model)
         {
-            return Ok(productService.Update(id, model));
+            if (productService.Update(id, model) == true)
+                return Ok("Thành công");
+            else
+                return Ok("Thất bại");
         }
         //[Authorize(Roles = UserRole.Admin)]
         [HttpPut("DeleteProduct/{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            return Ok(productService.Delete(id));
+            if(productService.Delete(id)==true)
+            return Ok("Thành công");
+            else
+                return Ok("Thất bại");
+
         }
     }
 }

@@ -16,6 +16,9 @@ namespace BaoDatShop.Responsitories
         public bool Update(Product model);
         public Product GetById(int id);
         public List<Product> GetAll();
+
+        
+            
     }
     public class ProductResponsitories: IProductResponsitories
     {
@@ -33,14 +36,16 @@ namespace BaoDatShop.Responsitories
 
         public List<Product> GetAll()
         {
-            if (context.Product.Where(a => a.Status == true).ToList() == null) return null;
-            return context.Product.Where(a => a.Status == true).ToList();
+            if (context.Product.ToList() == null) return null;
+            return context.Product.ToList();
         }
+
+     
 
         public Product GetById(int id)
         {
-            if (context.Product.Where(a => a.Id == id).Where(a => a.Status == true).FirstOrDefault() == null) return null;
-            return context.Product.Where(a => a.Id == id).Where(a => a.Status == true).FirstOrDefault();
+           
+            return context.Product.Where(a => a.Id == id).FirstOrDefault();
         }
 
         public bool Update(Product model)

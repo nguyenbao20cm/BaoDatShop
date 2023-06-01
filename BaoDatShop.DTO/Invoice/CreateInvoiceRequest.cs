@@ -13,8 +13,8 @@ namespace BaoDatShop.DTO.Invoice
     {
        
 
-        [DisplayName("Mã HĐ")]
-        public string Code { get; set; }
+    
+       
 
        // public string AccountId { get; set; }
 
