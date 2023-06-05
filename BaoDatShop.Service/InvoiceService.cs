@@ -22,7 +22,7 @@ namespace BaoDatShop.Service
         public Invoice GetById(int id);
         public List<Invoice> GetAll();
         public List<Invoice> GetAllInoviceFilterByDate(string startDate, string endDate);
-        public bool UpdateInovicePrepare(int id); 
+        public bool UpdateInovice(int id, UpdateInvoice model); 
         //     public bool UpdateInoviceDelivering(int id);
 
     }
@@ -118,10 +118,13 @@ namespace BaoDatShop.Service
             return invoiceResponsitories.Update(result);
         }
 
-        public bool UpdateInovicePrepare(int id)
+        public bool UpdateInovice(int id, UpdateInvoice model)
         {
             Invoice result = invoiceResponsitories.GetById(id);
-            result.OrderStatus = 2;
+            result.OrderStatus = model.orderStatus;
+            result.ShippingAddress = model.shippingadress;
+            result.ShippingPhone = model.shippingphone;
+            result.Pay=model.pay;
             return invoiceResponsitories.Update(result);
         }
     }
