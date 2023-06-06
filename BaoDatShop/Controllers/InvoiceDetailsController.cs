@@ -16,7 +16,7 @@ namespace BaoDatShop.Controllers
         {
             this.invoiceDetailService = invoiceDetailService;
         }
-     
+        [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllInvoiceDetails/{id}")]
         public async Task<IActionResult> GetAllNewDetail(int id)
         {
