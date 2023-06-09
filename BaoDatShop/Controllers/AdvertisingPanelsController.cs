@@ -18,10 +18,20 @@ namespace BaoDatShop.Controllers
             this.advertisingPanelService = advertisingPanelService;
         }
 
+        [HttpGet("GetAllAdvertisingPanelStatusTrue")]
+        public async Task<IActionResult> GetAllAdvertisingPane1l()
+        {
+            return Ok(advertisingPanelService.GetAll());
+        }
         [HttpGet("GetAllAdvertisingPanel")]
         public async Task<IActionResult> GetAllAdvertisingPanel()
         {
-            return Ok(advertisingPanelService.GetAll());
+            return Ok(advertisingPanelService.GetAllAdvertisingPanel());
+        }
+        [HttpGet("GetAllAdvertisingPanelStatusFalse")]
+        public async Task<IActionResult> GetAllAdvertisingPanelStatusFalse()
+        {
+            return Ok(advertisingPanelService.GetAllAdvertisingPanelStatusFalse());
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPost("CreateAdvertisingPanel")]

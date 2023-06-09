@@ -19,6 +19,9 @@ namespace BaoDatShop.Service
         public List<Review> GetByIdProduct(int IdProduct);
         public Review GetById(int id);
         public List<Review> GetAll();
+        public List<Review> GetAllStatusTrue();
+        public List<Review> GetAllStatusFalse();
+        
     }
     public class ReviewService : IReviewService
     {
@@ -50,6 +53,16 @@ namespace BaoDatShop.Service
         public List<Review> GetAll()
         {
            return reviewResponsitories.GetAll();
+        }
+
+        public List<Review> GetAllStatusFalse()
+        {
+            return reviewResponsitories.GetAll().Where(a=>a.Status==false).ToList();
+        }
+
+        public List<Review> GetAllStatusTrue()
+        {
+            return reviewResponsitories.GetAll().Where(a => a.Status == true).ToList();
         }
 
         public Review GetById(int id)

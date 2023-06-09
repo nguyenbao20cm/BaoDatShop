@@ -127,6 +127,22 @@ namespace BaoDatShop.Model.Migrations
                     b.ToTable("AdvertisingPanel");
                 });
 
+            modelBuilder.Entity("BaoDatShop.Model.Model.Disscount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("NameDisscount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Disscount");
+                });
+
             modelBuilder.Entity("BaoDatShop.Model.Model.NewDetail", b =>
                 {
                     b.Property<int>("NewDetailId")
@@ -365,6 +381,9 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("DiscountId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
@@ -377,6 +396,9 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<int>("ProductTypeId")
                         .HasColumnType("int");
 
+                    b.Property<string>("SKU")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
@@ -385,13 +407,15 @@ namespace BaoDatShop.Model.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasFilter("[Name] IS NOT NULL");
+                    b.HasIndex("DiscountId");
 
                     b.HasIndex("ProductTypeId");
 
-                    b.ToTable("Product");
+                    b.HasIndex("Name", "SKU")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL AND [SKU] IS NOT NULL");
+
+                    b.ToTable("Product", (string)null);
                 });
 
             modelBuilder.Entity("Eshop.Models.ProductTypes", b =>
@@ -625,11 +649,19 @@ namespace BaoDatShop.Model.Migrations
 
             modelBuilder.Entity("Eshop.Models.Product", b =>
                 {
+                    b.HasOne("BaoDatShop.Model.Model.Disscount", "Disscount")
+                        .WithMany("Product")
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Eshop.Models.ProductTypes", "ProductType")
                         .WithMany()
                         .HasForeignKey("ProductTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Disscount");
 
                     b.Navigation("ProductType");
                 });
@@ -683,6 +715,11 @@ namespace BaoDatShop.Model.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BaoDatShop.Model.Model.Disscount", b =>
+                {
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("BaoDatShop.Model.Model.News", b =>

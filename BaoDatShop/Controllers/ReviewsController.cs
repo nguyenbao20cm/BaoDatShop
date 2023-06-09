@@ -47,6 +47,24 @@ namespace BaoDatShop.Controllers
         {
             return Ok(reviewService.GetByIdProduct(id));
         }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetAllReview")]
+        public async Task<IActionResult> GetAll()
+        {
+            return Ok(reviewService.GetAll());
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetAllReviewStatusTrue")]
+        public async Task<IActionResult> GetAllStatusTrue()
+        {
+            return Ok(reviewService.GetAllStatusTrue());
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetAllReviewStatusFalse")]
+        public async Task<IActionResult> GetAllStatusFalse()
+        {
+            return Ok(reviewService.GetAllStatusFalse());
+        }
         private string GetCorrectUserId()
         {
             var a = (ClaimsIdentity)User.Identity;

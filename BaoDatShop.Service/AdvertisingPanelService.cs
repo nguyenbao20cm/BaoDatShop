@@ -19,6 +19,9 @@ namespace BaoDatShop.Service
         public bool Delete(int id);
         public bool Update(int id, CreateAdvertisingPanelRequest model);
         public List<AdvertisingPanel> GetAll();
+        public List<AdvertisingPanel> GetAllAdvertisingPanel();
+        public List<AdvertisingPanel> GetAllAdvertisingPanelStatusFalse();
+        
     }
     public class AdvertisingPanelService : IAdvertisingPanelService
     {
@@ -56,7 +59,17 @@ namespace BaoDatShop.Service
 
         public List<AdvertisingPanel> GetAll()
         {
-            return advertisingPanelResponsitories.GetAll();
+            return advertisingPanelResponsitories.GetAll().Where(a=>a.Status==true).ToList();
+        }
+
+        public List<AdvertisingPanel> GetAllAdvertisingPanelStatusFalse()
+        {
+            return advertisingPanelResponsitories.GetAll().Where(a => a.Status == false).ToList();
+        }
+
+        public List<AdvertisingPanel> GetAllAdvertisingPanel()
+        {
+            return advertisingPanelResponsitories.GetAll().ToList();
         }
 
         public bool Update(int id, CreateAdvertisingPanelRequest model)

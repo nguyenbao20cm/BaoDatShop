@@ -32,8 +32,8 @@ namespace BaoDatShop.Responsitories
 
         public List<Review> GetAll()
         {
-            if (context.Review.Where(a => a.Status == true).ToList() == null) return null;
-            return context.Review.Where(a => a.Status == true).ToList();
+            if (context.Review.ToList() == null) return null;
+            return context.Review.ToList();
         }
 
         public Review GetById(int id)

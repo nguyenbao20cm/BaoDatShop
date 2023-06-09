@@ -26,7 +26,8 @@ namespace BaoDatShop.Model.Context
         public DbSet<NewDetail> NewDetail { get; set; }
         public DbSet<News> News { get; set; }
         public DbSet<AdvertisingPanel> AdvertisingPanel { get; set; }
-        
+        public DbSet<Disscount> Disscount { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -35,8 +36,18 @@ namespace BaoDatShop.Model.Context
                 builder.ToTable(nameof(News));
                 builder.HasKey(x => x.NewsId);
             });
+
             modelBuilder.Entity<Product>()
-             .HasIndex(p => new { p.Name }).IsUnique();
+             .HasIndex(p => new { p.Name,p.SKU }).IsUnique();
+            modelBuilder.Entity<Product>(builder =>
+            {
+                builder.ToTable(nameof(Product));
+                builder.HasKey(x => x.Id);
+                builder
+             .HasOne(x => x.Disscount)
+             .WithMany(x => x.Product)
+             .HasForeignKey(x => x.DiscountId);
+            });
             modelBuilder.Entity<ProductTypes>()
            .HasIndex(p => new { p.Name }).IsUnique();
             modelBuilder.Entity<NewDetail>(builder =>

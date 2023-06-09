@@ -11,7 +11,7 @@ namespace Eshop.Models
     public class Product
     {
         public int Id { get; set; }
-  
+        public string SKU { get; set; }
         public string Name { get; set; }
 
         [DisplayName("Mô tả")]
@@ -21,7 +21,9 @@ namespace Eshop.Models
         [DisplayFormat(DataFormatString = "{0:n0}")]
         [DefaultValue(0)]
         public int Price { get; set; } = 0;
-
+        public int DiscountId { get; set; }
+        public Disscount Disscount { get; set; }
+    
         [DisplayName("Tồn kho")]
         [DefaultValue(0)]
         public int Stock { get; set; } = 0;

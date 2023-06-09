@@ -96,6 +96,7 @@ namespace BaoDatShop.Service
 
         public List<Product> GetAll()
         {
+           
             return productResponsitories.GetAll();
         }
 

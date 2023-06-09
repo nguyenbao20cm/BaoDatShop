@@ -33,8 +33,8 @@ namespace BaoDatShop.Responsitories
 
         public List<AdvertisingPanel> GetAll()
         {
-            if (context.AdvertisingPanel.Where(a => a.Status == true).ToList() == null) return null;
-            return context.AdvertisingPanel.Where(a => a.Status == true).ToList();
+            if (context.AdvertisingPanel.ToList() == null) return null;
+            return context.AdvertisingPanel.ToList();
         }
 
         public bool Update(AdvertisingPanel model)
