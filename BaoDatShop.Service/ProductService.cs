@@ -14,13 +14,13 @@ namespace BaoDatShop.Service
         public bool Create(CreateProductRequest model);
         public bool Update(int id, CreateProductRequest model);
         public bool Delete(int id);
-        public GetAllProductResponse GetById(int id);
+        public Product GetById(int id);
         public List<Product> GetAll();
         public Product GetByName(string name);
         public List<Product> GetAllProductStatusFalse();
         public List<Product> GetAllProductStatusTrue();
         
-        public List<GetAllProductResponse> GetAllProductInProductType(int id);
+        public List<Product> GetAllProductInProductType(int id);
     }
     public class ProductService : IProductService
     {
@@ -55,14 +55,15 @@ namespace BaoDatShop.Service
             //    fs.Flush();
             //}
             Product result = new();
-      
+         
             result.Name = model.Name;
+            result.SKU = model.SKU;
             result.Description = model.Description;
             result.Price = model.Price;
             result.Stock = model.Stock;
             result.ProductTypeId = model.ProductTypeId;
             result.Image = model.Image;
-            result.Status = true;
+            result.Status = model.Status;
             return productResponsitories.Create(result);
         }
 
@@ -100,41 +101,20 @@ namespace BaoDatShop.Service
             return productResponsitories.GetAll();
         }
 
-        public List<GetAllProductResponse> GetAllProductInProductType(int id)
+        public List<Product> GetAllProductInProductType(int id)
         {
-            var tamp = productResponsitories.GetAll().Where(a=>a.ProductTypeId==id);
-            List<GetAllProductResponse> reslut = new();
-            foreach (var item in tamp)
-            {
-                GetAllProductResponse a = new();
-                a.Id = item.Id;
-             
-                a.Name = item.Name;
-                a.Description = item.Description;
-                a.Price = item.Price;
-                a.Stock = item.Stock;
-                a.ProductTypeId = item.ProductTypeId;
-                a.Image = item.Image;
-                reslut.Add(a);
-            }
-            return reslut;
+            var tamp = productResponsitories.GetAll().Where(a=>a.ProductTypeId==id).ToList();
+          
+            return tamp;
         }
 
 
 
-        public GetAllProductResponse GetById(int id)
+        public Product GetById(int id)
         {
             var item = productResponsitories.GetById(id);
-            GetAllProductResponse a = new();
-            a.Id = item.Id;
-          
-            a.Name = item.Name;
-            a.Description = item.Description;
-            a.Price = item.Price;
-            a.Stock = item.Stock;
-            a.ProductTypeId = item.ProductTypeId;
-            a.Image = item.Image;
-            return a;
+           
+            return item;
         }
 
         public bool Update(int id, CreateProductRequest model)
@@ -163,11 +143,14 @@ namespace BaoDatShop.Service
             Product result = productResponsitories.GetById(id);
         
             result.Name = model.Name;
+    
+            result.SKU = model.SKU;
             result.Description = model.Description;
             result.Price = model.Price;
             result.Stock = model.Stock;
             result.ProductTypeId = model.ProductTypeId;
             result.Image = model.Image;
+            result.Status = model.Status;
             return productResponsitories.Update(result);
         }
 

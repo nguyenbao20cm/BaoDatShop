@@ -21,8 +21,8 @@ namespace Eshop.Models
         [DisplayFormat(DataFormatString = "{0:n0}")]
         [DefaultValue(0)]
         public int Price { get; set; } = 0;
-        public int DiscountId { get; set; }
-        public Disscount Disscount { get; set; }
+        //public int DisscountId { get; set; }
+        //public Disscount Disscount { get; set; }
     
         [DisplayName("Tồn kho")]
         [DefaultValue(0)]
@@ -44,6 +44,7 @@ namespace Eshop.Models
 
         // Collection reference property cho khóa ngoại từ InvoiceDetail
         public List<InvoiceDetail> InvoiceDetails { get; set; }
+      
         public ICollection<Review> Review { get; set; }
     }
 }

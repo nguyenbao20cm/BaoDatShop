@@ -9,6 +9,7 @@ namespace BaoDatShop.DTO.ProductType
     public class CreateProductTypeRequest
     {
         public string Name { get; set; }
+        public bool Status { get; set; }
     }
 }
   

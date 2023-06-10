@@ -42,7 +42,7 @@ namespace BaoDatShop.Service
         {
             ProductTypes result = new();
             result.Name = model.Name;
-            result.Status = true;
+            result.Status = model.Status;
             return productTypeResponsitories.Create(result);
         }
 
@@ -81,7 +81,7 @@ namespace BaoDatShop.Service
         {
             ProductTypes result = productTypeResponsitories.GetById(id);
             result.Name = model.Name;
-            result.Status = true;
+            result.Status = model.Status;
             return productTypeResponsitories.Update(result);
         }
     }

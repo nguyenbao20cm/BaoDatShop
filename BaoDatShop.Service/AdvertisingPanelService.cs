@@ -1,15 +1,18 @@
 ﻿using BaoDatShop.DTO.AdvertisingPanel;
 using BaoDatShop.DTO.Cart;
+using BaoDatShop.Model.Migrations;
 using BaoDatShop.Model.Model;
 using BaoDatShop.Responsitories;
 using Eshop.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BaoDatShop.Service
 {
@@ -21,7 +24,8 @@ namespace BaoDatShop.Service
         public List<AdvertisingPanel> GetAll();
         public List<AdvertisingPanel> GetAllAdvertisingPanel();
         public List<AdvertisingPanel> GetAllAdvertisingPanelStatusFalse();
-        
+        public AdvertisingPanel GetByid(string id);
+         public bool CreateImageAdvertisingPanel(IFormFile model);
     }
     public class AdvertisingPanelService : IAdvertisingPanelService
     {
@@ -35,18 +39,18 @@ namespace BaoDatShop.Service
 
         public bool Create(CreateAdvertisingPanelRequest model)
         {
-            var fileName = model.Image.FileName;
-            var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "AdvertisingPanel");
-            var uploadPath = Path.Combine(uploadFolder, fileName);
+            //var fileName = model.Image.FileName;
+            //var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "AdvertisingPanel");
+            //var uploadPath = Path.Combine(uploadFolder, fileName);
 
-            using (FileStream fs = System.IO.File.Create(uploadPath))
-            {
-                model.Image.CopyTo(fs);
-                fs.Flush();
-            }
+            //using (FileStream fs = System.IO.File.Create(uploadPath))
+            //{
+            //    model.Image.CopyTo(fs);
+            //    fs.Flush();
+            //}
             AdvertisingPanel result = new();
-            result.Image = fileName;
-            result.Status = true;
+            result.Image = model.Image;
+            result.Status = model.Status;
            return advertisingPanelResponsitories.Create(result);
         }
 
@@ -74,18 +78,39 @@ namespace BaoDatShop.Service
 
         public bool Update(int id, CreateAdvertisingPanelRequest model)
         {
-            var fileName = model.Image.FileName;
-            var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "AdvertisingPanel");
+        //    var fileName = model.Image.FileName;
+        //    var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "AdvertisingPanel");
+        //    var uploadPath = Path.Combine(uploadFolder, fileName);
+
+        //    using (FileStream fs = System.IO.File.Create(uploadPath))
+        //    {
+        //        model.Image.CopyTo(fs);
+        //        fs.Flush();
+        //    }
+            AdvertisingPanel result = advertisingPanelResponsitories.GetById(id);
+            result.Image = model.Image;
+            result.Status = model.Status;
+            return advertisingPanelResponsitories.Update(result);
+        }
+
+        public AdvertisingPanel GetByid(string id)
+        {
+            return advertisingPanelResponsitories.GetAll().Where(a=>a.Image==id).FirstOrDefault();
+        }
+
+        public bool CreateImageAdvertisingPanel(IFormFile model)
+        {
+            if (model == null) return false;
+            var fileName = model.FileName;
+            var uploadFolder = "C:\\Users\\ADMIN\\OneDrive\\Desktop\\admin\\src\\assets\\images\\AdvertisingPanel";
             var uploadPath = Path.Combine(uploadFolder, fileName);
 
             using (FileStream fs = System.IO.File.Create(uploadPath))
             {
-                model.Image.CopyTo(fs);
+                model.CopyTo(fs);
                 fs.Flush();
             }
-            AdvertisingPanel result = advertisingPanelResponsitories.GetById(id);
-            result.Image = fileName;
-            return advertisingPanelResponsitories.Update(result);
+            return true;
         }
     }
 }

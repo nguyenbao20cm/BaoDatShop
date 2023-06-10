@@ -46,7 +46,7 @@ namespace BaoDatShop.Responsitories
 
         public AdvertisingPanel GetById( int id )
         {
-            if (context.AdvertisingPanel.Where(a => a.AdvertisingPanelID == id).Where(a => a.Status == true).FirstOrDefault() == null) return null;
+            if (context.AdvertisingPanel.Where(a => a.AdvertisingPanelID == id).FirstOrDefault() == null) return null;
             return context.AdvertisingPanel.Where(a => a.AdvertisingPanelID == id).FirstOrDefault();
         }
 

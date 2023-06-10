@@ -34,16 +34,38 @@ namespace BaoDatShop.Controllers
             return Ok(advertisingPanelService.GetAllAdvertisingPanelStatusFalse());
         }
         [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetAdvertisingPanelById/{id}")]
+        public async Task<IActionResult> GetAdvertisingPanelById(string id)
+        {
+            var a = advertisingPanelService.GetByid(id);
+            return Ok(advertisingPanelService.GetByid(id));
+        }
+        [Authorize(Roles = UserRole.Admin)]
         [HttpPost("CreateAdvertisingPanel")]
         public async Task<IActionResult> CreateAdvertisingPanel(CreateAdvertisingPanelRequest model)
+            {
+         
+            if (advertisingPanelService.Create(model) == true)
+                return Ok("Thành công");
+            else
+                return Ok("Thất bại");
+        }
+       
+        [HttpPost("CreateImageAdvertisingPanel")]
+        public async Task<IActionResult> CreateImageAdvertisingPanel(IFormFile model)
         {
-            return Ok(advertisingPanelService.Create(model));
+            var a = advertisingPanelService.CreateImageAdvertisingPanel(model);
+            return Ok(advertisingPanelService.CreateImageAdvertisingPanel(model));
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateAdvertisingPanel/{id}")]
         public async Task<IActionResult> UpdateAdvertisingPanel(int id, CreateAdvertisingPanelRequest model)
         {
-            return Ok(advertisingPanelService.Update(id, model));
+          
+            if (advertisingPanelService.Update(id, model) == true)
+                return Ok("Thành công");
+            else
+                return Ok("Thất bại");
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPut("DeleteAdvertisingPanel/{id}")]

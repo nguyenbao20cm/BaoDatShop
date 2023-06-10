@@ -40,7 +40,11 @@ namespace BaoDatShop.Controllers
         [HttpPut("DeleteReviewByAdmin/{id}")]
         public async Task<IActionResult> DeleteReviewByAdmin(int id)
         {
-            return Ok(reviewService.Delete(id));
+          
+            if (reviewService.Delete(id) == true)
+                return Ok("Thành công");
+            else
+                return Ok("Thất bại");
         }
         [HttpGet("GetAllReviewProduct/{id}")]
         public async Task<IActionResult> GetAllReview(int id)

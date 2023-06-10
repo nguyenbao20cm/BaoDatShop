@@ -9,6 +9,7 @@ namespace BaoDatShop.DTO.AdvertisingPanel
 {
     public class CreateAdvertisingPanelRequest
     {
-        public IFormFile Image { get; set; }
+        public string Image { get; set; }
+        public bool Status { get; set; }
     }
 }
