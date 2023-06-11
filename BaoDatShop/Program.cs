@@ -89,6 +89,9 @@ builder.Services.AddTransient<IReviewService, ReviewService>();
 
 builder.Services.AddTransient<IAdvertisingPanelResponsitories, AdvertisingPanelResponsitories>();
 builder.Services.AddTransient<IAdvertisingPanelService, AdvertisingPanelService>();
+
+builder.Services.AddTransient<IDisscountRespositories, DisscountRespositories>();
+builder.Services.AddTransient<IDisscountService, DisscountService>();
 // For Enity
 builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("LMS")));

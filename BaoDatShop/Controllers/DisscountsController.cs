@@ -18,17 +18,19 @@ namespace BaoDatShop.Controllers
         {
             this.IDisscountService = IDisscountService;
         }
-
+        [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllDisscountStatusTrue")]
         public async Task<IActionResult> GetAllDisscountStatusTrue()
         {
             return Ok(IDisscountService.GetAllDisscountPanel());
         }
+        [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllDisscount")]
         public async Task<IActionResult> GetAllDisscount()
         {
             return Ok(IDisscountService.GetAll());
         }
+        [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllDisscountStatusFalse")]
         public async Task<IActionResult> GetAllDisscountStatusFalse()
         {
@@ -38,7 +40,10 @@ namespace BaoDatShop.Controllers
         [HttpPost("CreateDisscount")]
         public async Task<IActionResult> CreateDisscount(CreateDisscount model)
         {
-            return Ok(IDisscountService.Create(model));
+            if (IDisscountService.Create(model) == true)
+                return Ok("Thành công");
+            else
+                return Ok("Thất bại");
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateDisscount/{id}")]
