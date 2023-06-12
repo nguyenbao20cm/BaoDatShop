@@ -46,6 +46,7 @@ namespace BaoDatShop.Service
             result.Name = model.Name;
             result.ProductId = model.ProductId;
             result.Status = true;
+            result.Stock = model.Stock;
             return IProductSizeResponsitories.Create(result);
         }
 
@@ -75,6 +76,7 @@ namespace BaoDatShop.Service
             ProductSize result = IProductSizeResponsitories.GetById(id);
             result.Name = model.Name;
             result.Status = true;
+            result.Stock = model.Stock;
             result.ProductId = model.ProductId;
             return IProductSizeResponsitories.Update(result);
         }

@@ -12,7 +12,7 @@ namespace BaoDatShop.Model.Model
         public int Id { get; set; }
         public string Name { get; set; }
         public int ProductId { get; set; }
-
+        public int Stock { get; set; } = 0;
         // Navigation reference property cho khóa ngoại đến Product
         public Product Product { get; set; }
         public bool Status { get; set; }

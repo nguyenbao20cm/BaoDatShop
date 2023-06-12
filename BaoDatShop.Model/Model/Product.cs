@@ -26,7 +26,7 @@ namespace Eshop.Models
     
         [DisplayName("Tồn kho")]
         [DefaultValue(0)]
-        public int Stock { get; set; } = 0;
+        //public int Stock { get; set; } = 0;
 
         public int ProductTypeId { get; set; }
 
@@ -36,7 +36,7 @@ namespace Eshop.Models
 
       
         public string Image { get; set; }
-
+        public int ImportPrice { get; set; }
         public bool Status { get; set; } = true;
 
         // Collection reference property cho khóa ngoại từ Cart

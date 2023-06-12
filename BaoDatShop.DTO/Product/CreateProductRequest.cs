@@ -20,7 +20,7 @@ namespace BaoDatShop.DTO.Product
         public int Price { get; set; } = 0;
        
 
-        public int Stock { get; set; } = 0;
+        public int ImportPrice { get; set; } = 0;
    
         public int ProductTypeId { get; set; }
         public string Image { get; set; }

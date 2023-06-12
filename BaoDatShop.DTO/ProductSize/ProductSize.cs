@@ -8,7 +8,7 @@ namespace BaoDatShop.DTO.ProductSize
 {
     public class CreateProductSize
     {
-  
+        public int Stock { get; set; } = 0;
         public string Name { get; set; }
         public int ProductId { get; set; }
         public string Status { get; set; }

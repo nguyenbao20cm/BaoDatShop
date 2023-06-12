@@ -60,7 +60,7 @@ namespace BaoDatShop.Service
             result.SKU = model.SKU;
             result.Description = model.Description;
             result.Price = model.Price;
-            result.Stock = model.Stock;
+            result.ImportPrice = model.ImportPrice;
             result.ProductTypeId = model.ProductTypeId;
             result.Image = model.Image;
             result.Status = model.Status;
@@ -147,7 +147,7 @@ namespace BaoDatShop.Service
             result.SKU = model.SKU;
             result.Description = model.Description;
             result.Price = model.Price;
-            result.Stock = model.Stock;
+            result.ImportPrice = model.ImportPrice;
             result.ProductTypeId = model.ProductTypeId;
             result.Image = model.Image;
             result.Status = model.Status;

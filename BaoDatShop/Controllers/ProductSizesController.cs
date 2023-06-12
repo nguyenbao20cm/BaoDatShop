@@ -1,8 +1,11 @@
 ﻿using BaoDatShop.DTO.ProductSize;
 using BaoDatShop.DTO.ProductType;
+using BaoDatShop.DTO.Role;
 using BaoDatShop.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace BaoDatShop.Controllers
 {
@@ -15,6 +18,7 @@ namespace BaoDatShop.Controllers
         {
             this.productSizeService = productSizeService;
         }
+        [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllProductSizeStatusTrue")]//status true
         public async Task<IActionResult> GetProductType()
         {
@@ -25,6 +29,7 @@ namespace BaoDatShop.Controllers
         {
             return Ok(productSizeService.GetAll());
         }
+        [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllProductSizeStatusFalse")]//  status false
         public async Task<IActionResult> GetAllProductTypeStatusFalse()
         {
@@ -36,8 +41,8 @@ namespace BaoDatShop.Controllers
         {
             return Ok(productSizeService.GetById(id));
         }
-        //    [Authorize(Roles = UserRole.Admin)]
-        [HttpPost("CreateProductSizeType")]
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpPost("CreateProductSize")]
         public async Task<IActionResult> CreateProductType(CreateProductSize model)
         {
             if (model.Name == string.Empty) return Ok("Không được để trống");
@@ -46,7 +51,7 @@ namespace BaoDatShop.Controllers
 
             return Ok(productSizeService.Create(model));
         }
-        // [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateProductSize/{id}")]
         public async Task<IActionResult> UpdateProductType(int id, CreateProductSize model)
         {
