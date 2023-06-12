@@ -35,6 +35,11 @@ namespace BaoDatShop.Controllers
         {
             return Ok(cartService.GetAll(GetCorrectUserId()));
         }
+        [HttpGet("GetAllTotal")]
+        public async Task<IActionResult> GetAllTotal()
+        {
+            return Ok(cartService.GetAllTotal(GetCorrectUserId()));
+        }
         [HttpPut("UpdateCart+1/{id}")]
         public async Task<IActionResult> UpdateCartUp1(int id)
         {
