@@ -36,7 +36,7 @@ namespace Eshop.Models
 
       
         public string Image { get; set; }
-        public int ImportPrice { get; set; }
+      
         public bool Status { get; set; } = true;
 
         // Collection reference property cho khóa ngoại từ Cart

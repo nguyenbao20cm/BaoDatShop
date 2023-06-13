@@ -1,4 +1,5 @@
-﻿using BaoDatShop.DTO.Product;
+﻿using BaoDatShop.DTO.Invoice;
+using BaoDatShop.DTO.Product;
 using BaoDatShop.Responsitories;
 using Eshop.Models;
 using Microsoft.AspNetCore.Hosting;
@@ -19,7 +20,7 @@ namespace BaoDatShop.Service
         public Product GetByName(string name);
         public List<Product> GetAllProductStatusFalse();
         public List<Product> GetAllProductStatusTrue();
-        
+   
         public List<Product> GetAllProductInProductType(int id);
     }
     public class ProductService : IProductService
@@ -60,7 +61,7 @@ namespace BaoDatShop.Service
             result.SKU = model.SKU;
             result.Description = model.Description;
             result.Price = model.Price;
-            result.ImportPrice = model.ImportPrice;
+          
             result.ProductTypeId = model.ProductTypeId;
             result.Image = model.Image;
             result.Status = model.Status;
@@ -147,7 +148,7 @@ namespace BaoDatShop.Service
             result.SKU = model.SKU;
             result.Description = model.Description;
             result.Price = model.Price;
-            result.ImportPrice = model.ImportPrice;
+           
             result.ProductTypeId = model.ProductTypeId;
             result.Image = model.Image;
             result.Status = model.Status;
@@ -158,5 +159,7 @@ namespace BaoDatShop.Service
         {
             return productResponsitories.GetAll().Where(a => a.Name == name).FirstOrDefault();
         }
+
+     
     }
 }

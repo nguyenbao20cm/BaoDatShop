@@ -92,6 +92,9 @@ builder.Services.AddTransient<IAdvertisingPanelService, AdvertisingPanelService>
 
 builder.Services.AddTransient<IDisscountRespositories, DisscountRespositories>();
 builder.Services.AddTransient<IDisscountService, DisscountService>();
+
+builder.Services.AddTransient<IProductSizeResponsitories, ProductSizeResponsitories>();
+builder.Services.AddTransient<IProductSizeService, ProductSizeService>();
 // For Enity
 builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("LMS")));

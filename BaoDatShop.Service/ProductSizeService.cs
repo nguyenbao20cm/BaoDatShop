@@ -15,7 +15,7 @@ namespace BaoDatShop.Service
     public interface IProductSizeService
     {
         public bool Create(CreateProductSize model);
-        public bool Update(int id, CreateProductSize model);
+        public bool Update(int id, UpdateProductSize model);
         public bool Delete(int id);
         public ProductSize GetById(int id);
         public List<ProductSize> GetAll();
@@ -44,8 +44,10 @@ namespace BaoDatShop.Service
         {
             ProductSize result = new();
             result.Name = model.Name;
+            result.ImportPrice = model.ImportPrice;
+            result.IssuedDate = model.IssuedDate;
             result.ProductId = model.ProductId;
-            result.Status = true;
+            result.Status = model.Status;
             result.Stock = model.Stock;
             return IProductSizeResponsitories.Create(result);
         }
@@ -71,10 +73,11 @@ namespace BaoDatShop.Service
             return reslut;
         }
 
-        public bool Update(int id, CreateProductSize model)
+        public bool Update(int id, UpdateProductSize model)
         {
             ProductSize result = IProductSizeResponsitories.GetById(id);
             result.Name = model.Name;
+            result.ImportPrice = model.ImportPrice;
             result.Status = true;
             result.Stock = model.Stock;
             result.ProductId = model.ProductId;

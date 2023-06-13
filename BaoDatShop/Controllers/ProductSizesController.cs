@@ -43,7 +43,7 @@ namespace BaoDatShop.Controllers
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPost("CreateProductSize")]
-        public async Task<IActionResult> CreateProductType(CreateProductSize model)
+        public async Task<IActionResult> CreateProductSize(CreateProductSize model)
         {
             if (model.Name == string.Empty) return Ok("Không được để trống");
             if (productSizeService.Create(model) == true) return Ok("Thành công");
@@ -53,7 +53,7 @@ namespace BaoDatShop.Controllers
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateProductSize/{id}")]
-        public async Task<IActionResult> UpdateProductType(int id, CreateProductSize model)
+        public async Task<IActionResult> UpdateProductType(int id, UpdateProductSize model)
         {
 
             if (productSizeService.Update(id, model) == true)

@@ -33,6 +33,12 @@ namespace BaoDatShop.Controllers
             return Ok(invoiceService.GetAll());
         }
         [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetAllInoviceTotalMonth/{year}")]
+        public async Task<IActionResult> GetAllInoviceTotalMonth(string year)
+        {
+            return Ok(invoiceService.GetAllInoviceTotalMonth(year));
+        }
+        [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateInovice/{id}")]
         public async Task<IActionResult> UpdateInovice(int id, UpdateInvoice model)
         {

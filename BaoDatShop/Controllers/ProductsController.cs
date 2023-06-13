@@ -35,6 +35,7 @@ namespace BaoDatShop.Controllers
         {
             return Ok(productService.GetAllProductStatusFalse());
         }
+      
         [HttpGet("GetAllProductInProductType/{id}")]
         public async Task<IActionResult> GetAllProductInProductType(int id)
         {
