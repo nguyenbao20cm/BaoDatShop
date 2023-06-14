@@ -64,9 +64,6 @@ namespace BaoDatShop.Model.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -325,7 +322,10 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<string>("AccountId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductSizeId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -337,7 +337,9 @@ namespace BaoDatShop.Model.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Cart");
+                    b.HasIndex("ProductSizeId");
+
+                    b.ToTable("Cart", (string)null);
                 });
 
             modelBuilder.Entity("Eshop.Models.Invoice", b =>
@@ -660,15 +662,19 @@ namespace BaoDatShop.Model.Migrations
                         .WithMany("Carts")
                         .HasForeignKey("AccountId");
 
-                    b.HasOne("Eshop.Models.Product", "Product")
+                    b.HasOne("Eshop.Models.Product", null)
                         .WithMany("Carts")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("BaoDatShop.Model.Model.ProductSize", "ProductSize")
+                        .WithMany("Cart")
+                        .HasForeignKey("ProductSizeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Account");
 
-                    b.Navigation("Product");
+                    b.Navigation("ProductSize");
                 });
 
             modelBuilder.Entity("Eshop.Models.Invoice", b =>
@@ -764,6 +770,11 @@ namespace BaoDatShop.Model.Migrations
             modelBuilder.Entity("BaoDatShop.Model.Model.News", b =>
                 {
                     b.Navigation("NewDetail");
+                });
+
+            modelBuilder.Entity("BaoDatShop.Model.Model.ProductSize", b =>
+                {
+                    b.Navigation("Cart");
                 });
 
             modelBuilder.Entity("Eshop.Models.Account", b =>

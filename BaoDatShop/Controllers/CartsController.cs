@@ -25,7 +25,7 @@ namespace BaoDatShop.Controllers
         {
 
             CreateCartRequest result = new();
-            result.ProductId = model.ProductId;
+            result.ProductSizeId = model.ProductSizeId;
             result.AccountId = GetCorrectUserId();
             result.Quantity = model.Quantity;
             return Ok(cartService.Create(result));

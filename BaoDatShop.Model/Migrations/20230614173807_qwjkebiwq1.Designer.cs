@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaoDatShop.Model.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230612102049_123")]
-    partial class _123
+    [Migration("20230614173807_qwjkebiwq1")]
+    partial class qwjkebiwq1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -65,9 +65,6 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -217,6 +214,12 @@ namespace BaoDatShop.Model.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("ImportPrice")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("IssuedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -225,6 +228,9 @@ namespace BaoDatShop.Model.Migrations
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
+
+                    b.Property<int>("Stock")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -288,10 +294,6 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<int>("Level")
                         .HasColumnType("int");
 
-                    b.Property<string>("Password")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
                     b.Property<int>("Permission")
                         .HasColumnType("int");
 
@@ -322,7 +324,10 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<string>("AccountId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductSizeId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -334,7 +339,9 @@ namespace BaoDatShop.Model.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Cart");
+                    b.HasIndex("ProductSizeId");
+
+                    b.ToTable("Cart", (string)null);
                 });
 
             modelBuilder.Entity("Eshop.Models.Invoice", b =>
@@ -419,9 +426,6 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ImportPrice")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(450)");
 
@@ -436,9 +440,6 @@ namespace BaoDatShop.Model.Migrations
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
-
-                    b.Property<int>("Stock")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -663,15 +664,19 @@ namespace BaoDatShop.Model.Migrations
                         .WithMany("Carts")
                         .HasForeignKey("AccountId");
 
-                    b.HasOne("Eshop.Models.Product", "Product")
+                    b.HasOne("Eshop.Models.Product", null)
                         .WithMany("Carts")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("BaoDatShop.Model.Model.ProductSize", "ProductSize")
+                        .WithMany("Cart")
+                        .HasForeignKey("ProductSizeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Account");
 
-                    b.Navigation("Product");
+                    b.Navigation("ProductSize");
                 });
 
             modelBuilder.Entity("Eshop.Models.Invoice", b =>
@@ -767,6 +772,11 @@ namespace BaoDatShop.Model.Migrations
             modelBuilder.Entity("BaoDatShop.Model.Model.News", b =>
                 {
                     b.Navigation("NewDetail");
+                });
+
+            modelBuilder.Entity("BaoDatShop.Model.Model.ProductSize", b =>
+                {
+                    b.Navigation("Cart");
                 });
 
             modelBuilder.Entity("Eshop.Models.Account", b =>

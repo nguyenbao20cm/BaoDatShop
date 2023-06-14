@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BaoDatShop.Model.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -10,21 +11,13 @@ namespace Eshop.Models
     public class Cart
     {
         public int Id { get; set; }
-
+        public int ProductSizeId { get; set; }
+        public ProductSize ProductSize { get; set; }
         public string AccountId { get; set; }
-
-        // Navigation reference property cho khóa ngoại đến Account
-        [DisplayName("Khách hàng")]
         public Account Account { get; set; }
-        
-        public int ProductId { get; set; }
+        //public int ProductId { get; set; }
+        //public Product Product { get; set; }
 
-        // Navigation reference property cho khóa ngoại đến Product
-        [DisplayName("Sản phẩm")]
-        public Product Product { get; set; }
-
-        [Required(ErrorMessage = "{0} không được bỏ trống")]
-        [DefaultValue(1)]
         public int Quantity { get; set; } = 1;
     }
 }

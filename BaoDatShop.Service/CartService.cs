@@ -28,16 +28,20 @@ namespace BaoDatShop.Service
     {
         private readonly ICartResponsitories cartResponsitories;
         private readonly IProductResponsitories IProductResponsitories;
-        public CartService(ICartResponsitories cartResponsitories, IProductResponsitories IProductResponsitories)
+        private readonly IProductSizeService IProductSizeService;
+        private readonly IDisscountService IDisscountService;
+        public CartService(ICartResponsitories cartResponsitories, IProductResponsitories IProductResponsitories, IProductSizeService IProductSizeService, IDisscountService IDisscountService)
         {
             this.cartResponsitories = cartResponsitories;
             this.IProductResponsitories = IProductResponsitories;
+            this.IProductSizeService = IProductSizeService;
+            this.IDisscountService = IDisscountService;
         }
 
         public bool Create(CreateCartRequest model)
         {
            Cart result = new();
-            result.ProductId = model.ProductId;
+            result.ProductSizeId = model.ProductSizeId;
             result.AccountId = model.AccountId;
             result.Quantity = model.Quantity;
             var tamp=cartResponsitories.GetAll(result.AccountId).ToList();
@@ -45,7 +49,7 @@ namespace BaoDatShop.Service
             {
                 foreach (var a in tamp)
                 {
-                    if (result.ProductId == a.ProductId)
+                    if (result.ProductSizeId == a.ProductSizeId)
                     {
                         a.Quantity += result.Quantity;
                        return cartResponsitories.Update(a);
@@ -82,7 +86,7 @@ namespace BaoDatShop.Service
             {
                 GetAllCartResponse createCart = new();
                 createCart.CartId = item.Id;
-                createCart.ProductId = item.ProductId;  
+                createCart.ProductSizeId = item.ProductSizeId;  
                 createCart.AccountId = item.AccountId;
                 createCart.Quantity = item.Quantity;
              
@@ -96,9 +100,16 @@ namespace BaoDatShop.Service
         {
             int Total = 0;
             var tamp = cartResponsitories.GetAll(id);
-            foreach(var item in tamp)
+          
+            foreach (var item in tamp)
             {
-                Total += item.Quantity * IProductResponsitories.GetById(item.ProductId).Price;
+                var productId = IProductSizeService.GetById(item.ProductSizeId).ProductId;
+                var disscount = 0;
+                if (IDisscountService.GetAllDisscountPanel().Where(a => a.ProductId == productId).FirstOrDefault().NameDisscount != null)
+                    disscount = IDisscountService.GetAllDisscountPanel().Where(a => a.ProductId == productId).FirstOrDefault().NameDisscount;
+                else
+                    disscount = 0;
+                Total += item.Quantity * (IProductResponsitories.GetById(productId).Price* (disscount/100));
             }    
             return Total;
         }
@@ -118,7 +129,7 @@ namespace BaoDatShop.Service
         public bool Update(int id, CreateCartRequest model)
         {
             Cart result = cartResponsitories.GetById(id);
-            result.ProductId = model.ProductId;
+            result.ProductSizeId = model.ProductSizeId;
             result.AccountId = model.AccountId;
             result.Quantity = model.Quantity;
             return cartResponsitories.Update(result);

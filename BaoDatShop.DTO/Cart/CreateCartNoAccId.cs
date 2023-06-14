@@ -10,7 +10,7 @@ namespace BaoDatShop.DTO.Cart
     {
         //  public string AccountId { get; set; }
 
-        public int ProductId { get; set; }
+        public int ProductSizeId { get; set; }
 
         public int Quantity { get; set; } = 1;
     }

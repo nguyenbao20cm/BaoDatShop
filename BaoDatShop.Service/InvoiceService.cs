@@ -48,7 +48,8 @@ namespace BaoDatShop.Service
             int toal = 0;
             foreach (var item in Cart)
             {
-                toal += item.Quantity * productService.GetById(item.ProductId).Price;
+                var productId = productSizeResponsitories.GetById(item.ProductSizeId).ProductId;
+                toal += item.Quantity * productService.GetById(productId).Price;
             }
             result.Total = toal;
             result.Pay = false;
@@ -60,12 +61,13 @@ namespace BaoDatShop.Service
 
                 foreach (var c in Cart)
                 {
+                    var productId = productSizeResponsitories.GetById(c.ProductSizeId).ProductId;
                     InvoiceDetail detal = new InvoiceDetail
                     {
                         InvoiceId = result.Id,
-                        ProductId = c.ProductId,
+                        ProductId = productId,
                         Quantity = c.Quantity,
-                        UnitPrice = productService.GetById(c.ProductId).Price,
+                        UnitPrice = productService.GetById(productId).Price,
                     };
                     invoiceDetailResponsitories.Create(detal);
                     cartResponsitories.DeleteAll(AccountId);

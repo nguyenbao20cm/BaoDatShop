@@ -1,6 +1,6 @@
 ﻿using BaoDatShop.DTO.AdvertisingPanel;
 using BaoDatShop.DTO.Cart;
-using BaoDatShop.Model.Migrations;
+
 using BaoDatShop.Model.Model;
 using BaoDatShop.Responsitories;
 using Eshop.Models;

@@ -15,8 +15,9 @@ namespace BaoDatShop.Model.Model
         public DateTime IssuedDate { get; set; } = DateTime.Now;
         public int ImportPrice { get; set; }
         public int Stock { get; set; } = 0;
-        // Navigation reference property cho khóa ngoại đến Product
+      
         public Product Product { get; set; }
         public bool Status { get; set; }
+        public ICollection<Cart> Cart { get; set; }
     }
 }

@@ -28,7 +28,9 @@ namespace BaoDatShop.Model.Context
         public DbSet<AdvertisingPanel> AdvertisingPanel { get; set; }
         public DbSet<Disscount> Disscount { get; set; }
         public DbSet<ProductSize> ProductSize { get; set; }
-
+        public DbSet<ImageProduct> ImageProduct { get; set; }
+        public DbSet<EmailCustomer> EmailCustomer { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -53,6 +55,15 @@ namespace BaoDatShop.Model.Context
                 .HasOne(x => x.New)
                 .WithMany(x => x.NewDetail)
                 .HasForeignKey(x => x.NewId);
+            });
+            modelBuilder.Entity<Cart>(builder =>
+            {
+                builder.ToTable(nameof(Cart));
+                builder.HasKey(x => x.Id);
+                builder
+                .HasOne(x => x.ProductSize)
+                .WithMany(x => x.Cart)
+                .HasForeignKey(x => x.ProductSizeId);
             });
         }
     }
