@@ -20,6 +20,7 @@ namespace BaoDatShop.Responsitories
         public Task<IdentityResult> SignUpAdmin(RegisterRequest model);
         public Task<string> SignIn(LoginRequest model);
         public Task<IdentityResult> SignUpCustomer(RegisterRequest model);
+        public Account GetDetailAccount(string id);
 
     }
     public class AccountResponsitories : IAccountResponsitories
@@ -42,6 +43,12 @@ namespace BaoDatShop.Responsitories
             this.signInManager = signInManager;
             _roleManager = roleManager;
         }
+
+        public Account GetDetailAccount(string id)
+        {
+            return context.Account.Where(a => a.Id == id).FirstOrDefault();
+        }
+
         public async Task<string> SignIn(LoginRequest model)
         {
             var user = await userManager.FindByNameAsync(model.Username);

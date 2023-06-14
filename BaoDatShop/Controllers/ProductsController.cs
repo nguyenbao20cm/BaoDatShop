@@ -65,6 +65,7 @@ namespace BaoDatShop.Controllers
         [HttpPost("CreateProduct")]
         public async Task<IActionResult> CreateProduct( CreateProductRequest model)
         {
+            
             if (productService.Create(model) == true)
                 return Ok("Thành công");
             else

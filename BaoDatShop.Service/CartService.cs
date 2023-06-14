@@ -48,7 +48,7 @@ namespace BaoDatShop.Service
                     if (result.ProductId == a.ProductId)
                     {
                         a.Quantity += result.Quantity;
-                        cartResponsitories.Update(a);
+                       return cartResponsitories.Update(a);
                     }
                 }
             }

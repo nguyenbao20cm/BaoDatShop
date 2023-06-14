@@ -1,6 +1,7 @@
 ﻿using BaoDatShop.DTO.AccountRequest;
 using BaoDatShop.DTO.LoginRequest;
 using BaoDatShop.Responsitories;
+using Eshop.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace BaoDatShop.Service
         public Task<IdentityResult> SignUp(RegisterRequest model);
         public Task<IdentityResult> SignUpAdmin(RegisterRequest model);
         public Task<IdentityResult> SignUpCustomer(RegisterRequest model);
+        public Account GetDetailAccount(string id);
     }
     public class AccountService:IAccountService
     {
@@ -24,6 +26,11 @@ namespace BaoDatShop.Service
         public AccountService(IAccountResponsitories accountResponsitories)
         {
             this.accountResponsitories=accountResponsitories; 
+        }
+
+        public Account GetDetailAccount(string id)
+        {
+            return accountResponsitories.GetDetailAccount(id);
         }
 
         public Task<string> SignIn(LoginRequest model)

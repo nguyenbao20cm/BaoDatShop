@@ -61,6 +61,20 @@ namespace BaoDatShop.Controllers
             if (result.Succeeded) return Ok(result.Succeeded);
             return Unauthorized();
         }
+        [HttpGet]
+        [Route("GetDetailAccount")]
+        public async Task<IActionResult> GetDetailAccount()
+        {
+            var result =  _accountService.GetDetailAccount(GetCorrectUserId());
+            if (result!=null) return Ok(result);
+            return Unauthorized();
+        }
+        private string GetCorrectUserId()
+        {
+            var a = (ClaimsIdentity)User.Identity;
+            var result = a.FindFirst("UserId").Value;
+            return result;
+        }
 
     }
 }
