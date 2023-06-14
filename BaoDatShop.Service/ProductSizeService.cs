@@ -23,6 +23,8 @@ namespace BaoDatShop.Service
         public List<ProductSize> GetAllProductTypeStatusTrue();
         public List<ProductSize> GetAllProductTypeStatusFalse();
         public Month GetAllImportPrice(string year);
+        
+        public List<ProductSize> GetProductSizeById(int id);
     }
     public class ProductSizeService: IProductSizeService
     {
@@ -168,6 +170,11 @@ namespace BaoDatShop.Service
             }
             result.Month12 = total12;
             return result;
+        }
+
+        public List<ProductSize> GetProductSizeById(int id)
+        {
+            return IProductSizeResponsitories.GetAll().Where(a=>a.ProductId==id).ToList();
         }
     }
 }

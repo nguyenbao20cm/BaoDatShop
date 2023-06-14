@@ -24,8 +24,15 @@ namespace BaoDatShop.Controllers
         {
             return Ok(productSizeService.GetAllProductTypeStatusTrue());
         }
+
+        [HttpGet("GetProductSizeById/{Id}")]
+        public async Task<IActionResult> GetProductSizeById(int Id)
+        {
+            return Ok(productSizeService.GetProductSizeById(Id));
+        }
+        [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllProductSize")]// all status
-        public async Task<IActionResult> GetAllProductType()
+        public async Task<IActionResult> GetAllProductSize()
         {
             return Ok(productSizeService.GetAll());
         }
@@ -41,11 +48,7 @@ namespace BaoDatShop.Controllers
         {
             return Ok(productSizeService.GetAllImportPrice(year));
         }
-        [HttpGet("GetProductSizeById/{id}")]
-        public async Task<IActionResult> GetProductTypeById(int id)
-        {
-            return Ok(productSizeService.GetById(id));
-        }
+       
         [Authorize(Roles = UserRole.Admin)]
         [HttpPost("CreateProductSize")]
         public async Task<IActionResult> CreateProductSize(CreateProductSize model)
@@ -66,7 +69,7 @@ namespace BaoDatShop.Controllers
             else
                 return Ok("Thất bại");
         }
-        // [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin)]
         [HttpPut("DeleteProductSize/{id}")]
         public async Task<IActionResult> DeleteProductType(int id)
         {
