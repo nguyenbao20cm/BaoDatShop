@@ -14,8 +14,9 @@ namespace BaoDatShop.Service
         public List<Invoice> GetAll();
         public Month GetAllInoviceTotalMonth(string year);
         public List<Invoice> GetAllInoviceFilterByDate(string startDate, string endDate);
-        public bool UpdateInovice(int id, UpdateInvoice model);
+        public bool UpdateInovice(int id, UpdateInvoice model); 
         //     public bool UpdateInoviceDelivering(int id);
+        public int ProfitForyear(int year);
 
     }
     public class InvoiceService : IInvoiceService
@@ -24,12 +25,14 @@ namespace BaoDatShop.Service
         private readonly ICartResponsitories cartResponsitories;
         private readonly IProductService productService;
         private readonly IInvoiceDetailResponsitories invoiceDetailResponsitories;
-        public InvoiceService(IInvoiceResponsitories invoiceResponsitories, ICartResponsitories cartResponsitories, IProductService productService, IInvoiceDetailResponsitories invoiceDetailResponsitories)
+        private readonly IProductSizeResponsitories productSizeResponsitories;
+        public InvoiceService(IInvoiceResponsitories invoiceResponsitories, ICartResponsitories cartResponsitories, IProductService productService, IInvoiceDetailResponsitories invoiceDetailResponsitories, IProductSizeResponsitories productSizeResponsitories)
         {
             this.invoiceResponsitories = invoiceResponsitories;
             this.cartResponsitories = cartResponsitories;
             this.productService = productService;
             this.invoiceDetailResponsitories = invoiceDetailResponsitories;
+            this.productSizeResponsitories = productSizeResponsitories;
         }
 
         public bool Create(string AccountId, CreateInvoiceRequest model)
@@ -179,6 +182,25 @@ namespace BaoDatShop.Service
         {
             return invoiceResponsitories.GetById(id);
         }
+
+        public int ProfitForyear(int year)
+        {
+          var ImportPrice = 0;
+          var ImportPiceList=productSizeResponsitories.GetAll().Where(a => a.IssuedDate.Year == year).ToList();
+            foreach(var a in ImportPiceList)
+            {
+                ImportPrice+=a.ImportPrice*a.Stock;
+            }
+            var Total = 0;
+            var TotalList = invoiceResponsitories.GetAll().Where(a => a.IssuedDate.Year == year).ToList();
+            foreach (var a in TotalList)
+            {
+                Total += a.Total;
+            }
+            var b= Total - ImportPrice;
+            return Total- ImportPrice;
+        }
+
         // dang lam
         public bool Update(int id, CreateInvoiceRequest model)
         {
