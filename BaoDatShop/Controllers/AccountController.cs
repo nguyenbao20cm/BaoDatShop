@@ -3,10 +3,12 @@ using BaoDatShop.DTO.LoginRequest;
 using BaoDatShop.DTO.Response;
 using BaoDatShop.DTO.Role;
 using BaoDatShop.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -60,6 +62,15 @@ namespace BaoDatShop.Controllers
             var result = await _accountService.SignUpCustomer(model);
             if (result.Succeeded) return Ok(result.Succeeded);
             return Unauthorized();
+        }
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer)]
+        [HttpPost]
+        [Route("UpdateAccount")]
+        public async Task<IActionResult> UpdateAccount([FromForm] UpdateAccountRequest model)
+        {
+            var result = await _accountService.Update(GetCorrectUserId(), model);
+            if (result == "Failed") return Ok("Failed");
+            return Ok(result);
         }
         [HttpGet]
         [Route("GetDetailAccount")]

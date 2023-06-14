@@ -9,8 +9,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.Intrinsics.X86;
 using System.Security.Claims;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BaoDatShop.Responsitories
 {
@@ -21,10 +23,11 @@ namespace BaoDatShop.Responsitories
         public Task<string> SignIn(LoginRequest model);
         public Task<IdentityResult> SignUpCustomer(RegisterRequest model);
         public Account GetDetailAccount(string id);
-
+        public Task<string> Update(string id, UpdateAccountRequest model);
     }
     public class AccountResponsitories : IAccountResponsitories
     {
+        private IPasswordHasher<ApplicationUser> passwordHasher;
         private readonly AppDbContext context;
         private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration configuration;
@@ -34,7 +37,9 @@ namespace BaoDatShop.Responsitories
         public AccountResponsitories
             (UserManager<ApplicationUser> userManager, IWebHostEnvironment _environment,
             AppDbContext context,
-            SignInManager<ApplicationUser> signInManager, IConfiguration configuration, RoleManager<IdentityRole> roleManager)
+            SignInManager<ApplicationUser> signInManager, IConfiguration configuration, RoleManager<IdentityRole> roleManager,
+            IPasswordHasher<ApplicationUser> passwordHasher
+            )
         {
             this.context = context;
             this.configuration = configuration;
@@ -42,8 +47,79 @@ namespace BaoDatShop.Responsitories
             this._environment = _environment;
             this.signInManager = signInManager;
             _roleManager = roleManager;
+            this.passwordHasher = passwordHasher;
         }
 
+        public async Task<string> Update(string id, UpdateAccountRequest model)
+        {
+            var user = await userManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                if(await userManager.CheckPasswordAsync(user, model.password)!=true)
+                   return "Failed";
+                if (!string.IsNullOrEmpty(model.email))
+                    user.Email = model.email;
+                else
+                    return "Failed";
+                if (!string.IsNullOrEmpty(model.newpassword))
+                    user.PasswordHash = passwordHasher.HashPassword(user, model.newpassword);
+                else
+                    return "Failed";
+                if (!string.IsNullOrEmpty(model.Username))
+                    user.UserName = model.Username;
+                else
+                    return "Failed";
+                if (!string.IsNullOrEmpty(model.FullName))
+                    user.FullName =  model.FullName;
+                else
+                    return "Failed";
+                if (!string.IsNullOrEmpty(model.Address))
+                    user.Address = model.Address;
+                else
+                    return "Failed";
+                if (!string.IsNullOrEmpty(model.Phone))
+                    user.Phone =  model.Phone;
+                else
+                    return "Failed";
+                if (model.image != null)
+                {
+                    var fileName = id+"jpg";
+                    var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Avatar");
+                    var uploadPath = Path.Combine(uploadFolder, fileName);
+
+                    using (FileStream fs = System.IO.File.Create(uploadPath))
+                    {
+                        model.image.CopyTo(fs);
+                        fs.Flush();
+                    }
+                    user.Avatar = fileName;
+                }
+                else
+                    return "Failed";
+
+                if (!string.IsNullOrEmpty(model.email) && !string.IsNullOrEmpty(model.newpassword))
+                {
+                    IdentityResult result = await userManager.UpdateAsync(user);
+                    if (result.Succeeded)
+                    {
+                         
+                        Account tamp = context.Account.Where(a => a.Id == id).FirstOrDefault();
+                        tamp.FullName = model.FullName;
+                        tamp.Address = model.Address;
+                        tamp.Email = model.email;
+                        tamp.Username = model.Username;
+                        tamp.Phone = model.Phone;
+                        tamp.Avatar = model.image.FileName;
+                        context.Account.Update(tamp);
+                        context.SaveChanges();
+                        return "True";
+                    }
+                    else
+                        return "Failed";
+                }
+            }
+            return "Failed";
+        }
         public Account GetDetailAccount(string id)
         {
             return context.Account.Where(a => a.Id == id).FirstOrDefault();
@@ -95,7 +171,7 @@ namespace BaoDatShop.Responsitories
                 Address = model.Address,
                 Email = model.Email,
                 UserName = model.Username,
-                Password = model.Password,
+           
                 Phone = model.Phone,
                 Avatar = fileName,
                 Status = true,
@@ -105,15 +181,17 @@ namespace BaoDatShop.Responsitories
             if (result.Succeeded)
             {
                 var user1 = await userManager.FindByNameAsync(model.Username);
+                user1.Avatar = user1.Id + "jpg";
+                await userManager.UpdateAsync(user1);
                 Account tamp = new();
                 tamp.Id = user1.Id;
                 tamp.FullName = model.FullName;
                 tamp.Address = model.Address;
                 tamp.Email = model.Email;
                 tamp.Username = model.Username;
-                tamp.Password = model.Password;
+              
                 tamp.Phone = model.Phone;
-                tamp.Avatar = fileName;
+                tamp.Avatar = user1.Id + "jpg";
                 tamp.Status = true;
                 tamp.Permission = 2;
                 tamp.Level = 0;
@@ -140,7 +218,7 @@ namespace BaoDatShop.Responsitories
                 Address = model.Address,
                 Email = model.Email,
                 UserName = model.Username,
-                Password = model.Password,
+               
                 Phone = model.Phone,
                 Avatar = fileName,
                 Status = true,
@@ -158,15 +236,17 @@ namespace BaoDatShop.Responsitories
             if (result.Succeeded)
             {
                 var user1 = await userManager.FindByNameAsync(model.Username);
+                user1.Avatar = user1.Id + "jpg";
+                await userManager.UpdateAsync(user1);
                 Account tamp = new();
                 tamp.Id = user1.Id;
                 tamp.FullName = model.FullName;
                 tamp.Address = model.Address;
                 tamp.Email = model.Email;
                 tamp.Username = model.Username;
-                tamp.Password = model.Password;
+             
                 tamp.Phone = model.Phone;
-                tamp.Avatar = fileName;
+                tamp.Avatar = user1.Id + "jpg";
                 tamp.Status = true;
                 tamp.Permission = 1;
                 tamp.Level = 0;
@@ -193,7 +273,7 @@ namespace BaoDatShop.Responsitories
                 Address = model.Address,
                 Email = model.Email,
                 UserName = model.Username,
-                Password = model.Password,
+              
                 Phone = model.Phone,
                 Avatar = fileName,
                 Status = true,
@@ -211,15 +291,17 @@ namespace BaoDatShop.Responsitories
             if (result.Succeeded)
             {
                 var user1 = await userManager.FindByNameAsync(model.Username);
+                user1.Avatar = user1.Id + "jpg";
+                await userManager.UpdateAsync(user1);
                 Account tamp = new();
                 tamp.Id = user1.Id;
                 tamp.FullName = model.FullName;
                 tamp.Address = model.Address;
                 tamp.Email = model.Email;
                 tamp.Username = model.Username;
-                tamp.Password = model.Password;
+              
                 tamp.Phone = model.Phone;
-                tamp.Avatar = fileName;
+                tamp.Avatar = user1.Id + "jpg";
                 tamp.Status = true;
                 tamp.Permission = 3;
                 tamp.Level = 1;

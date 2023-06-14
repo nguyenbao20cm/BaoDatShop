@@ -19,10 +19,7 @@ namespace Eshop.Models
         [StringLength(20, MinimumLength = 6, ErrorMessage = "{0} từ 6-20 kí tự")]
         public string Username { get; set; }
 
-        [DisplayName("Mật khẩu")]
-        [DataType(DataType.Password)]
-        [StringLength(20, MinimumLength = 6, ErrorMessage = "{0} từ 6-20 kí tự")]
-        public string Password { get; set; }
+        
 
         [DisplayName("Email")]
         [EmailAddress(ErrorMessage = "{0} không hợp lệ")]

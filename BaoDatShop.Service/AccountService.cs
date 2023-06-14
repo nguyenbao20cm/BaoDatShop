@@ -13,6 +13,7 @@ namespace BaoDatShop.Service
 {
     public interface IAccountService
     {
+        public Task<string> Update(string id,UpdateAccountRequest model);
         public Task<string> SignIn(LoginRequest model);
         public Task<IdentityResult> SignUp(RegisterRequest model);
         public Task<IdentityResult> SignUpAdmin(RegisterRequest model);
@@ -50,6 +51,11 @@ namespace BaoDatShop.Service
         public Task<IdentityResult> SignUpCustomer(RegisterRequest model)
         {
             return accountResponsitories.SignUpCustomer(model);
+        }
+
+        public Task<string> Update(string id, UpdateAccountRequest model)
+        {
+            return accountResponsitories.Update(id, model);
         }
     }
 }
