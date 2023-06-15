@@ -18,7 +18,7 @@ namespace BaoDatShop.Controllers
         {
             this.productSizeService = productSizeService;
         }
-        [Authorize(Roles = UserRole.Admin)]
+ 
         [HttpGet("GetAllProductSizeStatusTrue")]//status true
         public async Task<IActionResult> GetProductType()
         {
@@ -29,6 +29,17 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> GetProductSizeByProductId(int Id)
         {
             return Ok(productSizeService.GetProductSizeById(Id));
+        }
+
+        [HttpGet("GetByid/{Id}")]
+        public async Task<IActionResult> GetByid(int Id)
+        {
+            return Ok(productSizeService.GetById(Id));
+        }
+        [HttpGet("GetProductIdByProductSize/{Id}")]
+        public async Task<IActionResult> GetProductIdByProductSize(int Id)
+        {
+            return Ok(productSizeService.GetProductIdByProductSize(Id));
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllProductSize")]// all status
