@@ -9,6 +9,7 @@ using System.Data;
 using System.Security.Claims;
 using BaoDatShop.DTO.Product;
 using BaoDatShop.Model.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace BaoDatShop.Controllers
 {
@@ -56,19 +57,19 @@ namespace BaoDatShop.Controllers
         [HttpGet("GetAllSpecialProducts")]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(context.SpecialProduct.ToList());
+            return Ok(context.SpecialProduct.Include(a=>a.Product).ToList());
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllSpecialProductsStatusTrue")]
         public async Task<IActionResult> GetAllStatusTrue()
         {
-            return Ok(context.SpecialProduct.Where(a=>a.Status==true).ToList());
+            return Ok(context.SpecialProduct.Include(a => a.Product).Where(a=>a.Status==true).ToList());
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllSpecialProductsStatusFalse")]
         public async Task<IActionResult> GetAllStatusFalse()
         {
-            return Ok(context.SpecialProduct.Where(a => a.Status == false).ToList());
+            return Ok(context.SpecialProduct.Include(a => a.Product).Where(a => a.Status == false).ToList());
         }
         private string GetCorrectUserId()
         {
