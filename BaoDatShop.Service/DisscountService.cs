@@ -21,6 +21,7 @@ namespace BaoDatShop.Service
         public List<Disscount> GetAll();
         public List<Disscount> GetAllDisscountPanel();
         public List<Disscount> GetAllDisscountStatusFalse();
+        public Disscount GetDisscountByProductId(int id);
     }
     public class DisscountService : IDisscountService
     {
@@ -77,6 +78,12 @@ namespace BaoDatShop.Service
             result.Status = model.Status;
             result.ProductId = model.ProductId;
             return IDisscountRespositories.Update(result);
+        }
+
+        public Disscount GetDisscountByProductId(int id)
+        {
+            Disscount result = IDisscountRespositories.GetAll().Where(a=>a.ProductId==id).FirstOrDefault();
+            return result;
         }
     }
 }

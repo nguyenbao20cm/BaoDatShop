@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaoDatShop.Model.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230614173807_qwjkebiwq1")]
-    partial class qwjkebiwq1
+    [Migration("20230615081608_baodatshop1")]
+    partial class baodatshop1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -126,6 +126,27 @@ namespace BaoDatShop.Model.Migrations
                     b.ToTable("AdvertisingPanel");
                 });
 
+            modelBuilder.Entity("BaoDatShop.Model.Model.BestSellerProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("BestSellerProduct");
+                });
+
             modelBuilder.Entity("BaoDatShop.Model.Model.Disscount", b =>
                 {
                     b.Property<int>("Id")
@@ -149,6 +170,77 @@ namespace BaoDatShop.Model.Migrations
                         .IsUnique();
 
                     b.ToTable("Disscount");
+                });
+
+            modelBuilder.Entity("BaoDatShop.Model.Model.EmailCustomer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmailCustomer");
+                });
+
+            modelBuilder.Entity("BaoDatShop.Model.Model.Footer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Adress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LinkFacebook")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LinkInstagram")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LinkZalo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Footer");
+                });
+
+            modelBuilder.Entity("BaoDatShop.Model.Model.ImageProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ImageProduct");
                 });
 
             modelBuilder.Entity("BaoDatShop.Model.Model.NewDetail", b =>
@@ -274,6 +366,27 @@ namespace BaoDatShop.Model.Migrations
                     b.ToTable("Review");
                 });
 
+            modelBuilder.Entity("BaoDatShop.Model.Model.SpecialProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("SpecialProduct");
+                });
+
             modelBuilder.Entity("Eshop.Models.Account", b =>
                 {
                     b.Property<string>("Id")
@@ -324,9 +437,6 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<string>("AccountId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductSizeId")
                         .HasColumnType("int");
 
@@ -336,8 +446,6 @@ namespace BaoDatShop.Model.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
-
-                    b.HasIndex("ProductId");
 
                     b.HasIndex("ProductSizeId");
 
@@ -419,6 +527,9 @@ namespace BaoDatShop.Model.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CountSell")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -608,7 +719,29 @@ namespace BaoDatShop.Model.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("BaoDatShop.Model.Model.BestSellerProduct", b =>
+                {
+                    b.HasOne("Eshop.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("BaoDatShop.Model.Model.Disscount", b =>
+                {
+                    b.HasOne("Eshop.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("BaoDatShop.Model.Model.ImageProduct", b =>
                 {
                     b.HasOne("Eshop.Models.Product", "Product")
                         .WithMany()
@@ -658,15 +791,22 @@ namespace BaoDatShop.Model.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("BaoDatShop.Model.Model.SpecialProduct", b =>
+                {
+                    b.HasOne("Eshop.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Eshop.Models.Cart", b =>
                 {
                     b.HasOne("Eshop.Models.Account", "Account")
                         .WithMany("Carts")
                         .HasForeignKey("AccountId");
-
-                    b.HasOne("Eshop.Models.Product", null)
-                        .WithMany("Carts")
-                        .HasForeignKey("ProductId");
 
                     b.HasOne("BaoDatShop.Model.Model.ProductSize", "ProductSize")
                         .WithMany("Cart")
@@ -795,8 +935,6 @@ namespace BaoDatShop.Model.Migrations
 
             modelBuilder.Entity("Eshop.Models.Product", b =>
                 {
-                    b.Navigation("Carts");
-
                     b.Navigation("InvoiceDetails");
 
                     b.Navigation("Review");

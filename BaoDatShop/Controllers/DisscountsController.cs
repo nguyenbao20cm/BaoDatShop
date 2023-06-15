@@ -24,6 +24,11 @@ namespace BaoDatShop.Controllers
         {
             return Ok(IDisscountService.GetAllDisscountPanel());
         }
+        [HttpGet("GetDisscountByProductId/{id}")]
+        public async Task<IActionResult> GetDisscountByProductId(int id)
+        {
+            return Ok(IDisscountService.GetDisscountByProductId(id));
+        }
         [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllDisscount")]
         public async Task<IActionResult> GetAllDisscount()

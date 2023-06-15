@@ -4,6 +4,7 @@ using BaoDatShop.Model.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaoDatShop.Model.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230615071013_baodatshop")]
+    partial class baodatshop
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -435,6 +437,9 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<string>("AccountId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProductSizeId")
                         .HasColumnType("int");
 
@@ -444,6 +449,8 @@ namespace BaoDatShop.Model.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("ProductId");
 
                     b.HasIndex("ProductSizeId");
 
@@ -806,6 +813,10 @@ namespace BaoDatShop.Model.Migrations
                         .WithMany("Carts")
                         .HasForeignKey("AccountId");
 
+                    b.HasOne("Eshop.Models.Product", null)
+                        .WithMany("Carts")
+                        .HasForeignKey("ProductId");
+
                     b.HasOne("BaoDatShop.Model.Model.ProductSize", "ProductSize")
                         .WithMany("Cart")
                         .HasForeignKey("ProductSizeId")
@@ -933,6 +944,8 @@ namespace BaoDatShop.Model.Migrations
 
             modelBuilder.Entity("Eshop.Models.Product", b =>
                 {
+                    b.Navigation("Carts");
+
                     b.Navigation("InvoiceDetails");
 
                     b.Navigation("Review");

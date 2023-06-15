@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BaoDatShop.Model.Migrations
 {
-    public partial class qwjkebiwq1 : Migration
+    public partial class baodatshop : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -86,6 +86,37 @@ namespace BaoDatShop.Model.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmailCustomer",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmailCustomer", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Footer",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Adress = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LinkFacebook = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LinkInstagram = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LinkZalo = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Footer", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -284,7 +315,8 @@ namespace BaoDatShop.Model.Migrations
                     Price = table.Column<int>(type: "int", nullable: false),
                     ProductTypeId = table.Column<int>(type: "int", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<bool>(type: "bit", nullable: false)
+                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    CountSell = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -293,6 +325,26 @@ namespace BaoDatShop.Model.Migrations
                         name: "FK_Product_ProductType_ProductTypeId",
                         column: x => x.ProductTypeId,
                         principalTable: "ProductType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BestSellerProduct",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BestSellerProduct", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BestSellerProduct_Product_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Product",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -312,6 +364,27 @@ namespace BaoDatShop.Model.Migrations
                     table.PrimaryKey("PK_Disscount", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Disscount_Product_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Product",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ImageProduct",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ImageProduct", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ImageProduct_Product_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "Id",
@@ -400,6 +473,26 @@ namespace BaoDatShop.Model.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SpecialProduct",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SpecialProduct", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SpecialProduct_Product_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Product",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Cart",
                 columns: table => new
                 {
@@ -471,6 +564,11 @@ namespace BaoDatShop.Model.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BestSellerProduct_ProductId",
+                table: "BestSellerProduct",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Cart_AccountId",
                 table: "Cart",
                 column: "AccountId");
@@ -490,6 +588,11 @@ namespace BaoDatShop.Model.Migrations
                 table: "Disscount",
                 column: "ProductId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ImageProduct_ProductId",
+                table: "ImageProduct",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invoice_AccountId",
@@ -544,6 +647,11 @@ namespace BaoDatShop.Model.Migrations
                 name: "IX_Review_ProductId",
                 table: "Review",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SpecialProduct_ProductId",
+                table: "SpecialProduct",
+                column: "ProductId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -567,10 +675,22 @@ namespace BaoDatShop.Model.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "BestSellerProduct");
+
+            migrationBuilder.DropTable(
                 name: "Cart");
 
             migrationBuilder.DropTable(
                 name: "Disscount");
+
+            migrationBuilder.DropTable(
+                name: "EmailCustomer");
+
+            migrationBuilder.DropTable(
+                name: "Footer");
+
+            migrationBuilder.DropTable(
+                name: "ImageProduct");
 
             migrationBuilder.DropTable(
                 name: "InvoiceDetail");
@@ -580,6 +700,9 @@ namespace BaoDatShop.Model.Migrations
 
             migrationBuilder.DropTable(
                 name: "Review");
+
+            migrationBuilder.DropTable(
+                name: "SpecialProduct");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

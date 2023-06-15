@@ -15,9 +15,7 @@ namespace Eshop.Models
         public ProductSize ProductSize { get; set; }
         public string AccountId { get; set; }
         public Account Account { get; set; }
-        //public int ProductId { get; set; }
-        //public Product Product { get; set; }
-
+    
         public int Quantity { get; set; } = 1;
     }
 }

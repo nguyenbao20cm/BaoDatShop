@@ -174,7 +174,7 @@ namespace BaoDatShop.Service
 
         public List<ProductSize> GetProductSizeById(int id)
         {
-            return IProductSizeResponsitories.GetAll().Where(a=>a.ProductId==id).ToList();
+            return IProductSizeResponsitories.GetAll().Where(a=>a.Status==true).Where(a=>a.ProductId==id).ToList();
         }
     }
 }

@@ -28,7 +28,10 @@ namespace BaoDatShop.Controllers
             result.ProductSizeId = model.ProductSizeId;
             result.AccountId = GetCorrectUserId();
             result.Quantity = model.Quantity;
-            return Ok(cartService.Create(result));
+            if(cartService.Create(result)==true)
+            return Ok("Thành công");
+            else
+                return Ok("Thất bại");
         }
         [HttpGet("GetAllCart")]
         public async Task<IActionResult> GetAllCart()

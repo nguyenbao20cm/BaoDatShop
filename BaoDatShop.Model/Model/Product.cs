@@ -32,7 +32,6 @@ namespace Eshop.Models
 
         public int CountSell { get; set; }
 
-        public List<Cart> Carts { get; set; }
 
         public List<InvoiceDetail> InvoiceDetails { get; set; }
       
