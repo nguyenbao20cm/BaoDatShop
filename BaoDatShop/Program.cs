@@ -95,6 +95,9 @@ builder.Services.AddTransient<IDisscountService, DisscountService>();
 
 builder.Services.AddTransient<IProductSizeResponsitories, ProductSizeResponsitories>();
 builder.Services.AddTransient<IProductSizeService, ProductSizeService>();
+
+builder.Services.AddTransient<IImageProductResponsitories, ImageProductResponsitories>();
+builder.Services.AddTransient<IImageProductService, ImageProductService>();
 // For Enity
 builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("LMS")));

@@ -25,8 +25,8 @@ namespace BaoDatShop.Controllers
             return Ok(productSizeService.GetAllProductTypeStatusTrue());
         }
 
-        [HttpGet("GetProductSizeById/{Id}")]
-        public async Task<IActionResult> GetProductSizeById(int Id)
+        [HttpGet("GetProductSizeByProductId/{Id}")]
+        public async Task<IActionResult> GetProductSizeByProductId(int Id)
         {
             return Ok(productSizeService.GetProductSizeById(Id));
         }

@@ -30,8 +30,8 @@ namespace BaoDatShop.Controllers
                 return Ok("Thất bại");
         }
         [Authorize(Roles = UserRole.Admin)]
-        [HttpPost("CreateImageProduct")]
-        public async Task<IActionResult> CreateImageProduct(CreateImageProduct model)
+        [HttpPost("CreateImagesProduct")]
+        public async Task<IActionResult> CreateImagesProduct(CreateImageProduct model)
         {
             return Ok(IImageProductService.Create(model));
         }
@@ -53,7 +53,7 @@ namespace BaoDatShop.Controllers
             return Ok(IImageProductService.GetAllImageProductStatusFalse());
         }
         [HttpGet("GetImageProductById/{id}")]
-        public async Task<IActionResult> GetProductById(int id)
+        public async Task<IActionResult> GetImageProductById(int id)
         {
             return Ok(IImageProductService.GetById(id));
 

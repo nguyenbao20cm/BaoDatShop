@@ -19,7 +19,7 @@ namespace BaoDatShop.Controllers
         {
             this.context = context;
         }
-        public bool IsEmail(string email)
+        private bool IsEmail(string email)
         {
             try
             {
