@@ -59,15 +59,7 @@ namespace BaoDatShop.Model.Context
                 .WithMany(x => x.NewDetail)
                 .HasForeignKey(x => x.NewId);
             });
-            modelBuilder.Entity<Cart>(builder =>
-            {
-                builder.ToTable(nameof(Cart));
-                builder.HasKey(x => x.Id);
-                builder
-                .HasOne(x => x.ProductSize)
-                .WithMany(x => x.Cart)
-                .HasForeignKey(x => x.ProductSizeId);
-            });
+           
         }
     }
 }

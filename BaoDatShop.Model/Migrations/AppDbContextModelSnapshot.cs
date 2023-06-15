@@ -447,7 +447,7 @@ namespace BaoDatShop.Model.Migrations
 
                     b.HasIndex("ProductSizeId");
 
-                    b.ToTable("Cart", (string)null);
+                    b.ToTable("Cart");
                 });
 
             modelBuilder.Entity("Eshop.Models.Invoice", b =>
@@ -807,7 +807,7 @@ namespace BaoDatShop.Model.Migrations
                         .HasForeignKey("AccountId");
 
                     b.HasOne("BaoDatShop.Model.Model.ProductSize", "ProductSize")
-                        .WithMany("Cart")
+                        .WithMany()
                         .HasForeignKey("ProductSizeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -910,11 +910,6 @@ namespace BaoDatShop.Model.Migrations
             modelBuilder.Entity("BaoDatShop.Model.Model.News", b =>
                 {
                     b.Navigation("NewDetail");
-                });
-
-            modelBuilder.Entity("BaoDatShop.Model.Model.ProductSize", b =>
-                {
-                    b.Navigation("Cart");
                 });
 
             modelBuilder.Entity("Eshop.Models.Account", b =>

@@ -19,7 +19,7 @@ namespace BaoDatShop.Service
         public bool Update(int id, CreateCartRequest model);
         public bool Delete(int id);
         public Cart GetById(int id);
-        public List<GetAllCartResponse> GetAll(string id);
+        public List<Cart> GetAll(string id);
         public bool Up(int id);
         public bool Down(int id);
         public bool DeleteAll(string id);
@@ -78,21 +78,21 @@ namespace BaoDatShop.Service
             return cartResponsitories.Update(result);
         }
 
-        public List<GetAllCartResponse> GetAll(string id)
+        public List<Cart> GetAll(string id)
         { 
-            var tamp= cartResponsitories.GetAll(id); 
-            List<GetAllCartResponse> result = new ();
-            foreach (var item in tamp)
-            {
-                GetAllCartResponse createCart = new();
-                createCart.CartId = item.Id;
-                createCart.ProductSizeId = item.ProductSizeId;  
-                createCart.AccountId = item.AccountId;
-                createCart.Quantity = item.Quantity;
-             
-                result.Add(createCart);
-            }
-            
+            var result = cartResponsitories.GetAll(id);
+            //List<GetAllCartResponse> result = new ();
+            //foreach (var item in tamp)
+            //{
+            //    GetAllCartResponse createCart = new();
+            //    createCart.CartId = item.Id;
+            //    createCart.ProductSizeId = item.ProductSizeId;  
+            //    createCart.AccountId = item.AccountId;
+            //    createCart.Quantity = item.Quantity;
+
+            //    result.Add(createCart);
+            //}
+        
             return result;
         }
 

@@ -1,6 +1,7 @@
 ﻿using BaoDatShop.Model.Context;
 using BaoDatShop.Model.Model;
 using Eshop.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace BaoDatShop.Responsitories
         public List<Disscount> GetAll()
         {
             if (context.Disscount.ToList() == null) return null;
-            return context.Disscount.ToList();
+            return context.Disscount.Include(a=>a.Product).ToList();
         }
 
 
@@ -41,7 +42,7 @@ namespace BaoDatShop.Responsitories
         public Disscount GetById(int id)
         {
             if (context.Disscount.Where(a => a.Id == id).FirstOrDefault() == null) return null;
-            return context.Disscount.Where(a => a.Id == id).FirstOrDefault();
+            return context.Disscount.Include(a => a.Product).Where(a => a.Id == id).FirstOrDefault();
         }
 
         public bool Update(Disscount model)

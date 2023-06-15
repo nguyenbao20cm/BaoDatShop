@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaoDatShop.Model.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230615071013_baodatshop")]
-    partial class baodatshop
+    [Migration("20230615170658_as1")]
+    partial class as1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -437,9 +437,6 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<string>("AccountId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductSizeId")
                         .HasColumnType("int");
 
@@ -450,11 +447,9 @@ namespace BaoDatShop.Model.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.HasIndex("ProductId");
-
                     b.HasIndex("ProductSizeId");
 
-                    b.ToTable("Cart", (string)null);
+                    b.ToTable("Cart");
                 });
 
             modelBuilder.Entity("Eshop.Models.Invoice", b =>
@@ -813,12 +808,8 @@ namespace BaoDatShop.Model.Migrations
                         .WithMany("Carts")
                         .HasForeignKey("AccountId");
 
-                    b.HasOne("Eshop.Models.Product", null)
-                        .WithMany("Carts")
-                        .HasForeignKey("ProductId");
-
                     b.HasOne("BaoDatShop.Model.Model.ProductSize", "ProductSize")
-                        .WithMany("Cart")
+                        .WithMany()
                         .HasForeignKey("ProductSizeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -923,11 +914,6 @@ namespace BaoDatShop.Model.Migrations
                     b.Navigation("NewDetail");
                 });
 
-            modelBuilder.Entity("BaoDatShop.Model.Model.ProductSize", b =>
-                {
-                    b.Navigation("Cart");
-                });
-
             modelBuilder.Entity("Eshop.Models.Account", b =>
                 {
                     b.Navigation("Carts");
@@ -944,8 +930,6 @@ namespace BaoDatShop.Model.Migrations
 
             modelBuilder.Entity("Eshop.Models.Product", b =>
                 {
-                    b.Navigation("Carts");
-
                     b.Navigation("InvoiceDetails");
 
                     b.Navigation("Review");

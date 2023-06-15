@@ -1,6 +1,7 @@
 ﻿using BaoDatShop.Model.Context;
 using BaoDatShop.Model.Model;
 using Eshop.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace BaoDatShop.Responsitories
         public List<Review> GetAll()
         {
             if (context.Review.ToList() == null) return null;
-            return context.Review.ToList();
+            return context.Review.Include(a=>a.Account).ToList();
         }
 
         public Review GetById(int id)

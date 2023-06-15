@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaoDatShop.Model.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230615081608_baodatshop1")]
-    partial class baodatshop1
+    [Migration("20230615163848_as")]
+    partial class @as
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

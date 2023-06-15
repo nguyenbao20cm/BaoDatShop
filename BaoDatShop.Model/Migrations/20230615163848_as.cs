@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BaoDatShop.Model.Migrations
 {
-    public partial class baodatshop : Migration
+    public partial class @as : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -500,8 +500,7 @@ namespace BaoDatShop.Model.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductSizeId = table.Column<int>(type: "int", nullable: false),
                     AccountId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    ProductId = table.Column<int>(type: "int", nullable: true)
+                    Quantity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -510,11 +509,6 @@ namespace BaoDatShop.Model.Migrations
                         name: "FK_Cart_Account_AccountId",
                         column: x => x.AccountId,
                         principalTable: "Account",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Cart_Product_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Product",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Cart_ProductSize_ProductSizeId",
@@ -572,11 +566,6 @@ namespace BaoDatShop.Model.Migrations
                 name: "IX_Cart_AccountId",
                 table: "Cart",
                 column: "AccountId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Cart_ProductId",
-                table: "Cart",
-                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cart_ProductSizeId",

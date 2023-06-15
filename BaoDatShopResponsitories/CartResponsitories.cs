@@ -1,5 +1,6 @@
 ﻿using BaoDatShop.Model.Context;
 using Eshop.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,8 +53,8 @@ namespace BaoDatShop.Responsitories
 
         public List<Cart> GetAll(string id)
         {
-            if (context.Cart.Where(a=>a.AccountId==id).ToList() == null) return null;
-            return context.Cart.Where(a => a.AccountId == id).ToList();
+            if (context.Cart.Include(a=>a.ProductSize).Where(a=>a.AccountId==id).ToList() == null) return null;
+            return context.Cart.Include(a => a.ProductSize).Where(a => a.AccountId == id).ToList();
         }
 
         public Cart GetById(int id)
