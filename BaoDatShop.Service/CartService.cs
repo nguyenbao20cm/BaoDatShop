@@ -109,7 +109,11 @@ namespace BaoDatShop.Service
                     disscount = IDisscountService.GetAllDisscountPanel().Where(a => a.ProductId == productId).FirstOrDefault().NameDisscount;
                 else
                     disscount = 0;
-                Total += item.Quantity * (IProductResponsitories.GetById(productId).Price* (disscount/100));
+                if(disscount!=0)
+                Total += item.Quantity * (IProductResponsitories.GetById(productId).Price-(IProductResponsitories.GetById(productId).Price* (disscount/100)));
+                else
+                    Total += item.Quantity * (IProductResponsitories.GetById(productId).Price);
+
             }    
             return Total;
         }
