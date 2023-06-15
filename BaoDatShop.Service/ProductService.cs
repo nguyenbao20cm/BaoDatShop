@@ -61,7 +61,7 @@ namespace BaoDatShop.Service
             result.SKU = model.SKU;
             result.Description = model.Description;
             result.Price = model.Price;
-          
+            result.CountSell = 0;
             result.ProductTypeId = model.ProductTypeId;
             result.Image = model.Image;
             result.Status = model.Status;

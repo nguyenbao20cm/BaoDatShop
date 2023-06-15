@@ -19,6 +19,11 @@ namespace BaoDatShop.Controllers
             this.productService = productService;
         }
 
+        [HttpGet("GetTop10BestSeller")]
+        public async Task<IActionResult> GetTop10BestSeller()
+        {
+            return Ok(productService.GetAll().OrderByDescending(a=>a.CountSell).Take(10).ToList());
+        }
         [HttpGet("GetAllProduct")]
         public async Task<IActionResult> GetAllProduct()
         {

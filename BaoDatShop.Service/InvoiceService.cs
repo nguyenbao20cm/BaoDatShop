@@ -23,16 +23,20 @@ namespace BaoDatShop.Service
     {
         private readonly IInvoiceResponsitories invoiceResponsitories;
         private readonly ICartResponsitories cartResponsitories;
+        private readonly IProductResponsitories IProductResponsitories;
         private readonly IProductService productService;
         private readonly IInvoiceDetailResponsitories invoiceDetailResponsitories;
         private readonly IProductSizeResponsitories productSizeResponsitories;
-        public InvoiceService(IInvoiceResponsitories invoiceResponsitories, ICartResponsitories cartResponsitories, IProductService productService, IInvoiceDetailResponsitories invoiceDetailResponsitories, IProductSizeResponsitories productSizeResponsitories)
+        public InvoiceService(IInvoiceResponsitories invoiceResponsitories, ICartResponsitories cartResponsitories, IProductService productService, 
+            IInvoiceDetailResponsitories invoiceDetailResponsitories,
+            IProductSizeResponsitories productSizeResponsitories, IProductResponsitories IProductResponsitories)
         {
             this.invoiceResponsitories = invoiceResponsitories;
             this.cartResponsitories = cartResponsitories;
             this.productService = productService;
             this.invoiceDetailResponsitories = invoiceDetailResponsitories;
             this.productSizeResponsitories = productSizeResponsitories;
+            IProductResponsitories = IProductResponsitories;
         }
 
         public bool Create(string AccountId, CreateInvoiceRequest model)
@@ -69,6 +73,9 @@ namespace BaoDatShop.Service
                         Quantity = c.Quantity,
                         UnitPrice = productService.GetById(productId).Price,
                     };
+                    var b=  productService.GetById(productId);
+                    b.CountSell++;
+                    IProductResponsitories.Update(b);
                     invoiceDetailResponsitories.Create(detal);
                     cartResponsitories.DeleteAll(AccountId);
                 }

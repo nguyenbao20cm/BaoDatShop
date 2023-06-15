@@ -30,10 +30,10 @@ namespace Eshop.Models
       
         public bool Status { get; set; } = true;
 
+        public int CountSell { get; set; }
 
         public List<Cart> Carts { get; set; }
 
-      
         public List<InvoiceDetail> InvoiceDetails { get; set; }
       
         public ICollection<Review> Review { get; set; }
