@@ -7,6 +7,7 @@ namespace BaoDatShop.Service
 {
     public interface IInvoiceService
     {
+        public bool DeleteInvoice(int id);
         public bool Create(string AccountId, CreateInvoiceRequest model);
         public bool Update(int id, CreateInvoiceRequest model);
         public bool Delete(int id);
@@ -89,6 +90,13 @@ namespace BaoDatShop.Service
         {
             Invoice result = invoiceResponsitories.GetById(id);
             result.Status = false;
+            return invoiceResponsitories.Update(result);
+        }
+
+        public bool DeleteInvoice(int id)
+        {
+            Invoice result = invoiceResponsitories.GetById(id);
+            result.OrderStatus = 4;
             return invoiceResponsitories.Update(result);
         }
 
