@@ -105,7 +105,7 @@ namespace BaoDatShop.Service
             {
                 var productId = IProductSizeService.GetById(item.ProductSizeId).ProductId;
                 var disscount = 0;
-                if (IDisscountService.GetAllDisscountPanel().Where(a => a.ProductId == productId).FirstOrDefault().NameDisscount != null)
+                if (IDisscountService.GetAllDisscountPanel().Where(a => a.ProductId == productId).FirstOrDefault() != null)
                     disscount = IDisscountService.GetAllDisscountPanel().Where(a => a.ProductId == productId).FirstOrDefault().NameDisscount;
                 else
                     disscount = 0;
