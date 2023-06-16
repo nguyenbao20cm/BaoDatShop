@@ -224,7 +224,7 @@ namespace BaoDatShop.Service
             Invoice result = invoiceResponsitories.GetById(id);
 
             //result.AccountId = AccountId;
-            result.IssuedDate = model.IssuedDate;
+            result.IssuedDate = DateTime.Now;
             result.ShippingAddress = model.ShippingAddress;
             result.ShippingPhone = model.ShippingPhone;
             //result.Total = model.Total;
