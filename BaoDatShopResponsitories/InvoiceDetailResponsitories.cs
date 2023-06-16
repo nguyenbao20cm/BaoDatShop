@@ -1,5 +1,6 @@
 ﻿using BaoDatShop.Model.Context;
 using Eshop.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace BaoDatShop.Responsitories
         public List<InvoiceDetail> GetAll(int id)
         {
             if (context.InvoiceDetail.Where(a=>a.InvoiceId==id).ToList() == null) return null;
-            return context.InvoiceDetail.Where(a => a.InvoiceId == id).ToList();
+            return context.InvoiceDetail.Include(a=>a.Product).Where(a => a.InvoiceId == id).ToList();
         }
 
       

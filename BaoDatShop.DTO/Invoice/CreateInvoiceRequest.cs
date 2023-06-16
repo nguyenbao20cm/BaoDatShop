@@ -19,7 +19,7 @@ namespace BaoDatShop.DTO.Invoice
        // public string AccountId { get; set; }
 
        
-        public DateTime IssuedDate { get; set; } = DateTime.Now;
+  
 
         [DisplayName("Địa chỉ giao hàng")]
         public string ShippingAddress { get; set; }
