@@ -31,6 +31,7 @@ namespace BaoDatShop.Model.Context
         public DbSet<ImageProduct> ImageProduct { get; set; }
         public DbSet<EmailCustomer> EmailCustomer { get; set; }
         public DbSet<SpecialProduct> SpecialProduct { get; set; }
+        public DbSet<FavoriteProduct> FavoriteProduct { get; set; }
         public DbSet<Footer> Footer { get; set; }
  
         protected override void OnModelCreating(ModelBuilder modelBuilder)

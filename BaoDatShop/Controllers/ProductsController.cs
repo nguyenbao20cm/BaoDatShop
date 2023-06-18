@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Security.Claims;
 using System.Xml.Linq;
 
 namespace BaoDatShop.Controllers
@@ -18,7 +19,7 @@ namespace BaoDatShop.Controllers
         {
             this.productService = productService;
         }
-
+     
         [HttpGet("GetTop10BestSeller")]
         public async Task<IActionResult> GetTop10BestSeller()
         {

@@ -82,5 +82,6 @@ namespace BaoDatShop.Controllers
             var result = a.FindFirst("UserId").Value;
             return result;
         }
+     
     }
 }

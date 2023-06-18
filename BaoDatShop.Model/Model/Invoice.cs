@@ -44,5 +44,7 @@ namespace Eshop.Models
 
         // Collection reference property cho khóa ngoại từ InvoiceDetail
         public List<InvoiceDetail> InvoiceDetails { get; set; }
+  
+        
     }
 }
