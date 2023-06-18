@@ -137,6 +137,7 @@ namespace BaoDatShop.Responsitories
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.Name, user.Id.ToString()),
+                
                     new Claim("UserId", user.Id.ToString()),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
@@ -144,6 +145,7 @@ namespace BaoDatShop.Responsitories
                 foreach (var userRole in userRoles)
                 {
                     authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+                    authClaims.Add(new Claim("RoleUser", userRole));
                 }
 
                 var token = GetToken(authClaims);
