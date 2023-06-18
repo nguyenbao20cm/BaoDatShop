@@ -33,7 +33,7 @@ namespace Eshop.Models
         public int CountSell { get; set; }
 
 
-        public List<InvoiceDetail> InvoiceDetails { get; set; }
+        //public List<InvoiceDetail> InvoiceDetails { get; set; }
       
         public ICollection<Review> Review { get; set; }
     }

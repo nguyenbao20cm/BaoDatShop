@@ -38,7 +38,7 @@ namespace BaoDatShop.Service
             result.ProductId = model.ProductId;
             result.AccountId = AccountID;
             result.Content = model.Content;
-            result.DateTime = model.DateTime;
+            result.DateTime =DateTime.Now;
             result.Status = true;
             return reviewResponsitories.Create(result);
         }
@@ -83,7 +83,7 @@ namespace BaoDatShop.Service
             result.ProductId = model.ProductId;
             result.AccountId = AccountId;
             result.Content = model.Content;
-            result.DateTime = model.DateTime;
+            result.DateTime = DateTime.Now;
             return reviewResponsitories.Update(result);
         }
     }

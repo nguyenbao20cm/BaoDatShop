@@ -11,7 +11,7 @@ namespace BaoDatShop.DTO.Review
     {
         public int ProductId { get; set; }
         public string Content { get; set; }
-        public DateTime DateTime { get; set; }
+        //public DateTime DateTime { get; set; }
         public int Star { get; set; }
     }
 }

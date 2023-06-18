@@ -51,7 +51,7 @@ namespace BaoDatShop.Service
             ProductSize result = new();
             result.Name = model.Name;
             result.ImportPrice = model.ImportPrice;
-            result.IssuedDate = model.IssuedDate;
+            result.IssuedDate = DateTime.Now;
             result.ProductId = model.ProductId;
             result.Status = model.Status;
             result.Stock = model.Stock;

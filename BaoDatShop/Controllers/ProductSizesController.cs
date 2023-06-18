@@ -41,7 +41,7 @@ namespace BaoDatShop.Controllers
         {
             return Ok(productSizeService.GetProductIdByProductSize(Id));
         }
-        [Authorize(Roles = UserRole.Admin)]
+     
         [HttpGet("GetAllProductSize")]// all status
         public async Task<IActionResult> GetAllProductSize()
         {

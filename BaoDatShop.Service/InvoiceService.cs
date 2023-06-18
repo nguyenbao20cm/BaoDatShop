@@ -37,7 +37,7 @@ namespace BaoDatShop.Service
             this.productService = productService;
             this.invoiceDetailResponsitories = invoiceDetailResponsitories;
             this.productSizeResponsitories = productSizeResponsitories;
-            IProductResponsitories = IProductResponsitories;
+            this.IProductResponsitories = IProductResponsitories;
         }
 
         public bool Create(string AccountId, CreateInvoiceRequest model)
@@ -66,6 +66,9 @@ namespace BaoDatShop.Service
 
                 foreach (var c in Cart)
                 {
+                    var a = productSizeResponsitories.GetById(c.ProductSizeId);
+                    a.Stock = a.Stock - c.Quantity;
+                    productSizeResponsitories.Update(a);
                     var productId = productSizeResponsitories.GetById(c.ProductSizeId).ProductId;
                     InvoiceDetail detal = new InvoiceDetail
                     {

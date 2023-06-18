@@ -20,7 +20,7 @@ namespace BaoDatShop.Controllers
         }
         [Authorize(Roles = UserRole.Costumer)]
         [HttpPost("CreateReview")]
-        public async Task<IActionResult> CreateReview(ReviewRequest model,string AccountId)
+        public async Task<IActionResult> CreateReview(ReviewRequest model)
         {
             return Ok(reviewService.Create(GetCorrectUserId(),model));
         }
