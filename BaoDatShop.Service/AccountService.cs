@@ -19,6 +19,7 @@ namespace BaoDatShop.Service
         public Task<IdentityResult> SignUpAdmin(RegisterRequest model);
         public Task<IdentityResult> SignUpCustomer(RegisterRequest model);
         public Account GetDetailAccount(string id);
+        public List<Account> GetAllAccount();
     }
     public class AccountService:IAccountService
     {
@@ -27,6 +28,11 @@ namespace BaoDatShop.Service
         public AccountService(IAccountResponsitories accountResponsitories)
         {
             this.accountResponsitories=accountResponsitories; 
+        }
+
+        public List<Account> GetAllAccount()
+        {
+            return accountResponsitories.GetAll();
         }
 
         public Account GetDetailAccount(string id)

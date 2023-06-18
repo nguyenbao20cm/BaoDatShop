@@ -24,6 +24,7 @@ namespace BaoDatShop.Responsitories
         public Task<IdentityResult> SignUpCustomer(RegisterRequest model);
         public Account GetDetailAccount(string id);
         public Task<string> Update(string id, UpdateAccountRequest model);
+        public List<Account> GetAll();
     }
     public class AccountResponsitories : IAccountResponsitories
     {
@@ -323,6 +324,11 @@ namespace BaoDatShop.Responsitories
                 );
 
             return token;
+        }
+
+        public List<Account> GetAll()
+        {
+            return context.Account.ToList();
         }
     }
 }

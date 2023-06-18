@@ -18,6 +18,8 @@ namespace BaoDatShop.Service
         public bool UpdateInovice(int id, UpdateInvoice model); 
         //     public bool UpdateInoviceDelivering(int id);
         public int ProfitForyear(int year);
+        public List<Invoice> GetAllInvoiceOfAccount(string id);
+        
 
     }
     public class InvoiceService : IInvoiceService
@@ -50,12 +52,12 @@ namespace BaoDatShop.Service
             result.IssuedDate = DateTime.Now;
             result.ShippingAddress = model.ShippingAddress;
             result.ShippingPhone = model.ShippingPhone;
-            int toal = 0;
-            foreach (var item in Cart)
-            {
-                var productId = productSizeResponsitories.GetById(item.ProductSizeId).ProductId;
-                toal += item.Quantity * productService.GetById(productId).Price;
-            }
+            int toal = model.total;
+            //foreach (var item in Cart)
+            //{
+            //    var productId = productSizeResponsitories.GetById(item.ProductSizeId).ProductId;
+            //    toal += item.Quantity * productService.GetById(productId).Price;
+            //}
             result.Total = toal;
             result.Pay = false;
             result.Status = true;
@@ -196,6 +198,11 @@ namespace BaoDatShop.Service
             result.Month12 = total12;
             return result;
            
+        }
+
+        public List<Invoice> GetAllInvoiceOfAccount(string id)
+        {
+            return invoiceResponsitories.GetAll().Where(a=>a.AccountId==id).ToList();
         }
 
         public Invoice GetById(int id)

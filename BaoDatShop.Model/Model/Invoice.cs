@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BaoDatShop.Model.Model;
 
 namespace Eshop.Models
 {
@@ -44,7 +45,7 @@ namespace Eshop.Models
 
         // Collection reference property cho khóa ngoại từ InvoiceDetail
         public List<InvoiceDetail> InvoiceDetails { get; set; }
-  
-        
+ 
+
     }
 }

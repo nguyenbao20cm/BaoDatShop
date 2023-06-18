@@ -2,6 +2,7 @@
 using BaoDatShop.DTO.Product;
 using BaoDatShop.Responsitories;
 using Eshop.Models;
+using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,24 +99,28 @@ namespace BaoDatShop.Service
 
         public int GetAllTotal(string id)
         {
-            int Total = 0;
-            var tamp = cartResponsitories.GetAll(id);
-          
-            foreach (var item in tamp)
-            {
-                var productId = IProductSizeService.GetById(item.ProductSizeId).ProductId;
-                var disscount = 0;
-                if (IDisscountService.GetAllDisscountPanel().Where(a => a.ProductId == productId).FirstOrDefault() != null)
-                    disscount = IDisscountService.GetAllDisscountPanel().Where(a => a.ProductId == productId).FirstOrDefault().NameDisscount;
-                else
-                    disscount = 0;
-                if(disscount!=0)
-                Total += item.Quantity * (IProductResponsitories.GetById(productId).Price-(IProductResponsitories.GetById(productId).Price* (disscount/100)));
-                else
-                    Total += item.Quantity * (IProductResponsitories.GetById(productId).Price);
+            
+                int Total = 0;
+                var tamp = cartResponsitories.GetAll(id);
 
-            }    
-            return Total;
+                foreach (var item in tamp)
+                {
+                    var productId = IProductSizeService.GetById(item.ProductSizeId).ProductId;
+                    var disscount = 0;
+                    if (IDisscountService.GetAllDisscountPanel().Where(a => a.ProductId == productId).FirstOrDefault() != null)
+                        disscount = IDisscountService.GetAllDisscountPanel().Where(a => a.ProductId == productId).FirstOrDefault().NameDisscount;
+                    else
+                        disscount = 0;
+                    if (disscount != 0)
+                        Total += item.Quantity * (IProductResponsitories.GetById(productId).Price - (IProductResponsitories.GetById(productId).Price * (disscount / 100)));
+                    else
+                        Total += item.Quantity * (IProductResponsitories.GetById(productId).Price);
+
+                }
+                return Total;
+            
+
+           
         }
 
         public Cart GetById(int id)

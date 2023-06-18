@@ -39,7 +39,7 @@ namespace BaoDatShop.Controllers
             return Ok(cartService.GetAll(GetCorrectUserId()));
         }
         [HttpGet("GetAllTotal")]
-        public async Task<IActionResult> GetAllTotal()
+        public async Task<IActionResult> GetAllTotal( )
         {
             return Ok(cartService.GetAllTotal(GetCorrectUserId()));
         }

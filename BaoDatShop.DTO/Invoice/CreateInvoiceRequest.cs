@@ -11,16 +11,16 @@ namespace BaoDatShop.DTO.Invoice
 {
     public class CreateInvoiceRequest
     {
-       
 
-    
-       
 
-       // public string AccountId { get; set; }
 
-       
-  
 
+
+        // public string AccountId { get; set; }
+
+
+
+        public int total { get; set; }
         [DisplayName("Địa chỉ giao hàng")]
         public string ShippingAddress { get; set; }
 

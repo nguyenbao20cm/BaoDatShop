@@ -33,7 +33,7 @@ namespace BaoDatShop.Model.Context
         public DbSet<SpecialProduct> SpecialProduct { get; set; }
         public DbSet<FavoriteProduct> FavoriteProduct { get; set; }
         public DbSet<Footer> Footer { get; set; }
- 
+        public DbSet<Voucher> Voucher { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -47,6 +47,8 @@ namespace BaoDatShop.Model.Context
              .HasIndex(p => new { p.Name,p.SKU }).IsUnique();
             modelBuilder.Entity<Disscount>()
              .HasIndex(p => new { p.ProductId }).IsUnique();
+            modelBuilder.Entity<Voucher>()
+           .HasIndex(p => new { p.Name }).IsUnique();
 
             modelBuilder.Entity<ProductTypes>()
            .HasIndex(p => new { p.Name }).IsUnique();

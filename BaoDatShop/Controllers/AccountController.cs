@@ -80,6 +80,15 @@ namespace BaoDatShop.Controllers
             if (result!=null) return Ok(result);
             return Unauthorized();
         }
+        [Authorize(Roles =  UserRole.Admin)]
+        [HttpGet]
+        [Route("GetAllAccount")]
+        public async Task<IActionResult> GetAllAccount()
+        {
+            var result = _accountService.GetAllAccount();
+             return Ok(result);
+           
+        }
         private string GetCorrectUserId()
         {
             var a = (ClaimsIdentity)User.Identity;
