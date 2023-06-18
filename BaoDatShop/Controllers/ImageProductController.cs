@@ -58,6 +58,12 @@ namespace BaoDatShop.Controllers
             return Ok(IImageProductService.GetById(id));
 
         }
+        [HttpGet("GetAllImageProductById/{id}")]
+        public async Task<IActionResult> GetAllImageProductById(int id)
+        {
+            return Ok(IImageProductService.GetAllImageProductById(id));
+
+        }
         private string GetCorrectUserId()
         {
             var a = (ClaimsIdentity)User.Identity;

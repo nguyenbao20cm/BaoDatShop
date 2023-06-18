@@ -21,8 +21,9 @@ namespace BaoDatShop.Service
         public List<ImageProduct> GetAllImageProductStatusTrue();
         public List<ImageProduct> GetAllImageProductStatusFalse();
         public bool CreateImage(IFormFile model);
-        public ImageProduct GetById(int id);
-        
+        public ImageProduct GetById(int id); 
+        public List<ImageProduct> GetAllImageProductById(int id);
+
     }
     public class ImageProductService : IImageProductService
     {
@@ -65,6 +66,11 @@ namespace BaoDatShop.Service
         public List<ImageProduct> GetAll()
         {
             return IImageProductResponsitories.GetAll().ToList();
+        }
+
+        public List<ImageProduct> GetAllImageProductById(int id)
+        {
+            return IImageProductResponsitories.GetAll().Where(a => a.Status == true).Where(a=>a.ProductId==id).ToList();
         }
 
         public List<ImageProduct> GetAllImageProductStatusFalse()
