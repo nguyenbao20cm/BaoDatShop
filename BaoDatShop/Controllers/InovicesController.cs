@@ -38,6 +38,12 @@ namespace BaoDatShop.Controllers
         {
             return Ok(invoiceService.GetAll());
         }
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer)]
+        [HttpGet("GetInvoiceById/{id}")]
+        public async Task<IActionResult> GetAllInovice(int id)
+        {
+            return Ok(invoiceService.GetById(id));
+        }
         [Authorize(Roles = UserRole.Admin)]
         [HttpGet("ProfitForyear/{year}")]
         public async Task<IActionResult> ProfitForyear(int year)
