@@ -50,7 +50,13 @@ namespace BaoDatShop.Service
 
         public bool Create(string AccountId, CreateInvoiceRequest model)
         {
+           
             var Cart = cartResponsitories.GetAll(AccountId);
+            foreach (var c in Cart)
+            {
+                var a = productSizeResponsitories.GetById(c.ProductSizeId);
+                if (c.Quantity > a.Stock) return false;
+            }
             if (Cart == null) return false;
             Invoice result = new();
 

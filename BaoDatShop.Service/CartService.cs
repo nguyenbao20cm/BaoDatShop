@@ -41,6 +41,7 @@ namespace BaoDatShop.Service
 
         public bool Create(CreateCartRequest model)
         {
+            if (model.Quantity > IProductSizeService.GetById(model.ProductSizeId).Stock) return false;
            Cart result = new();
             result.ProductSizeId = model.ProductSizeId;
             result.AccountId = model.AccountId;
