@@ -2,6 +2,7 @@
 using BaoDatShop.Model.Context;
 using BaoDatShop.Model.Model;
 using Eshop.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace BaoDatShop.Responsitories
         public List<ProductSize> GetAll()
         {
             if (context.ProductSize.ToList() == null) return null;
-            return context.ProductSize.ToList();
+            return context.ProductSize.Include(a=>a.Product).ToList();
         }
 
 
