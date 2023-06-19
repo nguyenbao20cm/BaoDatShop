@@ -75,12 +75,12 @@ namespace BaoDatShop.Service
                     InvoiceDetail detal = new InvoiceDetail
                     {
                         InvoiceId = result.Id,
-                        ProductId = productId,
+                        ProductSizeId = c.ProductSizeId,
                         Quantity = c.Quantity,
                         UnitPrice = productService.GetById(productId).Price,
                     };
                     var b=  productService.GetById(productId);
-                    b.CountSell++;
+                    b.CountSell= b.CountSell+ c.Quantity;
                     IProductResponsitories.Update(b);
                     invoiceDetailResponsitories.Create(detal);
                     cartResponsitories.DeleteAll(AccountId);

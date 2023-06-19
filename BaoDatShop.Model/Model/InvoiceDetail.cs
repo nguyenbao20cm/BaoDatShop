@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BaoDatShop.Model.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -11,8 +12,8 @@ namespace Eshop.Models
         public int Id { get; set; }
         public int InvoiceId { get; set; }
         public Invoice Invoice { get; set; }
-        public int ProductId { get; set; }
-        public Product Product { get; set; }
+        public int ProductSizeId { get; set; }
+        public ProductSize ProductSize { get; set; }
         public int Quantity { get; set; } = 1;
         public int UnitPrice { get; set; } = 0;
     }

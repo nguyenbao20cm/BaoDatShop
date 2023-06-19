@@ -11,7 +11,7 @@ namespace BaoDatShop.DTO.InvoiceDetail
     {
         public int InvoiceId { get; set; }
 
-        public int ProductId { get; set; }
+        public int ProductSizeId { get; set; }
 
         public int Quantity { get; set; } = 1;
 

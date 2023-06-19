@@ -28,7 +28,7 @@ namespace BaoDatShop.Service
         public bool Create(CreateInvoiceDetailRequest model)
         {
             InvoiceDetail result = new();
-            result.ProductId = model.ProductId;
+            result.ProductSizeId = model.ProductSizeId;
             result.UnitPrice = model.UnitPrice;
             result.Quantity = model.Quantity;
             result.InvoiceId = model.InvoiceId;
