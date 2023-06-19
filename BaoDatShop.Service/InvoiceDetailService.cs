@@ -17,6 +17,8 @@ namespace BaoDatShop.Service
         //public bool Delete(int id);
         //public InvoiceDetail GetById(int id);
         public List<InvoiceDetail> GetAll(int id);
+
+        public List<InvoiceDetail> GetAll();
     }
     public class InvoiceDetailService : IInvoiceDetailService
     {
@@ -37,6 +39,11 @@ namespace BaoDatShop.Service
         public List<InvoiceDetail> GetAll(int id)
         {
            return invoiceDetailResponsitories.GetAll(id);
+        }
+
+        public List<InvoiceDetail> GetAll()
+        {
+            return invoiceDetailResponsitories.GetAll();
         }
     }
 }

@@ -22,5 +22,11 @@ namespace BaoDatShop.Controllers
         {
             return Ok(invoiceDetailService.GetAll(id));
         }
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer)]
+        [HttpGet("GetAllInvoiceDetails")]
+        public async Task<IActionResult> GetAllInvoiceDetails()
+        {
+            return Ok(invoiceDetailService.GetAll());
+        }
     }
 }

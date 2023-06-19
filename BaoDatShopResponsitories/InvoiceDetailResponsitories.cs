@@ -15,6 +15,7 @@ namespace BaoDatShop.Responsitories
         public bool Update(InvoiceDetail model);
         public InvoiceDetail GetById(int id);
         public List<InvoiceDetail> GetAll(int id);
+        public List<InvoiceDetail> GetAll();
     }
 
     public class InvoiceDetailResponsitories : IInvoiceDetailResponsitories
@@ -34,10 +35,14 @@ namespace BaoDatShop.Responsitories
         public List<InvoiceDetail> GetAll(int id)
         {
             if (context.InvoiceDetail.Where(a=>a.InvoiceId==id).ToList() == null) return null;
-            return context.InvoiceDetail.Include(a=>a.ProductSize).Where(a => a.InvoiceId == id).ToList();
+            return context.InvoiceDetail.Include(a=>a.ProductSize).Include(a=>a.ProductSize.Product).Where(a => a.InvoiceId == id).ToList();
         }
 
-      
+        public List<InvoiceDetail> GetAll()
+        {
+            if (context.InvoiceDetail.ToList() == null) return null;
+            return context.InvoiceDetail.Include(a => a.ProductSize).Include(a => a.ProductSize.Product).ToList();
+        }
 
         public InvoiceDetail GetById(int id)
         {
