@@ -89,6 +89,38 @@ namespace BaoDatShop.Controllers
              return Ok(result);
            
         }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet]
+        [Route("DeleteAccount/{id}")]
+        public async Task<IActionResult> DeleteAccount(string id)
+        {
+            var result = _accountService.DeleteAccount(id);
+            return Ok(result);
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet]
+        [Route("GetAllAcountCustomer")]
+        public async Task<IActionResult> GetAllAcountCustomer()
+        {
+            var result = _accountService.GetAllAcountCustomer();
+            return Ok(result);
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet]
+        [Route("GetAllAcountCustomerStatusTrue")]
+        public async Task<IActionResult> GetAllAcountCustomerStatusTrue()
+        {
+            var result = _accountService.GetAllAcountCustomer().Where(a=>a.Status==true).ToList();
+            return Ok(result);
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet]
+        [Route("GetAllAcountCustomerStatusFalse")]
+        public async Task<IActionResult> GetAllAcountCustomerStatusFalse()
+        {
+            var result = _accountService.GetAllAcountCustomer().Where(a=>a.Status==false).ToList();
+            return Ok(result);
+        }
         private string GetCorrectUserId()
         {
             var a = (ClaimsIdentity)User.Identity;

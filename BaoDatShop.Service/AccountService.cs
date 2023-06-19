@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,6 +21,8 @@ namespace BaoDatShop.Service
         public Task<IdentityResult> SignUpCustomer(RegisterRequest model);
         public Account GetDetailAccount(string id);
         public List<Account> GetAllAccount();
+        public Task<string> DeleteAccount(string id);
+        public List<Account> GetAllAcountCustomer();
     }
     public class AccountService:IAccountService
     {
@@ -30,9 +33,19 @@ namespace BaoDatShop.Service
             this.accountResponsitories=accountResponsitories; 
         }
 
+        public Task<string> DeleteAccount(string id)
+        {
+            return accountResponsitories.DeleteAccount(id);
+        }
+
         public List<Account> GetAllAccount()
         {
             return accountResponsitories.GetAll();
+        }
+
+        public List<Account> GetAllAcountCustomer()
+        {
+            return accountResponsitories.GetAll().Where(a=>a.Permission==3).ToList();
         }
 
         public Account GetDetailAccount(string id)

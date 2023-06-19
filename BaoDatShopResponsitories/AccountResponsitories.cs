@@ -25,6 +25,7 @@ namespace BaoDatShop.Responsitories
         public Account GetDetailAccount(string id);
         public Task<string> Update(string id, UpdateAccountRequest model);
         public List<Account> GetAll();
+        public Task<string> DeleteAccount(string id);
     }
     public class AccountResponsitories : IAccountResponsitories
     {
@@ -50,7 +51,24 @@ namespace BaoDatShop.Responsitories
             _roleManager = roleManager;
             this.passwordHasher = passwordHasher;
         }
+        public async Task<string> DeleteAccount(string id)
+        {
+            var user =  await userManager.FindByIdAsync(id);
+            if (user == null) return "Failed";
+            user.Status = false;
+            IdentityResult result = await userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                Account tamp = context.Account.Where(a => a.Id == id).FirstOrDefault();
+                tamp.Status = false;
+                context.Account.Update(tamp);
+                context.SaveChanges();
+                return "True";
+            }
+            else
+                return "Failed";
 
+        }
         public async Task<string> Update(string id, UpdateAccountRequest model)
         {
             var user = await userManager.FindByIdAsync(id);
@@ -131,6 +149,7 @@ namespace BaoDatShop.Responsitories
             var user = await userManager.FindByNameAsync(model.Username);
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
+                if(user.Status==false) return "Người dùng đã bị khóa";
                 var userRoles = await userManager.GetRolesAsync(user);
 
                 var authClaims = new List<Claim>
@@ -174,11 +193,10 @@ namespace BaoDatShop.Responsitories
                 Address = model.Address,
                 Email = model.Email,
                 UserName = model.Username,
-           
                 Phone = model.Phone,
                 Avatar = fileName,
                 Status = true,
-                Permission = 0,
+                Permission = 2,
             };
             var result = await userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
@@ -225,7 +243,7 @@ namespace BaoDatShop.Responsitories
                 Phone = model.Phone,
                 Avatar = fileName,
                 Status = true,
-                Permission = 0,
+                Permission = 1,
             };
             var result = await userManager.CreateAsync(user, model.Password);
             if (!await _roleManager.RoleExistsAsync(UserRole.Admin))
@@ -280,7 +298,7 @@ namespace BaoDatShop.Responsitories
                 Phone = model.Phone,
                 Avatar = fileName,
                 Status = true,
-                Permission = 0,
+                Permission = 3,
             };
             var result = await userManager.CreateAsync(user, model.Password);
             if (!await _roleManager.RoleExistsAsync(UserRole.Costumer))
@@ -332,5 +350,7 @@ namespace BaoDatShop.Responsitories
         {
             return context.Account.ToList();
         }
+
+        
     }
 }
