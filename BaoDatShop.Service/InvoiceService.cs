@@ -129,7 +129,7 @@ namespace BaoDatShop.Service
         public bool DeleteInvoiceByCostumer(int id)
         {
             Invoice result = invoiceResponsitories.GetById(id);
-            if(result.OrderStatus!=1) return false;
+            if(result.OrderStatus!=1|| result.OrderStatus != 2) return false;
             result.OrderStatus = 4;
             var a = invoiceDetailResponsitories.GetAll(id);
             foreach (var item in a)
