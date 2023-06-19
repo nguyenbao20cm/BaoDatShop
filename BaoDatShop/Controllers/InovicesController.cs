@@ -26,17 +26,30 @@ namespace BaoDatShop.Controllers
         {
             return Ok(invoiceService.Create(GetCorrectUserId(), model));
         }
+        
         [Authorize(Roles = UserRole.Costumer)]
         [HttpPost("GetAllInvoiceOfAccount")]
         public async Task<IActionResult> GetAllInvoiceOfAccount()
         {
             return Ok(invoiceService.GetAllInvoiceOfAccount(GetCorrectUserId()));
         }
-        [Authorize(Roles = UserRole.Costumer)]
-        [HttpPost("DeleteInvoice")]
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpPut("DeleteInvoice/{id}")]
         public async Task<IActionResult> DeleteInvoice(int id)
         {
-            return Ok(invoiceService.DeleteInvoice(id));
+            if(invoiceService.DeleteInvoice(id)==true)
+            return Ok("Thành công");
+            else
+                return Ok("Thất bại");
+        }
+        [Authorize(Roles = UserRole.Costumer)]
+        [HttpPut("DeleteInvoiceByCostumer/{id}")]
+        public async Task<IActionResult> DeleteInvoiceByCostumer(int id)
+        {
+            if (invoiceService.DeleteInvoiceByCostumer(id) == true)
+                return Ok("Thành công");
+            else
+                return Ok("Thất bại");
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllInovice")]

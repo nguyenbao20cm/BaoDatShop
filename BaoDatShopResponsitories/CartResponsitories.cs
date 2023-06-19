@@ -54,7 +54,7 @@ namespace BaoDatShop.Responsitories
         public List<Cart> GetAll(string id)
         {
             if (context.Cart.Include(a=>a.ProductSize).Where(a=>a.AccountId==id).ToList() == null) return null;
-            return context.Cart.Include(a => a.ProductSize).Where(a => a.AccountId == id).ToList();
+            return context.Cart.Include(a => a.ProductSize).Include(a=>a.ProductSize.Product).Where(a => a.AccountId == id).ToList();
         }
 
         public Cart GetById(int id)

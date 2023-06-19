@@ -1,12 +1,13 @@
 ﻿using BaoDatShop.DTO.Invoice;
 using BaoDatShop.Responsitories;
 using Eshop.Models;
-
+using System.Security.Claims;
 
 namespace BaoDatShop.Service
 {
     public interface IInvoiceService
     {
+        public bool DeleteInvoiceByCostumer(int id);
         public bool DeleteInvoice(int id);
         public bool Create(string AccountId, CreateInvoiceRequest model);
         public bool Update(int id, CreateInvoiceRequest model);
@@ -24,15 +25,18 @@ namespace BaoDatShop.Service
     }
     public class InvoiceService : IInvoiceService
     {
+        private readonly IProductSizeService IProductSizeService;
         private readonly IInvoiceResponsitories invoiceResponsitories;
         private readonly ICartResponsitories cartResponsitories;
         private readonly IProductResponsitories IProductResponsitories;
+        private readonly IProductSizeResponsitories IProductSizeResponsitories;
         private readonly IProductService productService;
         private readonly IInvoiceDetailResponsitories invoiceDetailResponsitories;
         private readonly IProductSizeResponsitories productSizeResponsitories;
         public InvoiceService(IInvoiceResponsitories invoiceResponsitories, ICartResponsitories cartResponsitories, IProductService productService, 
             IInvoiceDetailResponsitories invoiceDetailResponsitories,
-            IProductSizeResponsitories productSizeResponsitories, IProductResponsitories IProductResponsitories)
+            IProductSizeResponsitories productSizeResponsitories, IProductResponsitories IProductResponsitories, 
+            IProductSizeService IProductSizeService ,IProductSizeResponsitories IProductSizeResponsitories)
         {
             this.invoiceResponsitories = invoiceResponsitories;
             this.cartResponsitories = cartResponsitories;
@@ -40,6 +44,8 @@ namespace BaoDatShop.Service
             this.invoiceDetailResponsitories = invoiceDetailResponsitories;
             this.productSizeResponsitories = productSizeResponsitories;
             this.IProductResponsitories = IProductResponsitories;
+            this.IProductSizeService = IProductSizeService;
+            this.IProductSizeResponsitories = IProductSizeResponsitories;
         }
 
         public bool Create(string AccountId, CreateInvoiceRequest model)
@@ -69,6 +75,7 @@ namespace BaoDatShop.Service
                 foreach (var c in Cart)
                 {
                     var a = productSizeResponsitories.GetById(c.ProductSizeId);
+                    if(c.Quantity>a.Stock) return false;
                     a.Stock = a.Stock - c.Quantity;
                     productSizeResponsitories.Update(a);
                     var productId = productSizeResponsitories.GetById(c.ProductSizeId).ProductId;
@@ -95,19 +102,42 @@ namespace BaoDatShop.Service
         {
             Invoice result = invoiceResponsitories.GetById(id);
             result.Status = false;
+           
             return invoiceResponsitories.Update(result);
         }
-
+      
         public bool DeleteInvoice(int id)
         {
             Invoice result = invoiceResponsitories.GetById(id);
             result.OrderStatus = 4;
+            var a= invoiceDetailResponsitories.GetAll(id);
+            foreach(var item in a)
+            {
+                var b = IProductSizeService.GetById(item.ProductSizeId);
+                    b.Stock =+ item.Quantity;
+                IProductSizeResponsitories.Update(b);
+            }
+            return invoiceResponsitories.Update(result);
+        }
+
+        public bool DeleteInvoiceByCostumer(int id)
+        {
+            Invoice result = invoiceResponsitories.GetById(id);
+            if(result.OrderStatus!=1) return false;
+            result.OrderStatus = 4;
+            var a = invoiceDetailResponsitories.GetAll(id);
+            foreach (var item in a)
+            {
+                var b = IProductSizeService.GetById(item.ProductSizeId);
+                b.Stock = +item.Quantity;
+                IProductSizeResponsitories.Update(b);
+            }
             return invoiceResponsitories.Update(result);
         }
 
         public List<Invoice> GetAll()
         {
-            return invoiceResponsitories.GetAll();
+            return invoiceResponsitories.GetAll().OrderByDescending(a=>a.IssuedDate).ToList();
         }
 
         public List<Invoice> GetAllInoviceFilterByDate(string startDate, string endDate)
