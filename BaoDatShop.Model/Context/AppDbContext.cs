@@ -42,9 +42,11 @@ namespace BaoDatShop.Model.Context
                 builder.ToTable(nameof(News));
                 builder.HasKey(x => x.NewsId);
             });
-
+   
             modelBuilder.Entity<Product>()
-             .HasIndex(p => new { p.Name,p.SKU }).IsUnique();
+             .HasIndex(p =>  p.SKU).IsUnique();
+            modelBuilder.Entity<Product>()
+             .HasIndex(p =>  p.Name ).IsUnique();
             modelBuilder.Entity<Disscount>()
              .HasIndex(p => new { p.ProductId }).IsUnique();
             modelBuilder.Entity<Voucher>()

@@ -13,8 +13,8 @@ namespace Eshop.Models
     {
         public int Id { get; set; }
 
-    
 
+        public bool PaymentMethods { get; set; }// true là COD flase là thanh toán ngân hàng
         public string AccountId { get; set; }
 
         // Navigation reference property cho khóa ngoại đến Account 

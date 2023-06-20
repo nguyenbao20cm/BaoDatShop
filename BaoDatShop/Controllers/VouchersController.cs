@@ -44,7 +44,7 @@ namespace BaoDatShop.Controllers
             return Ok(IVoucherService.Delete(id));
         }
         [Authorize(Roles = UserRole.Admin)]
-        [HttpGet("CreateVoucher")]
+        [HttpPost("CreateVoucher")]
         public async Task<IActionResult> CreateVoucher(CreateVoucher model)
         {
             return Ok(IVoucherService.Create(model));
