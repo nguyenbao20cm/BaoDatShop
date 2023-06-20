@@ -31,7 +31,7 @@ namespace BaoDatShop.Controllers
         [HttpPost("GetAllInvoiceOfAccount")]
         public async Task<IActionResult> GetAllInvoiceOfAccount()
         {
-            return Ok(invoiceService.GetAllInvoiceOfAccount(GetCorrectUserId()));
+            return Ok(invoiceService.GetAllInvoiceOfAccount(GetCorrectUserId()).OrderByDescending(a=>a.IssuedDate).ToList());
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPut("DeleteInvoice/{id}")]
@@ -56,6 +56,42 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> GetAllInovice()
         {
             return Ok(invoiceService.GetAll());
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetAllInoviceHUy")]
+        public async Task<IActionResult> GetAllInoviceHUy()
+        {
+            return Ok(invoiceService.GetAll().Where(a=>a.OrderStatus==4).ToList());
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetAllInoviceHT")]
+        public async Task<IActionResult> GetAllInoviceHT()
+        {
+            return Ok(invoiceService.GetAll().Where(a => a.OrderStatus == 5).ToList());
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetAllInoviceCXN")]
+        public async Task<IActionResult> GetAllInoviceCXN()
+        {
+            return Ok(invoiceService.GetAll().Where(a => a.OrderStatus == 1).ToList());
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetAllInoviceCB")]
+        public async Task<IActionResult> GetAllInoviceCB()
+        {
+            return Ok(invoiceService.GetAll().Where(a => a.OrderStatus == 2).ToList());
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetAllInoviceDaG")]
+        public async Task<IActionResult> GetAllInoviceDG()
+        {
+            return Ok(invoiceService.GetAll().Where(a => a.OrderStatus == 6).ToList());
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetAllInoviceDangG")]
+        public async Task<IActionResult> GetAllInoviceDangG()
+        {
+            return Ok(invoiceService.GetAll().Where(a => a.OrderStatus == 3).ToList());
         }
         [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer)]
         [HttpGet("GetInvoiceById/{id}")]

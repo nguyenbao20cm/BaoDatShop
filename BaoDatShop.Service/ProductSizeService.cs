@@ -84,7 +84,7 @@ namespace BaoDatShop.Service
             ProductSize result = IProductSizeResponsitories.GetById(id);
             result.Name = model.Name;
             result.ImportPrice = model.ImportPrice;
-            result.Status = true;
+            result.Status = model.Status;
             result.Stock = model.Stock;
             result.ProductId = model.ProductId;
             return IProductSizeResponsitories.Update(result);

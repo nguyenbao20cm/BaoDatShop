@@ -290,7 +290,7 @@ namespace BaoDatShop.Service
  
             result.ShippingAddress = model.shippingadress;
             result.ShippingPhone = model.shippingphone;
-            if(model.orderStatus==5) result.Pay = true;
+                    if(model.orderStatus==5) result.Pay = true;
             else
             result.Pay = model.pay;
             return invoiceResponsitories.Update(result);
