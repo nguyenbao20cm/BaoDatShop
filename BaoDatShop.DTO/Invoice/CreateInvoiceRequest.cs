@@ -18,8 +18,8 @@ namespace BaoDatShop.DTO.Invoice
 
         // public string AccountId { get; set; }
 
-
-
+        public bool PaymentMethods { get; set; }
+        public bool Pay { get; set; }
         public int total { get; set; }
         [DisplayName("Địa chỉ giao hàng")]
         public string ShippingAddress { get; set; }

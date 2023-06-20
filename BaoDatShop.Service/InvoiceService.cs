@@ -59,7 +59,8 @@ namespace BaoDatShop.Service
             }
             if (Cart == null) return false;
             Invoice result = new();
-
+            result.Pay = model.Pay;
+            result.PaymentMethods = model.PaymentMethods;
             result.AccountId = AccountId;
             result.IssuedDate = DateTime.Now;
             result.ShippingAddress = model.ShippingAddress;
@@ -71,7 +72,7 @@ namespace BaoDatShop.Service
             //    toal += item.Quantity * productService.GetById(productId).Price;
             //}
             result.Total = toal;
-            result.Pay = false;
+          
             result.Status = true;
             result.OrderStatus = 1;
             var tamp = invoiceResponsitories.Create(result);
@@ -108,7 +109,7 @@ namespace BaoDatShop.Service
         {
             Invoice result = invoiceResponsitories.GetById(id);
             result.Status = false;
-           
+            
             return invoiceResponsitories.Update(result);
         }
       
@@ -116,6 +117,7 @@ namespace BaoDatShop.Service
         {
             Invoice result = invoiceResponsitories.GetById(id);
             result.OrderStatus = 4;
+            result.Pay = false;
             var a= invoiceDetailResponsitories.GetAll(id);
             foreach(var item in a)
             {
@@ -131,6 +133,7 @@ namespace BaoDatShop.Service
             Invoice result = invoiceResponsitories.GetById(id);
             if(result.OrderStatus!=1|| result.OrderStatus != 2) return false;
             result.OrderStatus = 4;
+            result.Pay = false;
             var a = invoiceDetailResponsitories.GetAll(id);
             foreach (var item in a)
             {
@@ -248,6 +251,7 @@ namespace BaoDatShop.Service
 
         public int ProfitForyear(int year)
         {
+
           var ImportPrice = 0;
           var ImportPiceList=productSizeResponsitories.GetAll().Where(a => a.IssuedDate.Year == year).ToList();
             foreach(var a in ImportPiceList)
@@ -283,8 +287,11 @@ namespace BaoDatShop.Service
         {
             Invoice result = invoiceResponsitories.GetById(id);
             result.OrderStatus = model.orderStatus;
+ 
             result.ShippingAddress = model.shippingadress;
             result.ShippingPhone = model.shippingphone;
+            if(model.orderStatus==5) result.Pay = true;
+            else
             result.Pay = model.pay;
             return invoiceResponsitories.Update(result);
         }

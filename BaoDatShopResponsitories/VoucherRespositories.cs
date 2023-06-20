@@ -46,7 +46,7 @@ namespace BaoDatShop.Responsitories
         public Voucher GetByName(string Name)
         {
             if (context.Voucher.Where(a => a.Name == Name).ToList() == null) return null;
-            return context.Voucher.Where(a => a.Name == Name).FirstOrDefault();
+            return context.Voucher.Where(a => a.Name == Name).Where(a=>a.Status==true).FirstOrDefault();
         }
 
         public bool Update(Voucher model)
