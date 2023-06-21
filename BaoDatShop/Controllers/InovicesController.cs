@@ -26,7 +26,12 @@ namespace BaoDatShop.Controllers
         {
             return Ok(invoiceService.Create(GetCorrectUserId(), model));
         }
-        
+        [Authorize(Roles = UserRole.Costumer)]
+        [HttpPost("CreateInvoiceNow")]
+        public async Task<IActionResult> CreateInCreateInvoiceNowvoice(CreateInvoiceNow model)
+        {
+            return Ok(invoiceService.CreateInvoiceNow(GetCorrectUserId(), model));
+        }
         [Authorize(Roles = UserRole.Costumer)]
         [HttpPost("GetAllInvoiceOfAccount")]
         public async Task<IActionResult> GetAllInvoiceOfAccount()

@@ -9,6 +9,7 @@ namespace BaoDatShop.Service
     {
         public bool DeleteInvoiceByCostumer(int id);
         public bool DeleteInvoice(int id);
+        public bool CreateInvoiceNow(string AccountId, CreateInvoiceNow model);
         public bool Create(string AccountId, CreateInvoiceRequest model);
         public bool Update(int id, CreateInvoiceRequest model);
         public bool Delete(int id);
@@ -105,6 +106,44 @@ namespace BaoDatShop.Service
 
         }
 
+        public bool CreateInvoiceNow(string AccountId, CreateInvoiceNow model)
+        {
+       
+            Invoice result = new();
+            result.Pay = model.Pay;
+            result.PaymentMethods = model.PaymentMethods;
+            result.AccountId = AccountId;
+            result.IssuedDate = DateTime.Now;
+            result.ShippingAddress = model.ShippingAddress;
+            result.ShippingPhone = model.ShippingPhone;
+            int toal = model.total;
+            result.Total = toal;
+            result.Status = true;
+            result.OrderStatus = 1;
+            var tamp = invoiceResponsitories.Create(result);
+            if (tamp == true)
+            {
+                    var a = productSizeResponsitories.GetById(model.ProductSizeID);
+                    if (model.Quantity > a.Stock) return false;
+                    a.Stock = a.Stock - model.Quantity;
+                    productSizeResponsitories.Update(a);
+                    var productId = productSizeResponsitories.GetById(model.ProductSizeID).ProductId;
+                    InvoiceDetail detal = new InvoiceDetail
+                    {
+                        InvoiceId = result.Id,
+                        ProductSizeId = model.ProductSizeID,
+                        Quantity = model.Quantity,
+                        UnitPrice = productService.GetById(productId).Price,
+                    };
+                    var b = productService.GetById(productId);
+                    b.CountSell = b.CountSell + model.Quantity;
+                    IProductResponsitories.Update(b);
+                    invoiceDetailResponsitories.Create(detal);
+                return true;
+            }
+            else return false;
+        }
+
         public bool Delete(int id)
         {
             Invoice result = invoiceResponsitories.GetById(id);
@@ -131,17 +170,20 @@ namespace BaoDatShop.Service
         public bool DeleteInvoiceByCostumer(int id)
         {
             Invoice result = invoiceResponsitories.GetById(id);
-            if(result.OrderStatus!=1|| result.OrderStatus != 2) return false;
-            result.OrderStatus = 4;
-            result.Pay = false;
-            var a = invoiceDetailResponsitories.GetAll(id);
-            foreach (var item in a)
+            if(result.OrderStatus==1|| result.OrderStatus == 2)
             {
-                var b = IProductSizeService.GetById(item.ProductSizeId);
-                b.Stock = +item.Quantity;
-                IProductSizeResponsitories.Update(b);
-            }
-            return invoiceResponsitories.Update(result);
+                result.OrderStatus = 4;
+                result.Pay = false;
+                var a = invoiceDetailResponsitories.GetAll(id);
+                foreach (var item in a)
+                {
+                    var b = IProductSizeService.GetById(item.ProductSizeId);
+                    b.Stock = +item.Quantity;
+                    IProductSizeResponsitories.Update(b);
+                }
+                return invoiceResponsitories.Update(result);
+            }    
+            return false;
         }
 
         public List<Invoice> GetAll()
