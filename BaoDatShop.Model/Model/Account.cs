@@ -56,7 +56,6 @@ namespace Eshop.Models
         // Collection reference property cho khóa ngoại từ Cart
        
         public List<Cart> Carts { get; set; }
-        public ICollection<Review> Review { get; set; }
 
     }
 }

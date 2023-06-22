@@ -52,10 +52,9 @@ namespace BaoDatShop.Service
         public bool Delete(int id)
         {
             
-                Disscount result = IDisscountRespositories.GetById(id);
-                result.Status = false;
+               
   
-                return IDisscountRespositories.Update(result);
+                return IDisscountRespositories.Delete(id);
         }
 
         public List<Disscount> GetAll()

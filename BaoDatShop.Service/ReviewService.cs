@@ -52,17 +52,17 @@ namespace BaoDatShop.Service
 
         public List<Review> GetAll()
         {
-           return reviewResponsitories.GetAll();
+           return reviewResponsitories.GetAll().OrderByDescending(a=>a.DateTime).ToList();
         }
 
         public List<Review> GetAllStatusFalse()
         {
-            return reviewResponsitories.GetAll().Where(a=>a.Status==false).ToList();
+            return reviewResponsitories.GetAll().Where(a=>a.Status==false).ToList().OrderByDescending(a => a.DateTime).ToList();
         }
 
         public List<Review> GetAllStatusTrue()
         {
-            return reviewResponsitories.GetAll().Where(a => a.Status == true).ToList();
+            return reviewResponsitories.GetAll().Where(a => a.Status == true).ToList().OrderByDescending(a => a.DateTime).ToList();
         }
 
         public Review GetById(int id)

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Linq.Expressions;
 
 namespace BaoDatShop.Controllers
 {
@@ -13,10 +14,12 @@ namespace BaoDatShop.Controllers
     [ApiController]
     public class DisscountsController : ControllerBase
     {
+        private readonly IProductService IProductService;
         private readonly IDisscountService IDisscountService;
-        public DisscountsController(IDisscountService IDisscountService)
+        public DisscountsController(IDisscountService IDisscountService, IProductService IProductService)
         {
             this.IDisscountService = IDisscountService;
+            this.IProductService = IProductService;
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllDisscountStatusTrue")]
@@ -45,16 +48,30 @@ namespace BaoDatShop.Controllers
         [HttpPost("CreateDisscount")]
         public async Task<IActionResult> CreateDisscount(CreateDisscount model)
         {
-            if (IDisscountService.Create(model) == true)
-                return Ok("Thành công");
-            else
-                return Ok("Thất bại");
-        }
+            if(IProductService.GetById(model.ProductId)==null) return Ok("Sản phẩm này đã được giảm giá");
+             
+           
+            try
+            {
+                if (IDisscountService.Create(model) == true)
+                    return Ok("Thành công");
+                else
+                    return Ok("Thất bại");
+            }
+            catch (Exception e)
+            {
+                return Ok("Sản phẩm này đã được giảm giá");
+            }
+            }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateDisscount/{id}")]
         public async Task<IActionResult> UpdateDisscount(int id, CreateDisscount model)
         {
-            return Ok(IDisscountService.Update(id, model));
+            if (IDisscountService.Update(id, model) == true)
+                return Ok("Thành công");
+            else
+                return Ok("Thất bại");
+          
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPut("DeleteDisscount/{id}")]

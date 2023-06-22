@@ -12,6 +12,7 @@ namespace BaoDatShop.Responsitories
 {
     public interface IDisscountRespositories
     {
+        public bool Delete(int id );
         public bool Create(Disscount model);
         public bool Update(Disscount model);
         public Disscount GetById(int id);
@@ -27,6 +28,13 @@ namespace BaoDatShop.Responsitories
         public bool Create(Disscount model)
         {
             context.Add(model);
+            int check = context.SaveChanges();
+            return check > 0 ? true : false;
+        }
+
+        public bool Delete(int id)
+        {
+            context.Remove(GetById(id));
             int check = context.SaveChanges();
             return check > 0 ? true : false;
         }

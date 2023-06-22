@@ -37,6 +37,6 @@ namespace Eshop.Models
 
         //public List<InvoiceDetail> InvoiceDetails { get; set; }
       
-        public ICollection<Review> Review { get; set; }
+        
     }
 }

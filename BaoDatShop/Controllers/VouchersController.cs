@@ -47,7 +47,10 @@ namespace BaoDatShop.Controllers
         [HttpPost("CreateVoucher")]
         public async Task<IActionResult> CreateVoucher(CreateVoucher model)
         {
-            return Ok(IVoucherService.Create(model));
+            if (IVoucherService.Create(model) == true)
+                return Ok("Thành công");
+            else
+                return Ok("Thất bại");
         }
     }
 }

@@ -14,9 +14,11 @@ namespace BaoDatShop.Controllers
     public class ProductSizesController : ControllerBase
     {
         private readonly IProductSizeService productSizeService;
-        public ProductSizesController(IProductSizeService productSizeService)
+        private readonly IProductService IProductService;
+        public ProductSizesController(IProductSizeService productSizeService, IProductService IProductService)
         {
             this.productSizeService = productSizeService;
+            this.IProductService = IProductService;
         }
  
         [HttpGet("GetAllProductSizeStatusTrue")]//status true
@@ -64,6 +66,19 @@ namespace BaoDatShop.Controllers
         [HttpPost("CreateProductSize")]
         public async Task<IActionResult> CreateProductSize(CreateProductSize model)
         {
+            if(IProductService.GetById(model.ProductId).Price<model.ImportPrice)
+                return Ok("Giá nhập không thể nhỏ hơn giá bán");
+            var a = 0;
+            var b = productSizeService.GetAll().Where(a=>a.ProductId==model.ProductId).ToList();
+            foreach(var item in b)
+            {
+                if (item.Name == model.Name)
+                {
+                    model.Status = false;
+                    if (productSizeService.Create(model) == true) return Ok("Thành công, nhưng trạng thái thành Ẩn vì Size này chỉ được 1 hiện thị ");
+                    else return Ok("Thất bại");
+                }    
+            }    
             if (model.Name == string.Empty) return Ok("Không được để trống");
             if (productSizeService.Create(model) == true) return Ok("Thành công");
             else return Ok("Thất bại");
@@ -74,7 +89,18 @@ namespace BaoDatShop.Controllers
         [HttpPut("UpdateProductSize/{id}")]
         public async Task<IActionResult> UpdateProductType(int id, UpdateProductSize model)
         {
-
+            if (IProductService.GetById(model.ProductId).Price < model.ImportPrice)
+                return Ok("Giá nhập không thể nhỏ hơn giá bán");
+            if (model.Status==true)
+            {
+                var b = productSizeService.GetAll().Where(a => a.ProductId == model.ProductId).ToList();
+                foreach (var item in b)
+                {
+                    if (item.Name == model.Name)
+                        if (item.Status == true)
+                        return Ok("Không được vì Size này đã được hiện thị");
+                }
+            }    
             if (productSizeService.Update(id, model) == true)
                 return Ok("Thành công");
             else
