@@ -1,5 +1,7 @@
 ﻿using BaoDatShop.DTO.AdvertisingPanel;
 using BaoDatShop.DTO.Role;
+using BaoDatShop.Model.Context;
+using BaoDatShop.Model.Model;
 using BaoDatShop.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -12,10 +14,12 @@ namespace BaoDatShop.Controllers
     [ApiController]
     public class AdvertisingPanelsController : ControllerBase
     {
-        private readonly IAdvertisingPanelService advertisingPanelService;
-        public AdvertisingPanelsController(IAdvertisingPanelService advertisingPanelService)
+        private readonly IAdvertisingPanelService advertisingPanelService; 
+        private readonly AppDbContext context;
+        public AdvertisingPanelsController(IAdvertisingPanelService advertisingPanelService, AppDbContext context)
         {
             this.advertisingPanelService = advertisingPanelService;
+            this.context = context;
         }
 
         [HttpGet("GetAllAdvertisingPanelStatusTrue")]
@@ -35,7 +39,7 @@ namespace BaoDatShop.Controllers
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAdvertisingPanelById/{id}")]
-        public async Task<IActionResult> GetAdvertisingPanelById(string id)
+        public async Task<IActionResult> GetAdvertisingPanelById(int id)
         {
             var a = advertisingPanelService.GetByid(id);
             return Ok(advertisingPanelService.GetByid(id));
@@ -43,12 +47,15 @@ namespace BaoDatShop.Controllers
         [Authorize(Roles = UserRole.Admin)]
         [HttpPost("CreateAdvertisingPanel")]
         public async Task<IActionResult> CreateAdvertisingPanel(CreateAdvertisingPanelRequest model)
-            {
-         
-            if (advertisingPanelService.Create(model) == true)
-                return Ok("Thành công");
-            else
-                return Ok("Thất bại");
+        {
+            AdvertisingPanel result = new();
+            result.Image = model.Image;
+            result.LinkProduct = model.LinkProduct;
+            result.LinkProductType = model.LinkProductType;
+            result.Status = model.Status;
+            context.Add(result);
+            int check = context.SaveChanges();
+            return check > 0 ? Ok(new { data = result, Success = true }) : Ok("Thất bại");
         }
        
         [HttpPost("CreateImageAdvertisingPanel")]

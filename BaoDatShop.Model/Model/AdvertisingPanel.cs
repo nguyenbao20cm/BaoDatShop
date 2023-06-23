@@ -10,6 +10,8 @@ namespace BaoDatShop.Model.Model
     {
         public int AdvertisingPanelID { get; set; }
         public string Image { get; set; }
+        public int? LinkProduct { get; set; }
+        public int? LinkProductType { get; set; }
         public bool Status { get; set; }
 
     }

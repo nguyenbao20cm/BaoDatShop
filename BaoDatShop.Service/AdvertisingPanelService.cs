@@ -24,7 +24,7 @@ namespace BaoDatShop.Service
         public List<AdvertisingPanel> GetAll();
         public List<AdvertisingPanel> GetAllAdvertisingPanel();
         public List<AdvertisingPanel> GetAllAdvertisingPanelStatusFalse();
-        public AdvertisingPanel GetByid(string id);
+        public AdvertisingPanel GetByid(int id);
          public bool CreateImageAdvertisingPanel(IFormFile model);
     }
     public class AdvertisingPanelService : IAdvertisingPanelService
@@ -40,7 +40,8 @@ namespace BaoDatShop.Service
         public bool Create(CreateAdvertisingPanelRequest model)
         {
             //var fileName = model.Image.FileName;
-            //var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "AdvertisingPanel");
+            ////var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "AdvertisingPanel");
+            //var uploadFolder = Path.Combine("C:\\Users\\ADMIN\\OneDrive\\Desktop\\admin\\src\\assets\\images\\AdvertisingPanel");
             //var uploadPath = Path.Combine(uploadFolder, fileName);
 
             //using (FileStream fs = System.IO.File.Create(uploadPath))
@@ -50,6 +51,8 @@ namespace BaoDatShop.Service
             //}
             AdvertisingPanel result = new();
             result.Image = model.Image;
+            result.LinkProduct = model.LinkProduct;
+            result.LinkProductType = model.LinkProductType;
             result.Status = model.Status;
            return advertisingPanelResponsitories.Create(result);
         }
@@ -89,13 +92,15 @@ namespace BaoDatShop.Service
         //    }
             AdvertisingPanel result = advertisingPanelResponsitories.GetById(id);
             result.Image = model.Image;
+            result.LinkProduct = model.LinkProduct;
+            result.LinkProductType = model.LinkProductType;
             result.Status = model.Status;
             return advertisingPanelResponsitories.Update(result);
         }
 
-        public AdvertisingPanel GetByid(string id)
+        public AdvertisingPanel GetByid(int id)
         {
-            return advertisingPanelResponsitories.GetAll().Where(a=>a.Image==id).FirstOrDefault();
+            return advertisingPanelResponsitories.GetAll().Where(a=>a.AdvertisingPanelID==id).FirstOrDefault();
         }
 
         public bool CreateImageAdvertisingPanel(IFormFile model)
