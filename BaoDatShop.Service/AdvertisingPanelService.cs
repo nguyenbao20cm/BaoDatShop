@@ -51,8 +51,8 @@ namespace BaoDatShop.Service
             //}
             AdvertisingPanel result = new();
             result.Image = model.Image;
-            result.LinkProduct = model.LinkProduct;
-            result.LinkProductType = model.LinkProductType;
+            result.ProductId = model.LinkProduct;
+            result.ProductTypeId = model.LinkProductType;
             result.Status = model.Status;
            return advertisingPanelResponsitories.Create(result);
         }
@@ -92,8 +92,8 @@ namespace BaoDatShop.Service
         //    }
             AdvertisingPanel result = advertisingPanelResponsitories.GetById(id);
             result.Image = model.Image;
-            result.LinkProduct = model.LinkProduct;
-            result.LinkProductType = model.LinkProductType;
+            result.ProductId = model.LinkProduct;
+            result.ProductTypeId = model.LinkProductType;
             result.Status = model.Status;
             return advertisingPanelResponsitories.Update(result);
         }

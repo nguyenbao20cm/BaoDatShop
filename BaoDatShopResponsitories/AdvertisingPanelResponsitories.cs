@@ -34,7 +34,7 @@ namespace BaoDatShop.Responsitories
         public List<AdvertisingPanel> GetAll()
         {
             if (context.AdvertisingPanel.ToList() == null) return null;
-            return context.AdvertisingPanel.ToList();
+            return context.AdvertisingPanel.Include(a=>a.Product).Include(a=>a.ProductType).ToList();
         }
 
         public bool Update(AdvertisingPanel model)
@@ -47,7 +47,7 @@ namespace BaoDatShop.Responsitories
         public AdvertisingPanel GetById( int id )
         {
             if (context.AdvertisingPanel.Where(a => a.AdvertisingPanelID == id).FirstOrDefault() == null) return null;
-            return context.AdvertisingPanel.Where(a => a.AdvertisingPanelID == id).FirstOrDefault();
+            return context.AdvertisingPanel.Where(a => a.AdvertisingPanelID == id).Include(a => a.Product).Include(a => a.ProductType).FirstOrDefault();
         }
 
         

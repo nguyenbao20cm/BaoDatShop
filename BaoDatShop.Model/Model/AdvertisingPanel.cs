@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eshop.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,8 +11,11 @@ namespace BaoDatShop.Model.Model
     {
         public int AdvertisingPanelID { get; set; }
         public string Image { get; set; }
-        public int? LinkProduct { get; set; }
-        public int? LinkProductType { get; set; }
+        public int? ProductId { get; set; }
+
+        public Product Product { get; set; }
+        public int? ProductTypeId { get; set; }
+        public ProductTypes ProductType { get; set; }
         public bool Status { get; set; }
 
     }

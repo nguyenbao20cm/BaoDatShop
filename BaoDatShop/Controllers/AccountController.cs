@@ -63,6 +63,25 @@ namespace BaoDatShop.Controllers
             if (result.Succeeded) return Ok(result.Succeeded);
             return Unauthorized();
         }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpPost]
+        [Route("register-Staff")]
+        public async Task<IActionResult> RegisterStaff(ReuqestSignUp model)
+        {
+            var result = await _accountService.RegisterStaff(model);
+            if (result.Succeeded) return Ok(result.Succeeded);
+            return Unauthorized();
+        }
+        [HttpPost("CreateAvatarImage")]
+        public async Task<IActionResult> CreateAvatarImage(IFormFile model)
+        {
+            if(await _accountService.CreateAvatarImage(model)=="Thành công")
+            return Ok("Thành công");
+            else
+            {
+                return Ok("Đã có lỗi xảy ra");
+            }
+        }
         [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer)]
         [HttpPost]
         [Route("UpdateAccount")]
@@ -91,10 +110,19 @@ namespace BaoDatShop.Controllers
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpGet]
+        [Route("GetAllAccountStaff")]
+        public async Task<IActionResult> GetAllAccountStaff()
+        {
+            var result = _accountService.GetAllAccount().Where(a=>a.Permission==2).ToList();
+            return Ok(result);
+
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpPut]
         [Route("DeleteAccount/{id}")]
         public async Task<IActionResult> DeleteAccount(string id)
         {
-            var result = _accountService.DeleteAccount(id);
+            var result = await _accountService.DeleteAccount(id);
             return Ok(result);
         }
         [Authorize(Roles = UserRole.Admin)]

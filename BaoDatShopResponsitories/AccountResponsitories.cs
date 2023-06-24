@@ -5,6 +5,7 @@ using BaoDatShop.DTO.Role;
 using BaoDatShop.Model.Context;
 using Eshop.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -26,8 +27,12 @@ namespace BaoDatShop.Responsitories
         public Task<string> Update(string id, UpdateAccountRequest model);
         public List<Account> GetAll();
         public Task<string> DeleteAccount(string id);
+        public Task<IdentityResult> RegisterStaff(ReuqestSignUp model);
+        public Task<string> CreateAvatarImage(  IFormFile model);
+
     }
-    public class AccountResponsitories : IAccountResponsitories
+ 
+public class AccountResponsitories : IAccountResponsitories
     {
         private IPasswordHasher<ApplicationUser> passwordHasher;
         private readonly AppDbContext context;
@@ -53,20 +58,28 @@ namespace BaoDatShop.Responsitories
         }
         public async Task<string> DeleteAccount(string id)
         {
-            var user =  await userManager.FindByIdAsync(id);
-            if (user == null) return "Failed";
-            user.Status = false;
-            IdentityResult result = await userManager.UpdateAsync(user);
-            if (result.Succeeded)
-            {
-                Account tamp = context.Account.Where(a => a.Id == id).FirstOrDefault();
-                tamp.Status = false;
-                context.Account.Update(tamp);
-                context.SaveChanges();
-                return "True";
+           
+            try {
+                var user = await userManager.FindByIdAsync(id);
+                if (user == null) return "Failed";
+                user.Status = false;
+                IdentityResult result = await userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    Account tamp = context.Account.Where(a => a.Id == id).FirstOrDefault();
+                    tamp.Status = false;
+                    context.Account.Update(tamp);
+                    context.SaveChanges();
+                    return "True";
+                }
+                else
+                    return "Failed";
             }
-            else
-                return "Failed";
+            catch (Exception ex)
+            {
+                Console.WriteLine("{0} First exception caught.", ex.Message);
+            }
+            return "Failed";
 
         }
         public async Task<string> Update(string id, UpdateAccountRequest model)
@@ -351,6 +364,73 @@ namespace BaoDatShop.Responsitories
             return context.Account.ToList();
         }
 
-        
+        public async Task<IdentityResult> RegisterStaff(ReuqestSignUp model)
+        {
+            //var userExists = await userManager.FindByNameAsync(model.Username);
+            //var fileName = model.image.FileName;
+            //var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Avatar");
+            //var uploadPath = Path.Combine(uploadFolder, fileName);
+
+            //using (FileStream fs = System.IO.File.Create(uploadPath))
+            //{
+            //    model.image.CopyTo(fs);
+            //    fs.Flush();
+            //}
+            var user = new ApplicationUser()
+            {
+                FullName = model.FullName,
+                Address = model.Address,
+                Email = model.Email,
+                UserName = model.Username,
+                Phone = model.Phone,
+                Avatar = model.image,
+                Status = model.status,
+                Permission = 2,
+            };
+            var result = await userManager.CreateAsync(user, model.Password);
+            if (!await _roleManager.RoleExistsAsync(UserRole.Staff))
+                await _roleManager.CreateAsync(new IdentityRole(UserRole.Staff));
+
+            if (await _roleManager.RoleExistsAsync(UserRole.Staff))
+            {
+                await userManager.AddToRoleAsync(user, UserRole.Staff);
+            }
+
+            if (result.Succeeded)
+            {
+                var user1 = await userManager.FindByNameAsync(model.Username);
+                user1.Avatar = user1.Id + "jpg";
+                await userManager.UpdateAsync(user1);
+                Account tamp = new();
+                tamp.Id = user1.Id;
+                tamp.FullName = model.FullName;
+                tamp.Address = model.Address;
+                tamp.Email = model.Email;
+                tamp.Username = model.Username;
+                tamp.Phone = model.Phone;
+                tamp.Avatar = user1.Id + "jpg";
+                tamp.Status = model.status ;
+                tamp.Permission = 2;
+                tamp.Level = 0;
+                context.Account.Add(tamp);
+                context.SaveChanges();
+            }
+            return result;
+        }
+
+        public async Task<string> CreateAvatarImage(  IFormFile model)
+        {
+            if (await userManager.FindByNameAsync(model.FileName) == null) return "Thất bại";
+            var userExists = await userManager.FindByNameAsync(model.FileName);
+            var fileName = userExists.Id;
+            var uploadFolder = Path.Combine("C:\\Users\\ADMIN\\OneDrive\\Desktop\\admin\\src\\assets\\images\\Avatar");
+            var uploadPath = Path.Combine(uploadFolder, fileName);
+
+            using (FileStream fs = System.IO.File.Create(uploadPath))
+            {
+                model.CopyTo(fs);
+            }
+            return "Thành công";
+        }
     }
 }

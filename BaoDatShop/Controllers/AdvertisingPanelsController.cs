@@ -50,12 +50,12 @@ namespace BaoDatShop.Controllers
         {
             AdvertisingPanel result = new();
             result.Image = model.Image;
-            result.LinkProduct = model.LinkProduct;
-            result.LinkProductType = model.LinkProductType;
+            result.ProductId = model.LinkProduct;
+            result.ProductTypeId = model.LinkProductType;
             result.Status = model.Status;
             context.Add(result);
             int check = context.SaveChanges();
-            return check > 0 ? Ok(new { data = result, Success = true }) : Ok("Thất bại");
+            return check > 0 ? Ok(new { data = result, Success = true }) : Ok(" ");
         }
        
         [HttpPost("CreateImageAdvertisingPanel")]

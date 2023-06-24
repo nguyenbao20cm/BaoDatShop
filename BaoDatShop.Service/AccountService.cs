@@ -2,6 +2,7 @@
 using BaoDatShop.DTO.LoginRequest;
 using BaoDatShop.Responsitories;
 using Eshop.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -23,15 +24,25 @@ namespace BaoDatShop.Service
         public List<Account> GetAllAccount();
         public Task<string> DeleteAccount(string id);
         public List<Account> GetAllAcountCustomer();
+        public Task<IdentityResult> RegisterStaff(ReuqestSignUp model);
+        public Task<string> CreateAvatarImage( IFormFile model);
+
+
     }
-    public class AccountService:IAccountService
+    public class AccountService : IAccountService
     {
 
         private readonly IAccountResponsitories accountResponsitories;
         public AccountService(IAccountResponsitories accountResponsitories)
         {
-            this.accountResponsitories=accountResponsitories; 
+            this.accountResponsitories = accountResponsitories;
         }
+
+        public async Task<string> CreateAvatarImage( IFormFile model)
+        {
+          
+            return await accountResponsitories.CreateAvatarImage(model);
+        } 
 
         public Task<string> DeleteAccount(string id)
         {
@@ -51,6 +62,11 @@ namespace BaoDatShop.Service
         public Account GetDetailAccount(string id)
         {
             return accountResponsitories.GetDetailAccount(id);
+        }
+
+        public Task<IdentityResult> RegisterStaff(ReuqestSignUp model)
+        {
+            return accountResponsitories.RegisterStaff(model);
         }
 
         public Task<string> SignIn(LoginRequest model)
