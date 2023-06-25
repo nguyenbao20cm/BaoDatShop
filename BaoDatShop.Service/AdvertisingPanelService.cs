@@ -107,7 +107,7 @@ namespace BaoDatShop.Service
         {
             if (model == null) return false;
             var fileName = model.FileName;
-            var uploadFolder = "C:\\Users\\ADMIN\\OneDrive\\Desktop\\admin\\src\\assets\\images\\AdvertisingPanel";
+            var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "AdvertisingPanel");
             var uploadPath = Path.Combine(uploadFolder, fileName);
 
             using (FileStream fs = System.IO.File.Create(uploadPath))

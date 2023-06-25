@@ -28,7 +28,7 @@ namespace BaoDatShop.Responsitories
         public List<Account> GetAll();
         public Task<string> DeleteAccount(string id);
         public Task<IdentityResult> RegisterStaff(ReuqestSignUp model);
-        public Task<string> CreateAvatarImage(  IFormFile model);
+        public bool CreateAvatarImage(  IFormFile model);
 
     }
  
@@ -42,8 +42,9 @@ public class AccountResponsitories : IAccountResponsitories
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         public AccountResponsitories
-            (UserManager<ApplicationUser> userManager, IWebHostEnvironment _environment,
-            AppDbContext context,
+            (UserManager<ApplicationUser> userManager,
+          IWebHostEnvironment _environment,
+        AppDbContext context,
             SignInManager<ApplicationUser> signInManager, IConfiguration configuration, RoleManager<IdentityRole> roleManager,
             IPasswordHasher<ApplicationUser> passwordHasher
             )
@@ -399,7 +400,7 @@ public class AccountResponsitories : IAccountResponsitories
             if (result.Succeeded)
             {
                 var user1 = await userManager.FindByNameAsync(model.Username);
-                user1.Avatar = user1.Id + "jpg";
+                user1.Avatar = user1.Id + ".jpg";
                 await userManager.UpdateAsync(user1);
                 Account tamp = new();
                 tamp.Id = user1.Id;
@@ -408,7 +409,7 @@ public class AccountResponsitories : IAccountResponsitories
                 tamp.Email = model.Email;
                 tamp.Username = model.Username;
                 tamp.Phone = model.Phone;
-                tamp.Avatar = user1.Id + "jpg";
+                tamp.Avatar = user1.Id + ".jpg";
                 tamp.Status = model.status ;
                 tamp.Permission = 2;
                 tamp.Level = 0;
@@ -418,19 +419,34 @@ public class AccountResponsitories : IAccountResponsitories
             return result;
         }
 
-        public async Task<string> CreateAvatarImage(  IFormFile model)
+        private async Task<string> Check(string name)
         {
-            if (await userManager.FindByNameAsync(model.FileName) == null) return "Thất bại";
-            var userExists = await userManager.FindByNameAsync(model.FileName);
+            var userExists = await userManager.FindByNameAsync(name);
+            if (userExists == null) return "Thất bại";
             var fileName = userExists.Id;
-            var uploadFolder = Path.Combine("C:\\Users\\ADMIN\\OneDrive\\Desktop\\admin\\src\\assets\\images\\Avatar");
-            var uploadPath = Path.Combine(uploadFolder, fileName);
+            return fileName;
 
-            using (FileStream fs = System.IO.File.Create(uploadPath))
+        }
+        public  bool CreateAvatarImage(IFormFile model)
+        {
+            var a = Check(model.FileName).Result;
+            var fileName = a+".jpg";
+            var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Avatar");
+            var uploadPath = Path.Combine(uploadFolder, fileName);
+            try
             {
-                model.CopyTo(fs);
+                using (FileStream fs = System.IO.File.Create(uploadPath))
+                {
+                    model.CopyTo(fs);
+                    fs.Flush();
+                }
             }
-            return "Thành công";
+            catch (Exception e)
+            {
+                
+            }
+            return true;
+         
         }
     }
 }

@@ -74,10 +74,8 @@ namespace BaoDatShop.Service
             {
                 var fileName = Image.FileName;
                 //var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Product");
-           
-                      var uploadFolder = Path.Combine("C:\\Users\\ADMIN\\OneDrive\\Desktop\\admin\\src\\assets\\images\\products");
+                var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Product");
                 var uploadPath = Path.Combine(uploadFolder, fileName);
-
                 using (FileStream fs = System.IO.File.Create(uploadPath))
                 {
                     Image.CopyTo(fs);

@@ -73,14 +73,10 @@ namespace BaoDatShop.Controllers
             return Unauthorized();
         }
         [HttpPost("CreateAvatarImage")]
-        public async Task<IActionResult> CreateAvatarImage(IFormFile model)
+        public async Task<IActionResult> CreateAvatarImage( IFormFile model)
         {
-            if(await _accountService.CreateAvatarImage(model)=="Thành công")
-            return Ok("Thành công");
-            else
-            {
-                return Ok("Đã có lỗi xảy ra");
-            }
+            var a = _accountService.CreateAvatarImage(model);
+            return Ok(a);
         }
         [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer)]
         [HttpPost]

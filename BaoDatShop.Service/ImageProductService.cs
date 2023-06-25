@@ -2,6 +2,7 @@
 using BaoDatShop.DTO.Disscount;
 using BaoDatShop.Model.Model;
 using BaoDatShop.Responsitories;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -28,9 +29,11 @@ namespace BaoDatShop.Service
     public class ImageProductService : IImageProductService
     {
         private readonly IImageProductResponsitories IImageProductResponsitories;
-        public ImageProductService(IImageProductResponsitories IImageProductResponsitories)
+        private readonly IWebHostEnvironment _environment;
+        public ImageProductService(IImageProductResponsitories IImageProductResponsitories, IWebHostEnvironment _environment)
         {
             this.IImageProductResponsitories = IImageProductResponsitories;
+            this._environment = _environment;
         }
         public bool Create(CreateImageProduct model)
         {
@@ -45,7 +48,7 @@ namespace BaoDatShop.Service
         {
             if (model == null) return false;
             var fileName = model.FileName;
-            var uploadFolder = "C:\\Users\\ADMIN\\OneDrive\\Desktop\\admin\\src\\assets\\images\\ImgaeProduct";
+                var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "ImageProduct");
             var uploadPath = Path.Combine(uploadFolder, fileName);
 
             using (FileStream fs = System.IO.File.Create(uploadPath))

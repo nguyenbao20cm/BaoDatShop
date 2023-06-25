@@ -15,8 +15,8 @@ namespace BaoDatShop.Service
 {
     public interface IProductSizeService
     {
-        public bool Create(CreateProductSize model);
-        public bool Update(int id, UpdateProductSize model);
+        public bool Create(string id,CreateProductSize model);
+        public bool Update(int id, string idacc, UpdateProductSize model);
         public bool Delete(int id);
         public ProductSize GetById(int id);
         public List<ProductSize> GetAll();
@@ -31,11 +31,12 @@ namespace BaoDatShop.Service
     public class ProductSizeService: IProductSizeService
     {
         private readonly IProductSizeResponsitories IProductSizeResponsitories;
+        private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
 
-        public ProductSizeService(IProductSizeResponsitories IProductSizeResponsitories)
+        public ProductSizeService(IProductSizeResponsitories IProductSizeResponsitories, IHistoryAccountResponsitories IHistoryAccountResponsitories)
         {
             this.IProductSizeResponsitories = IProductSizeResponsitories;
-          
+            this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;  
         }
         public List<ProductSize> GetAllProductTypeStatusFalse()
         {
@@ -46,7 +47,7 @@ namespace BaoDatShop.Service
         {
             return IProductSizeResponsitories.GetAll().Where(a => a.Status == true).ToList();
         }
-        public bool Create(CreateProductSize model)
+        public bool Create(string id,CreateProductSize model)
         {
             ProductSize result = new();
             result.Name = model.Name;
@@ -55,7 +56,16 @@ namespace BaoDatShop.Service
             result.ProductId = model.ProductId;
             result.Status = model.Status;
             result.Stock = model.Stock;
-            return IProductSizeResponsitories.Create(result);
+            var ab = IProductSizeResponsitories.Create(result);
+            if (ab==true)
+            {
+               var tam= IProductSizeResponsitories.GetById(result.Id);
+                HistoryAccount a = new();
+                a.AccountID = id; a.Datetime = DateTime.Now;
+                a.Content = "Đã thêm Size " + model.Name + " cho sản phẩm " + tam.Product.Name;
+                IHistoryAccountResponsitories.Create(a);
+            }    
+            return ab;
         }
 
         public bool Delete(int id)
@@ -79,7 +89,7 @@ namespace BaoDatShop.Service
             return reslut;
         }
 
-        public bool Update(int id, UpdateProductSize model)
+        public bool Update(int id,string idacc, UpdateProductSize model)
         {
             ProductSize result = IProductSizeResponsitories.GetById(id);
             result.Name = model.Name;
@@ -87,7 +97,18 @@ namespace BaoDatShop.Service
             result.Status = model.Status;
             result.Stock = model.Stock;
             result.ProductId = model.ProductId;
-            return IProductSizeResponsitories.Update(result);
+            
+            var ab = IProductSizeResponsitories.Update(result);
+            if (ab == true)
+            {
+                var tam = IProductSizeResponsitories.GetById(result.Id);
+                HistoryAccount a = new();
+                a.AccountID = idacc;
+                a.Content = "Đã cập nhật dữ liệu cho cho sản phẩm " + tam.Product.Name;
+                a.Datetime = DateTime.Now;
+                IHistoryAccountResponsitories.Create(a);
+            }
+            return ab;
         }
 
         public Month GetAllImportPrice(string year)

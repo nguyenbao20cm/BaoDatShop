@@ -13,6 +13,7 @@ namespace BaoDatShop.Model.Model
         public string AccountID { get; set; }
         public Account Account { get; set; }
         public string Content { get; set; }
+        public DateTime Datetime { get; set; }
 
     }
 }

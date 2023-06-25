@@ -6,9 +6,11 @@ using BaoDatShop.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
+using System.Net.NetworkInformation;
 using System.Text;
 
 
@@ -101,6 +103,13 @@ builder.Services.AddTransient<IImageProductService, ImageProductService>();
 
 builder.Services.AddTransient<IVoucherRespositories, VoucherRespositories>();
 builder.Services.AddTransient<IVoucherService, VoucherService>();
+
+builder.Services.AddTransient<IHistoryAccountResponsitories, HistoryAccountResponsitories>();
+
+
+
+
+
 // For Enity
 builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("LMS")));
@@ -137,7 +146,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+//Image
+app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+    RequestPath = "/wwwroot",
+});
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

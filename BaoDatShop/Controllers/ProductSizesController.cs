@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Security.Claims;
 
 namespace BaoDatShop.Controllers
 {
@@ -75,15 +76,15 @@ namespace BaoDatShop.Controllers
                 if (item.Name == model.Name)
                 {
                     model.Status = false;
-                    if (productSizeService.Create(model) == true) return Ok("Thành công, nhưng trạng thái thành Ẩn vì Size này chỉ được 1 hiện thị ");
+                    if (productSizeService.Create(GetCorrectUserId(), model) == true) return Ok("Thành công, nhưng trạng thái thành Ẩn vì Size này chỉ được 1 hiện thị ");
                     else return Ok("Thất bại");
                 }    
             }    
             if (model.Name == string.Empty) return Ok("Không được để trống");
-            if (productSizeService.Create(model) == true) return Ok("Thành công");
+            if (productSizeService.Create(GetCorrectUserId(),model) == true) return Ok("Thành công");
             else return Ok("Thất bại");
 
-            return Ok(productSizeService.Create(model));
+            return Ok(productSizeService.Create(GetCorrectUserId(),model));
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateProductSize/{id}")]
@@ -101,7 +102,7 @@ namespace BaoDatShop.Controllers
                         return Ok("Không được vì Size này đã được hiện thị");
                 }
             }    
-            if (productSizeService.Update(id, model) == true)
+            if (productSizeService.Update(id, GetCorrectUserId(), model) == true)
                 return Ok("Thành công");
             else
                 return Ok("Thất bại");
@@ -114,6 +115,12 @@ namespace BaoDatShop.Controllers
                 return Ok("Thành công");
             else
                 return Ok("Thất bại");
+        }
+        private string GetCorrectUserId()
+        {
+            var a = (ClaimsIdentity)User.Identity;
+            var result = a.FindFirst("UserId").Value;
+            return result;
         }
     }
 }

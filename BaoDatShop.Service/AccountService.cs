@@ -25,7 +25,8 @@ namespace BaoDatShop.Service
         public Task<string> DeleteAccount(string id);
         public List<Account> GetAllAcountCustomer();
         public Task<IdentityResult> RegisterStaff(ReuqestSignUp model);
-        public Task<string> CreateAvatarImage( IFormFile model);
+        public bool CreateAvatarImage( IFormFile model);
+
 
 
     }
@@ -38,10 +39,10 @@ namespace BaoDatShop.Service
             this.accountResponsitories = accountResponsitories;
         }
 
-        public async Task<string> CreateAvatarImage( IFormFile model)
+        public bool CreateAvatarImage( IFormFile model)
         {
           
-            return await accountResponsitories.CreateAvatarImage(model);
+            return  accountResponsitories.CreateAvatarImage(model);
         } 
 
         public Task<string> DeleteAccount(string id)

@@ -232,6 +232,30 @@ namespace BaoDatShop.Model.Migrations
                     b.ToTable("Footer");
                 });
 
+            modelBuilder.Entity("BaoDatShop.Model.Model.HistoryAccount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AccountID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Datetime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountID");
+
+                    b.ToTable("HistoryAccount");
+                });
+
             modelBuilder.Entity("BaoDatShop.Model.Model.ImageProduct", b =>
                 {
                     b.Property<int>("Id")
@@ -806,6 +830,15 @@ namespace BaoDatShop.Model.Migrations
                     b.Navigation("Account");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("BaoDatShop.Model.Model.HistoryAccount", b =>
+                {
+                    b.HasOne("Eshop.Models.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountID");
+
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("BaoDatShop.Model.Model.ImageProduct", b =>
