@@ -1,6 +1,7 @@
 ﻿using BaoDatShop.DTO.Invoice;
 using BaoDatShop.DTO.Product;
 using BaoDatShop.DTO.Role;
+using BaoDatShop.Responsitories;
 using BaoDatShop.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -11,20 +12,44 @@ using System.Security.Claims;
 namespace BaoDatShop.Controllers
 {
     [Route("api/[controller]")]
-   
+
     [ApiController]
     public class InovicesController : ControllerBase
     {
         private readonly IInvoiceService invoiceService;
-        public InovicesController(IInvoiceService invoiceService)
+        private readonly IInvoiceResponsitories IInvoiceResponsitories;
+        private readonly IProductSizeResponsitories IProductSizeResponsitories;
+        public InovicesController(IInvoiceService invoiceService, IInvoiceResponsitories IInvoiceResponsitories, IProductSizeResponsitories IProductSizeResponsitories)
         {
             this.invoiceService = invoiceService;
+            this.IInvoiceResponsitories = IInvoiceResponsitories;
+            this.IProductSizeResponsitories = IProductSizeResponsitories;
         }
         [Authorize(Roles = UserRole.Costumer)]
         [HttpPost("CreateInvoice")]
         public async Task<IActionResult> CreateInvoice(CreateInvoiceRequest model)
         {
             return Ok(invoiceService.Create(GetCorrectUserId(), model));
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpPost("GetMonthInvoice")]
+        public async Task<IActionResult> GetMonthInvoice(YearAndMonth model )
+        {
+            var ImportPrice = 0;
+            var ImportPiceList = IProductSizeResponsitories.GetAll().Where(a => a.IssuedDate.Month == model.Month).Where(a => a.IssuedDate.Year ==model.Year).ToList();
+            foreach (var aba in ImportPiceList)
+            {
+                ImportPrice += aba.ImportPrice * aba.Stock;
+            }
+            var Total = 0;
+            var TotalList = IInvoiceResponsitories.GetAll().Where(a => a.IssuedDate.Month == model.Month).Where(a => a.IssuedDate.Year == model.Year).ToList();
+            foreach (var abc in TotalList)
+            {
+                Total += abc.Total;
+            }
+            var b = Total - ImportPrice;
+            var c= Total - ImportPrice;
+            return Ok(c);
         }
         [Authorize(Roles = UserRole.Costumer)]
         [HttpPost("CreateInvoiceNow")]

@@ -23,7 +23,12 @@ namespace BaoDatShop.Controllers
         [HttpGet("GetTop10BestSeller")]
         public async Task<IActionResult> GetTop10BestSeller()
         {
-            return Ok(productService.GetAll().Where(a => a.ProductType.Status == true).OrderByDescending(a=>a.CountSell).Take(10).ToList());
+            return Ok(productService.GetAll().Where(a => a.ProductType.Status == true).OrderByDescending(a=>a.CountSell).Take(10).ToList().Take(10));
+        }
+        [HttpGet("GetBestSeller")]
+        public async Task<IActionResult> GetBestSeller()
+        {
+            return Ok(productService.GetAll().Where(a => a.ProductType.Status == true).OrderByDescending(a => a.CountSell).Take(10).ToList());
         }
         [HttpGet("GetAllProduct")]
         public async Task<IActionResult> GetAllProduct()

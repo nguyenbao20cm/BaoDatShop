@@ -35,6 +35,7 @@ namespace BaoDatShop.Model.Context
         public DbSet<Footer> Footer { get; set; }
         public DbSet<Voucher> Voucher { get; set; }
         public DbSet<HistoryAccount> HistoryAccount { get; set; }
+        public DbSet<LoveProduct> LoveProduct { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

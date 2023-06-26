@@ -69,6 +69,20 @@ namespace BaoDatShop.Controllers
         {
             return Ok(reviewService.GetAllStatusFalse());
         }
+
+        [HttpGet("GetAverageStartReview/{id}")]
+        public async Task<IActionResult> GetAverageStartReview(int id)
+        {
+            var a = reviewService.GetAll().Where(a => a.ProductId == id).ToList();
+            var Average =0;
+            var b = 0;
+            foreach(var item in a)
+            {
+                b++;
+                Average += item.Star;
+            }
+            return Ok(Average/b);
+        }
         private string GetCorrectUserId()
         {
             var a = (ClaimsIdentity)User.Identity;

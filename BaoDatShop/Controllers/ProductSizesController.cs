@@ -68,7 +68,7 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> CreateProductSize(CreateProductSize model)
         {
             if(IProductService.GetById(model.ProductId).Price<model.ImportPrice)
-                return Ok("Giá nhập không thể nhỏ hơn giá bán");
+                return Ok("Giá nhập không thể lớn hơn giá bán");
             var a = 0;
             var b = productSizeService.GetAll().Where(a=>a.ProductId==model.ProductId).ToList();
             foreach(var item in b)
@@ -99,7 +99,7 @@ namespace BaoDatShop.Controllers
                 {
                     if (item.Name == model.Name)
                         if (item.Status == true)
-                        return Ok("Không được vì Size này đã được hiện thị");
+                        return Ok("Không được vì sản phẩm đã có Size này hiện thị");
                 }
             }    
             if (productSizeService.Update(id, GetCorrectUserId(), model) == true)
