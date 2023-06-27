@@ -57,7 +57,7 @@ namespace BaoDatShop.Controllers
         }
         [HttpPost]
         [Route("register-Customer")]
-        public async Task<IActionResult> RegisterCustomer([FromForm] RegisterRequest model)
+        public async Task<IActionResult> RegisterCustomer(ReuqestSignUp model)
         {
             var result = await _accountService.SignUpCustomer(model);
             if (result.Succeeded) return Ok(result.Succeeded);
@@ -79,11 +79,20 @@ namespace BaoDatShop.Controllers
             return Ok(a);
         }
         [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer)]
-        [HttpPost]
+        [HttpPut]
         [Route("UpdateAccount")]
-        public async Task<IActionResult> UpdateAccount([FromForm] UpdateAccountRequest model)
+        public async Task<IActionResult> UpdateAccount( UpdateAccountRequest model)
         {
             var result = await _accountService.Update(GetCorrectUserId(), model);
+            if (result == "Failed") return Ok("Failed");
+            return Ok(result);
+        }
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer)]
+        [HttpPut]
+        [Route("UpdateAccountCustomer")]
+        public async Task<IActionResult> UpdateAccountCustomer(UpdateAccountCustomerRequest model)
+        {
+            var result = await _accountService.UpdateAccountCustomer(GetCorrectUserId(), model);
             if (result == "Failed") return Ok("Failed");
             return Ok(result);
         }

@@ -22,9 +22,10 @@ namespace BaoDatShop.Responsitories
         public Task<IdentityResult> SignUp(RegisterRequest model);
         public Task<IdentityResult> SignUpAdmin(RegisterRequest model);
         public Task<string> SignIn(LoginRequest model);
-        public Task<IdentityResult> SignUpCustomer(RegisterRequest model);
+        public Task<IdentityResult> SignUpCustomer(ReuqestSignUp model);
         public Account GetDetailAccount(string id);
         public Task<string> Update(string id, UpdateAccountRequest model);
+        public Task<string> UpdateAccountCustomer(string id, UpdateAccountCustomerRequest model);
         public List<Account> GetAll();
         public Task<string> DeleteAccount(string id);
         public Task<IdentityResult> RegisterStaff(ReuqestSignUp model);
@@ -83,6 +84,45 @@ public class AccountResponsitories : IAccountResponsitories
             return "Failed";
 
         }
+        public async Task<string> UpdateAccountCustomer(string id, UpdateAccountCustomerRequest model)
+        {
+
+            var user = await userManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                if (!string.IsNullOrEmpty(model.email))
+                    user.Email = model.email;
+                else
+                    return "Failed";
+                if (!string.IsNullOrEmpty(model.FullName))
+                    user.FullName = model.FullName;
+                else
+                    return "Failed";
+                if (!string.IsNullOrEmpty(model.Address))
+                    user.Address = model.Address;
+                else
+                    return "Failed";
+                if (!string.IsNullOrEmpty(model.Phone))
+                    user.Phone = model.Phone;
+                else
+                    return "Failed";
+                IdentityResult result = await userManager.UpdateAsync(user);
+                    if (result.Succeeded)
+                    {
+                        Account tamp = context.Account.Where(a => a.Id == id).FirstOrDefault();
+                        tamp.FullName = model.FullName;
+                        tamp.Address = model.Address;
+                        tamp.Email = model.email;
+                        tamp.Phone = model.Phone;
+                        context.Account.Update(tamp);
+                        context.SaveChanges();
+                        return "True";
+                    }
+                    else
+                        return "Failed";
+            }
+            return "Failed";
+        }
         public async Task<string> Update(string id, UpdateAccountRequest model)
         {
             var user = await userManager.FindByIdAsync(id);
@@ -114,21 +154,21 @@ public class AccountResponsitories : IAccountResponsitories
                     user.Phone =  model.Phone;
                 else
                     return "Failed";
-                if (model.image != null)
-                {
-                    var fileName = id+"jpg";
-                    var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Avatar");
-                    var uploadPath = Path.Combine(uploadFolder, fileName);
+                //if (model.image != null)
+                //{
+                //    var fileName = id+"jpg";
+                //    var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Avatar");
+                //    var uploadPath = Path.Combine(uploadFolder, fileName);
 
-                    using (FileStream fs = System.IO.File.Create(uploadPath))
-                    {
-                        model.image.CopyTo(fs);
-                        fs.Flush();
-                    }
-                    user.Avatar = fileName;
-                }
-                else
-                    return "Failed";
+                //    using (FileStream fs = System.IO.File.Create(uploadPath))
+                //    {
+                //        model.image.CopyTo(fs);
+                //        fs.Flush();
+                //    }
+                //    user.Avatar = fileName;
+                //}
+                //else
+                //    return "Failed";
 
                 if (!string.IsNullOrEmpty(model.email) && !string.IsNullOrEmpty(model.newpassword))
                 {
@@ -142,7 +182,7 @@ public class AccountResponsitories : IAccountResponsitories
                         tamp.Email = model.email;
                         tamp.Username = model.Username;
                         tamp.Phone = model.Phone;
-                        tamp.Avatar = model.image.FileName;
+                        
                         context.Account.Update(tamp);
                         context.SaveChanges();
                         return "True";
@@ -290,18 +330,18 @@ public class AccountResponsitories : IAccountResponsitories
             }
             return result;
         }
-        public async Task<IdentityResult> SignUpCustomer(RegisterRequest model)
+        public async Task<IdentityResult> SignUpCustomer(ReuqestSignUp model)
         {
             var userExists = await userManager.FindByNameAsync(model.Username);
-            var fileName = model.image.FileName;
-            var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Avatar");
-            var uploadPath = Path.Combine(uploadFolder, fileName);
+            //var fileName = model.image.FileName;
+            //var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Avatar");
+            //var uploadPath = Path.Combine(uploadFolder, fileName);
 
-            using (FileStream fs = System.IO.File.Create(uploadPath))
-            {
-                model.image.CopyTo(fs);
-                fs.Flush();
-            }
+            //using (FileStream fs = System.IO.File.Create(uploadPath))
+            //{
+            //    model.image.CopyTo(fs);
+            //    fs.Flush();
+            //}
             var user = new ApplicationUser()
             {
                 FullName = model.FullName,
@@ -310,7 +350,7 @@ public class AccountResponsitories : IAccountResponsitories
                 UserName = model.Username,
               
                 Phone = model.Phone,
-                Avatar = fileName,
+                Avatar = model.image,
                 Status = true,
                 Permission = 3,
             };
@@ -326,7 +366,7 @@ public class AccountResponsitories : IAccountResponsitories
             if (result.Succeeded)
             {
                 var user1 = await userManager.FindByNameAsync(model.Username);
-                user1.Avatar = user1.Id + "jpg";
+                user1.Avatar = user1.Id + ".jpg";
                 await userManager.UpdateAsync(user1);
                 Account tamp = new();
                 tamp.Id = user1.Id;
@@ -336,7 +376,7 @@ public class AccountResponsitories : IAccountResponsitories
                 tamp.Username = model.Username;
               
                 tamp.Phone = model.Phone;
-                tamp.Avatar = user1.Id + "jpg";
+                tamp.Avatar = user1.Id + ".jpg";
                 tamp.Status = true;
                 tamp.Permission = 3;
                 tamp.Level = 1;
@@ -448,5 +488,7 @@ public class AccountResponsitories : IAccountResponsitories
             return true;
          
         }
+
+      
     }
 }

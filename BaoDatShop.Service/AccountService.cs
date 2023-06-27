@@ -15,11 +15,12 @@ namespace BaoDatShop.Service
 {
     public interface IAccountService
     {
+        public Task<string> UpdateAccountCustomer(string id, UpdateAccountCustomerRequest model);
         public Task<string> Update(string id,UpdateAccountRequest model);
         public Task<string> SignIn(LoginRequest model);
         public Task<IdentityResult> SignUp(RegisterRequest model);
         public Task<IdentityResult> SignUpAdmin(RegisterRequest model);
-        public Task<IdentityResult> SignUpCustomer(RegisterRequest model);
+        public Task<IdentityResult> SignUpCustomer(ReuqestSignUp model);
         public Account GetDetailAccount(string id);
         public List<Account> GetAllAccount();
         public Task<string> DeleteAccount(string id);
@@ -84,7 +85,7 @@ namespace BaoDatShop.Service
         {
             return accountResponsitories.SignUpAdmin(model);
         }
-        public Task<IdentityResult> SignUpCustomer(RegisterRequest model)
+        public Task<IdentityResult> SignUpCustomer(ReuqestSignUp model)
         {
             return accountResponsitories.SignUpCustomer(model);
         }
@@ -92,6 +93,11 @@ namespace BaoDatShop.Service
         public Task<string> Update(string id, UpdateAccountRequest model)
         {
             return accountResponsitories.Update(id, model);
+        }
+
+        public Task<string> UpdateAccountCustomer(string id, UpdateAccountCustomerRequest model)
+        {
+            return accountResponsitories.UpdateAccountCustomer(id, model);
         }
     }
 }
