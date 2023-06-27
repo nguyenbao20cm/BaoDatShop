@@ -106,7 +106,8 @@ builder.Services.AddTransient<IVoucherService, VoucherService>();
 
 builder.Services.AddTransient<IHistoryAccountResponsitories, HistoryAccountResponsitories>();
 
-
+builder.Services.AddTransient<IFavoriteProductRespositories, FavoriteProductResponsitories>();
+builder.Services.AddTransient<IFavoriteProductService, FavoriteProductService>();
 
 
 
