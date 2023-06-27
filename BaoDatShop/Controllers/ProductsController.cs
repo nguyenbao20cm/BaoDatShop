@@ -77,7 +77,7 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> CreateProduct( CreateProductRequest model)
         {
             
-            if (productService.Create(model) == true)
+            if (productService.Create(GetCorrectUserId(),model) == true)
                 return Ok("Thành công");
             else
                 return Ok("Thất bại");
@@ -86,7 +86,7 @@ namespace BaoDatShop.Controllers
         [HttpPut("UpdateProduct/{id}")]
         public async Task<IActionResult> UpdateProduct(int id,  CreateProductRequest model)
         {
-            if (productService.Update(id, model) == true)
+            if (productService.Update(id, GetCorrectUserId(),model) == true)
                 return Ok("Thành công");
             else
                 return Ok("Thất bại");
@@ -101,5 +101,12 @@ namespace BaoDatShop.Controllers
                 return Ok("Thất bại");
 
         }
+        private string GetCorrectUserId()
+        {
+            var a = (ClaimsIdentity)User.Identity;
+            var result = a.FindFirst("UserId").Value;
+            return result;
+        }
+
     }
 }

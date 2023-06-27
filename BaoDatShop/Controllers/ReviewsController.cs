@@ -81,7 +81,8 @@ namespace BaoDatShop.Controllers
                 b++;
                 Average += item.Star;
             }
-            return Ok(Average/b);
+            float re = Average / b;
+            return Ok(re);
         }
         private string GetCorrectUserId()
         {

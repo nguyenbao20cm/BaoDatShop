@@ -1,9 +1,11 @@
 ﻿using BaoDatShop.DTO.Invoice;
 using BaoDatShop.DTO.Product;
+using BaoDatShop.Model.Model;
 using BaoDatShop.Responsitories;
 using Eshop.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace BaoDatShop.Service
@@ -12,8 +14,8 @@ namespace BaoDatShop.Service
     {
         
         public bool CreateImageProduct(IFormFile model);
-        public bool Create(CreateProductRequest model);
-        public bool Update(int id, CreateProductRequest model);
+        public bool Create(string id,CreateProductRequest model);
+        public bool Update(int id,string ida, CreateProductRequest model);
         public bool Delete(int id);
         public Product GetById(int id);
         public List<Product> GetAll();
@@ -27,10 +29,13 @@ namespace BaoDatShop.Service
     {
         private readonly IProductResponsitories productResponsitories;
         private readonly IWebHostEnvironment _environment;
-        public ProductService(IProductResponsitories productResponsitories, IWebHostEnvironment _environment)
+        private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
+        public ProductService(IProductResponsitories productResponsitories, IWebHostEnvironment _environment,
+            IHistoryAccountResponsitories IHistoryAccountResponsitories)
         {
             this.productResponsitories = productResponsitories;
             this._environment = _environment;
+            this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
         }
 
         public List<Product> GetAllProductStatusFalse()
@@ -42,7 +47,7 @@ namespace BaoDatShop.Service
         {
             return productResponsitories.GetAll().Where(a => a.Status == true).ToList();
         }
-        public bool Create(CreateProductRequest model)
+        public bool Create(string id,CreateProductRequest model)
         {
             //var fileName = model.Image.FileName;
             ////var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Product");
@@ -65,7 +70,16 @@ namespace BaoDatShop.Service
             result.ProductTypeId = model.ProductTypeId;
             result.Image = model.Image;
             result.Status = model.Status;
-            return productResponsitories.Create(result);
+            bool ab = productResponsitories.Create(result);
+            if (ab == true)
+            {
+                var tam = productResponsitories.GetById(result.Id);
+                HistoryAccount a = new();
+                a.AccountID = id; a.Datetime = DateTime.Now;
+                a.Content = "Đã thêm sản phẩm" + model.Name +"thuộc loại sản phẩm "+tam.ProductType.Name;
+                IHistoryAccountResponsitories.Create(a);
+            }
+            return ab;
         }
 
         public bool CreateImageProduct(IFormFile Image)
@@ -116,7 +130,7 @@ namespace BaoDatShop.Service
             return item;
         }
 
-        public bool Update(int id, CreateProductRequest model)
+        public bool Update(int id,string ida, CreateProductRequest model)
         {
             ////var fileName = model.Image.FileName;
             ////var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Product");
@@ -150,7 +164,16 @@ namespace BaoDatShop.Service
             result.ProductTypeId = model.ProductTypeId;
             result.Image = model.Image;
             result.Status = model.Status;
-            return productResponsitories.Update(result);
+            bool ab = productResponsitories.Update(result);
+            if (ab == true)
+            {
+                var tam = productResponsitories.GetById(result.Id);
+                HistoryAccount a = new();
+                a.AccountID = ida; a.Datetime = DateTime.Now;
+                a.Content = "Đã chỉnh sửa sản phẩm" + model.Name + "thuộc loại sản phẩm " + tam.ProductType.Name;
+                IHistoryAccountResponsitories.Create(a);
+            }
+            return ab;
         }
 
         public Product GetByName(string name)

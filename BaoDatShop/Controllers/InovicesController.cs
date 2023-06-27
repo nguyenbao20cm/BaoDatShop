@@ -136,6 +136,12 @@ namespace BaoDatShop.Controllers
             return Ok(invoiceService.ProfitForyear(year));
         }
         [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("ProfitForYearAgo/{year}")]
+        public async Task<IActionResult> ProfitForYearAgo(int year)
+        {
+            return Ok(invoiceService.ProfitForyear(year));
+        }
+        [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllInoviceTotalMonth/{year}")]
         public async Task<IActionResult> GetAllInoviceTotalMonth(string year)
         {

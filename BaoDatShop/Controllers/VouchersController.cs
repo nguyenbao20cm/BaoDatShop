@@ -38,7 +38,7 @@ namespace BaoDatShop.Controllers
             return Ok(IVoucherService.ValidationVoucher(ValidationVoucher));
         }
         [Authorize(Roles = UserRole.Admin)]
-        [HttpGet("DeleteVoucher/{id}")]
+        [HttpPut("DeleteVoucher/{id}")]
         public async Task<IActionResult> DeleteVoucher(int id)
         {
             return Ok(IVoucherService.Delete(id));
