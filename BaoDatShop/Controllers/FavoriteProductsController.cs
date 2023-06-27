@@ -31,13 +31,13 @@ namespace BaoDatShop.Controllers
             return Ok(IFavoriteProductService.GetAll(GetCorrectUserId()));
         }
         [Authorize(Roles = UserRole.Costumer)]
-        [HttpGet("DeleteFavoriteProduct")]
+        [HttpPut("DeleteFavoriteProduct")]
         public async Task<IActionResult> DeleteFavoriteProduct(int id)
         {
             return Ok(IFavoriteProductService.Delete(id));
         }
         [Authorize(Roles = UserRole.Costumer)]
-        [HttpGet("CreateFavoriteProduct")]
+        [HttpPost("CreateFavoriteProduct")]
         public async Task<IActionResult> CreateFavoriteProduct(CreateFavoriteProduct model)
         {
             return Ok(IFavoriteProductService.Create(GetCorrectUserId(), model));
