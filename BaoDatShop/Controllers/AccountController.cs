@@ -59,6 +59,14 @@ namespace BaoDatShop.Controllers
         [Route("register-Customer")]
         public async Task<IActionResult> RegisterCustomer(ReuqestSignUp model)
         {
+            var a = _accountService.GetAllAccount();
+            foreach(var item in a)
+            {
+              
+                if ( model.Username==item.Username)
+                    return Ok("Tên đăng nhập này đã được sử dụng");
+                if (model.Phone == item.Phone) return Ok("Số điện thoại này đã được sử dụng");
+            }
             var result = await _accountService.SignUpCustomer(model);
             if (result.Succeeded) return Ok(result.Succeeded);
             return Unauthorized();
