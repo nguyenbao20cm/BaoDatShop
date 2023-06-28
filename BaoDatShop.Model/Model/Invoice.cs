@@ -13,7 +13,7 @@ namespace Eshop.Models
     {
         public int Id { get; set; }
 
-
+        public string NameCustomer { get; set; }
         public bool PaymentMethods { get; set; }// true là COD flase là thanh toán ngân hàng
         public string AccountId { get; set; }
 

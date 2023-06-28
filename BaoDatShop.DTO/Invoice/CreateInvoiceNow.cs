@@ -9,6 +9,7 @@ namespace BaoDatShop.DTO.Invoice
 {
     public class CreateInvoiceNow
     {
+        public string NameCustomer { get; set; }
         public int Quantity { get; set; }
         public int ProductSizeID { get; set; }
         public bool PaymentMethods { get; set; }

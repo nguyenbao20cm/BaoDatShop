@@ -15,7 +15,7 @@ namespace BaoDatShop.DTO.Invoice
 
 
 
-
+        public string NameCustomer { get; set; }
         // public string AccountId { get; set; }
 
         public bool PaymentMethods { get; set; }

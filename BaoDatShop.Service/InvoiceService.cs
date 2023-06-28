@@ -61,6 +61,7 @@ namespace BaoDatShop.Service
             if (Cart == null) return false;
             Invoice result = new();
             result.Pay = model.Pay;
+            result.NameCustomer = model.NameCustomer;
             result.PaymentMethods = model.PaymentMethods;
             result.AccountId = AccountId;
             result.IssuedDate = DateTime.Now;
@@ -113,6 +114,7 @@ namespace BaoDatShop.Service
             result.Pay = model.Pay;
             result.PaymentMethods = model.PaymentMethods;
             result.AccountId = AccountId;
+            result.NameCustomer = model.NameCustomer;
             result.IssuedDate = DateTime.Now;
             result.ShippingAddress = model.ShippingAddress;
             result.ShippingPhone = model.ShippingPhone;
