@@ -53,6 +53,7 @@ namespace BaoDatShop.Service
             result.Name = model.Name;
             result.ImportPrice = model.ImportPrice;
             result.IssuedDate = DateTime.Now;
+            result.SupplierId = model.SupplierId;
             result.ProductId = model.ProductId;
             result.Status = model.Status;
             result.Stock = model.Stock;
@@ -97,7 +98,7 @@ namespace BaoDatShop.Service
             result.Status = model.Status;
             result.Stock = model.Stock;
             result.ProductId = model.ProductId;
-            
+            result.SupplierId = model.SupplierId;
             var ab = IProductSizeResponsitories.Update(result);
             if (ab == true)
             {

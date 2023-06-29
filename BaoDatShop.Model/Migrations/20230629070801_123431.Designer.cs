@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaoDatShop.Model.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230615163848_as")]
-    partial class @as
+    [Migration("20230629070801_123431")]
+    partial class _123431
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -118,33 +118,22 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductTypeId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
                     b.HasKey("AdvertisingPanelID");
 
-                    b.ToTable("AdvertisingPanel");
-                });
-
-            modelBuilder.Entity("BaoDatShop.Model.Model.BestSellerProduct", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
                     b.HasIndex("ProductId");
 
-                    b.ToTable("BestSellerProduct");
+                    b.HasIndex("ProductTypeId");
+
+                    b.ToTable("AdvertisingPanel");
                 });
 
             modelBuilder.Entity("BaoDatShop.Model.Model.Disscount", b =>
@@ -172,7 +161,7 @@ namespace BaoDatShop.Model.Migrations
                     b.ToTable("Disscount");
                 });
 
-            modelBuilder.Entity("BaoDatShop.Model.Model.EmailCustomer", b =>
+            modelBuilder.Entity("BaoDatShop.Model.Model.FavoriteProduct", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -180,12 +169,22 @@ namespace BaoDatShop.Model.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("AccountId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmailCustomer");
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("FavoriteProduct");
                 });
 
             modelBuilder.Entity("BaoDatShop.Model.Model.Footer", b =>
@@ -217,6 +216,30 @@ namespace BaoDatShop.Model.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Footer");
+                });
+
+            modelBuilder.Entity("BaoDatShop.Model.Model.HistoryAccount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AccountID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Datetime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountID");
+
+                    b.ToTable("HistoryAccount");
                 });
 
             modelBuilder.Entity("BaoDatShop.Model.Model.ImageProduct", b =>
@@ -324,9 +347,14 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<int>("Stock")
                         .HasColumnType("int");
 
+                    b.Property<int>("SupplierId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("SupplierId");
 
                     b.ToTable("ProductSize");
                 });
@@ -385,6 +413,57 @@ namespace BaoDatShop.Model.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("SpecialProduct");
+                });
+
+            modelBuilder.Entity("BaoDatShop.Model.Model.Supplier", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Phone")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Supplier");
+                });
+
+            modelBuilder.Entity("BaoDatShop.Model.Model.Voucher", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Disscount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
+
+                    b.ToTable("Voucher");
                 });
 
             modelBuilder.Entity("Eshop.Models.Account", b =>
@@ -449,7 +528,7 @@ namespace BaoDatShop.Model.Migrations
 
                     b.HasIndex("ProductSizeId");
 
-                    b.ToTable("Cart", (string)null);
+                    b.ToTable("Cart");
                 });
 
             modelBuilder.Entity("Eshop.Models.Invoice", b =>
@@ -466,10 +545,16 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<DateTime>("IssuedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("NameCustomer")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("OrderStatus")
                         .HasColumnType("int");
 
                     b.Property<bool>("Pay")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("PaymentMethods")
                         .HasColumnType("bit");
 
                     b.Property<string>("ShippingAddress")
@@ -502,7 +587,7 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<int>("InvoiceId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("ProductSizeId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -515,7 +600,7 @@ namespace BaoDatShop.Model.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductSizeId");
 
                     b.ToTable("InvoiceDetail");
                 });
@@ -554,11 +639,15 @@ namespace BaoDatShop.Model.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
+
                     b.HasIndex("ProductTypeId");
 
-                    b.HasIndex("Name", "SKU")
+                    b.HasIndex("SKU")
                         .IsUnique()
-                        .HasFilter("[Name] IS NOT NULL AND [SKU] IS NOT NULL");
+                        .HasFilter("[SKU] IS NOT NULL");
 
                     b.ToTable("Product");
                 });
@@ -719,15 +808,19 @@ namespace BaoDatShop.Model.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BaoDatShop.Model.Model.BestSellerProduct", b =>
+            modelBuilder.Entity("BaoDatShop.Model.Model.AdvertisingPanel", b =>
                 {
                     b.HasOne("Eshop.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("Eshop.Models.ProductTypes", "ProductType")
+                        .WithMany()
+                        .HasForeignKey("ProductTypeId");
 
                     b.Navigation("Product");
+
+                    b.Navigation("ProductType");
                 });
 
             modelBuilder.Entity("BaoDatShop.Model.Model.Disscount", b =>
@@ -739,6 +832,32 @@ namespace BaoDatShop.Model.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("BaoDatShop.Model.Model.FavoriteProduct", b =>
+                {
+                    b.HasOne("Eshop.Models.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId");
+
+                    b.HasOne("Eshop.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("BaoDatShop.Model.Model.HistoryAccount", b =>
+                {
+                    b.HasOne("Eshop.Models.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountID");
+
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("BaoDatShop.Model.Model.ImageProduct", b =>
@@ -771,17 +890,25 @@ namespace BaoDatShop.Model.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BaoDatShop.Model.Model.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Product");
+
+                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("BaoDatShop.Model.Model.Review", b =>
                 {
                     b.HasOne("Eshop.Models.Account", "Account")
-                        .WithMany("Review")
+                        .WithMany()
                         .HasForeignKey("AccountId");
 
                     b.HasOne("Eshop.Models.Product", "Product")
-                        .WithMany("Review")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -809,7 +936,7 @@ namespace BaoDatShop.Model.Migrations
                         .HasForeignKey("AccountId");
 
                     b.HasOne("BaoDatShop.Model.Model.ProductSize", "ProductSize")
-                        .WithMany("Cart")
+                        .WithMany()
                         .HasForeignKey("ProductSizeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -836,15 +963,15 @@ namespace BaoDatShop.Model.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Eshop.Models.Product", "Product")
-                        .WithMany("InvoiceDetails")
-                        .HasForeignKey("ProductId")
+                    b.HasOne("BaoDatShop.Model.Model.ProductSize", "ProductSize")
+                        .WithMany()
+                        .HasForeignKey("ProductSizeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Invoice");
 
-                    b.Navigation("Product");
+                    b.Navigation("ProductSize");
                 });
 
             modelBuilder.Entity("Eshop.Models.Product", b =>
@@ -914,30 +1041,16 @@ namespace BaoDatShop.Model.Migrations
                     b.Navigation("NewDetail");
                 });
 
-            modelBuilder.Entity("BaoDatShop.Model.Model.ProductSize", b =>
-                {
-                    b.Navigation("Cart");
-                });
-
             modelBuilder.Entity("Eshop.Models.Account", b =>
                 {
                     b.Navigation("Carts");
 
                     b.Navigation("Invoices");
-
-                    b.Navigation("Review");
                 });
 
             modelBuilder.Entity("Eshop.Models.Invoice", b =>
                 {
                     b.Navigation("InvoiceDetails");
-                });
-
-            modelBuilder.Entity("Eshop.Models.Product", b =>
-                {
-                    b.Navigation("InvoiceDetails");
-
-                    b.Navigation("Review");
                 });
 #pragma warning restore 612, 618
         }

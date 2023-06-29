@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BaoDatShop.Model.Migrations
 {
-    public partial class @as : Migration
+    public partial class _12343 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,20 +27,6 @@ namespace BaoDatShop.Model.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Account", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AdvertisingPanel",
-                columns: table => new
-                {
-                    AdvertisingPanelID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AdvertisingPanel", x => x.AdvertisingPanelID);
                 });
 
             migrationBuilder.CreateTable(
@@ -86,19 +72,6 @@ namespace BaoDatShop.Model.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EmailCustomer",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EmailCustomer", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -151,11 +124,63 @@ namespace BaoDatShop.Model.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Supplier",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Supplier", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Voucher",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Disscount = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Voucher", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HistoryAccount",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AccountID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Datetime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HistoryAccount", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_HistoryAccount_Account_AccountID",
+                        column: x => x.AccountID,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Invoice",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    NameCustomer = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PaymentMethods = table.Column<bool>(type: "bit", nullable: false),
                     AccountId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     IssuedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ShippingAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -330,23 +355,29 @@ namespace BaoDatShop.Model.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BestSellerProduct",
+                name: "AdvertisingPanel",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    AdvertisingPanelID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProductId = table.Column<int>(type: "int", nullable: true),
+                    ProductTypeId = table.Column<int>(type: "int", nullable: true),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BestSellerProduct", x => x.Id);
+                    table.PrimaryKey("PK_AdvertisingPanel", x => x.AdvertisingPanelID);
                     table.ForeignKey(
-                        name: "FK_BestSellerProduct_Product_ProductId",
+                        name: "FK_AdvertisingPanel_Product_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Product",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AdvertisingPanel_ProductType_ProductTypeId",
+                        column: x => x.ProductTypeId,
+                        principalTable: "ProductType",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -364,6 +395,32 @@ namespace BaoDatShop.Model.Migrations
                     table.PrimaryKey("PK_Disscount", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Disscount_Product_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Product",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FavoriteProduct",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AccountId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FavoriteProduct", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FavoriteProduct_Account_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_FavoriteProduct_Product_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "Id",
@@ -392,34 +449,6 @@ namespace BaoDatShop.Model.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "InvoiceDetail",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    InvoiceId = table.Column<int>(type: "int", nullable: false),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    UnitPrice = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_InvoiceDetail", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_InvoiceDetail_Invoice_InvoiceId",
-                        column: x => x.InvoiceId,
-                        principalTable: "Invoice",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_InvoiceDetail_Product_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Product",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ProductSize",
                 columns: table => new
                 {
@@ -430,6 +459,7 @@ namespace BaoDatShop.Model.Migrations
                     IssuedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ImportPrice = table.Column<int>(type: "int", nullable: false),
                     Stock = table.Column<int>(type: "int", nullable: false),
+                    SupplierId = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -439,6 +469,12 @@ namespace BaoDatShop.Model.Migrations
                         name: "FK_ProductSize_Product_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Product",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductSize_Supplier_SupplierId",
+                        column: x => x.SupplierId,
+                        principalTable: "Supplier",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -518,6 +554,44 @@ namespace BaoDatShop.Model.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "InvoiceDetail",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    InvoiceId = table.Column<int>(type: "int", nullable: false),
+                    ProductSizeId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    UnitPrice = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InvoiceDetail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_InvoiceDetail_Invoice_InvoiceId",
+                        column: x => x.InvoiceId,
+                        principalTable: "Invoice",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_InvoiceDetail_ProductSize_ProductSizeId",
+                        column: x => x.ProductSizeId,
+                        principalTable: "ProductSize",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AdvertisingPanel_ProductId",
+                table: "AdvertisingPanel",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AdvertisingPanel_ProductTypeId",
+                table: "AdvertisingPanel",
+                column: "ProductTypeId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -558,11 +632,6 @@ namespace BaoDatShop.Model.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BestSellerProduct_ProductId",
-                table: "BestSellerProduct",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Cart_AccountId",
                 table: "Cart",
                 column: "AccountId");
@@ -577,6 +646,21 @@ namespace BaoDatShop.Model.Migrations
                 table: "Disscount",
                 column: "ProductId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FavoriteProduct_AccountId",
+                table: "FavoriteProduct",
+                column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FavoriteProduct_ProductId",
+                table: "FavoriteProduct",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HistoryAccount_AccountID",
+                table: "HistoryAccount",
+                column: "AccountID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ImageProduct_ProductId",
@@ -594,9 +678,9 @@ namespace BaoDatShop.Model.Migrations
                 column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InvoiceDetail_ProductId",
+                name: "IX_InvoiceDetail_ProductSizeId",
                 table: "InvoiceDetail",
-                column: "ProductId");
+                column: "ProductSizeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NewDetail_NewId",
@@ -604,11 +688,11 @@ namespace BaoDatShop.Model.Migrations
                 column: "NewId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Product_Name_SKU",
+                name: "IX_Product_Name",
                 table: "Product",
-                columns: new[] { "Name", "SKU" },
+                column: "Name",
                 unique: true,
-                filter: "[Name] IS NOT NULL AND [SKU] IS NOT NULL");
+                filter: "[Name] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Product_ProductTypeId",
@@ -616,9 +700,21 @@ namespace BaoDatShop.Model.Migrations
                 column: "ProductTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Product_SKU",
+                table: "Product",
+                column: "SKU",
+                unique: true,
+                filter: "[SKU] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductSize_ProductId",
                 table: "ProductSize",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductSize_SupplierId",
+                table: "ProductSize",
+                column: "SupplierId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductType_Name",
@@ -641,6 +737,13 @@ namespace BaoDatShop.Model.Migrations
                 name: "IX_SpecialProduct_ProductId",
                 table: "SpecialProduct",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Voucher_Name",
+                table: "Voucher",
+                column: "Name",
+                unique: true,
+                filter: "[Name] IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -664,19 +767,19 @@ namespace BaoDatShop.Model.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BestSellerProduct");
-
-            migrationBuilder.DropTable(
                 name: "Cart");
 
             migrationBuilder.DropTable(
                 name: "Disscount");
 
             migrationBuilder.DropTable(
-                name: "EmailCustomer");
+                name: "FavoriteProduct");
 
             migrationBuilder.DropTable(
                 name: "Footer");
+
+            migrationBuilder.DropTable(
+                name: "HistoryAccount");
 
             migrationBuilder.DropTable(
                 name: "ImageProduct");
@@ -694,25 +797,31 @@ namespace BaoDatShop.Model.Migrations
                 name: "SpecialProduct");
 
             migrationBuilder.DropTable(
+                name: "Voucher");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "ProductSize");
+                name: "Invoice");
 
             migrationBuilder.DropTable(
-                name: "Invoice");
+                name: "ProductSize");
 
             migrationBuilder.DropTable(
                 name: "News");
 
             migrationBuilder.DropTable(
+                name: "Account");
+
+            migrationBuilder.DropTable(
                 name: "Product");
 
             migrationBuilder.DropTable(
-                name: "Account");
+                name: "Supplier");
 
             migrationBuilder.DropTable(
                 name: "ProductType");

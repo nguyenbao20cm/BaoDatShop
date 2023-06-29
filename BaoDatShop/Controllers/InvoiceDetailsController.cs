@@ -19,7 +19,7 @@ namespace BaoDatShop.Controllers
         [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer)]
         [HttpGet("GetAllInvoiceDetails/{id}")]
         public async Task<IActionResult> GetAllNewDetail(int id)
-        {
+        { 
             return Ok(invoiceDetailService.GetAll(id));
         }
         [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer)]

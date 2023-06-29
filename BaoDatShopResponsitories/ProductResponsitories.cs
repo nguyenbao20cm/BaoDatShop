@@ -45,7 +45,7 @@ namespace BaoDatShop.Responsitories
         public Product GetById(int id)
         {
            
-            return context.Product.Where(a => a.Id == id).FirstOrDefault();
+            return context.Product.Include(a=>a.ProductType).Where(a => a.Id == id).FirstOrDefault();
         }
 
         public bool Update(Product model)

@@ -8,6 +8,7 @@ namespace BaoDatShop.DTO.ProductSize
 {
     public class UpdateProductSize
     {
+        public int SupplierId { get; set; }
         public int Stock { get; set; } = 0;
         public string Name { get; set; }
         public int ProductId { get; set; }

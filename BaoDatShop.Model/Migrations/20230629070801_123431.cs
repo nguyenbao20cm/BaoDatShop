@@ -4,23 +4,23 @@
 
 namespace BaoDatShop.Model.Migrations
 {
-    public partial class _1232131222 : Migration
+    public partial class _123431 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
-                name: "PaymentMethods",
-                table: "Invoice",
-                type: "bit",
+            migrationBuilder.AddColumn<int>(
+                name: "Phone",
+                table: "Supplier",
+                type: "int",
                 nullable: false,
-                defaultValue: false);
+                defaultValue: 0);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "PaymentMethods",
-                table: "Invoice");
+                name: "Phone",
+                table: "Supplier");
         }
     }
 }
