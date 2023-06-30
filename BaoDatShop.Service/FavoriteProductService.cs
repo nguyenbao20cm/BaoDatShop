@@ -39,9 +39,8 @@ namespace BaoDatShop.Service
 
         public bool Delete(int id)
         {
-            var a = IFavoriteProductRespositories.GetbyId(id);
-            a.Status = false;
-            return IFavoriteProductRespositories.Update(a);
+          
+            return IFavoriteProductRespositories.Delete(id);
         }
 
         public List<FavoriteProduct> GetAll(string id)

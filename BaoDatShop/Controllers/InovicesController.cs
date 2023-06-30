@@ -1,11 +1,13 @@
 ﻿using BaoDatShop.DTO.Invoice;
 using BaoDatShop.DTO.Product;
 using BaoDatShop.DTO.Role;
+using BaoDatShop.Model.Context;
 using BaoDatShop.Responsitories;
 using BaoDatShop.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Security.Claims;
 
@@ -14,16 +16,41 @@ namespace BaoDatShop.Controllers
     [Route("api/[controller]")]
 
     [ApiController]
+    public class I
+    {
+        public DateTime date { get; set; }
+        public int Doanhthu { get; set; }
+        public int LoiNhuan { get; set; }
+        public int TienXuat { get; set; }
+    }
     public class InovicesController : ControllerBase
     {
+        private readonly AppDbContext context;
         private readonly IInvoiceService invoiceService;
         private readonly IInvoiceResponsitories IInvoiceResponsitories;
         private readonly IProductSizeResponsitories IProductSizeResponsitories;
-        public InovicesController(IInvoiceService invoiceService, IInvoiceResponsitories IInvoiceResponsitories, IProductSizeResponsitories IProductSizeResponsitories)
+        public InovicesController(IInvoiceService invoiceService, AppDbContext context, IInvoiceResponsitories IInvoiceResponsitories, IProductSizeResponsitories IProductSizeResponsitories)
         {
+            this.context = context;
             this.invoiceService = invoiceService;
             this.IInvoiceResponsitories = IInvoiceResponsitories;
             this.IProductSizeResponsitories = IProductSizeResponsitories;
+        }
+        //[Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetTotalByDay")]
+        public async Task<IActionResult> GetTongTienTheoNgay()
+        {
+            var query = await context.InvoiceDetail.Include(a=>a.ProductSize).Include(a=>a.Invoice).Where(a => a.Invoice.OrderStatus == 5)
+                .GroupBy(hd => hd.Invoice.IssuedDate.Date)
+                .Select(g => new
+                {
+                    NgayLap = g.Key,
+                    TongTien = g.Sum(hd => hd.Invoice.Total),
+                    TongTienChi=g.Sum(hd=>hd.ProductSize.ImportPrice)
+                })
+                .ToListAsync();
+
+            return Ok(query);
         }
         [Authorize(Roles = UserRole.Costumer)]
         [HttpPost("CreateInvoice")]
@@ -51,6 +78,7 @@ namespace BaoDatShop.Controllers
             var c= Total - ImportPrice;
             return Ok(c);
         }
+      
         [Authorize(Roles = UserRole.Costumer)]
         [HttpPost("CreateInvoiceNow")]
         public async Task<IActionResult> CreateInCreateInvoiceNowvoice(CreateInvoiceNow model)

@@ -1,5 +1,6 @@
 ﻿using BaoDatShop.Model.Context;
 using Eshop.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,18 @@ namespace BaoDatShop.Responsitories
         {
             if (context.Invoice.Where(a => a.Status == true).ToList() == null) return null;
             return context.Invoice.Where(a => a.Status == true).ToList();
+            var query = context.Invoice
+               .GroupBy(hoadon => hoadon.IssuedDate.Date)
+               .Select(g => new
+               {
+                   NgayLap = g.Key,
+                   TongTien = g.Sum(hd => hd.Total)
+               });
+
+            foreach (var result in query)
+            {
+                Console.WriteLine($"Ngày: {result.NgayLap.ToShortDateString()}, Tổng tiền: {result.TongTien}");
+            }
         }
 
         public Invoice GetById(int id)
