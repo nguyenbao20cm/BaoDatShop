@@ -76,7 +76,7 @@ namespace BaoDatShop.Service
                 var tam = productResponsitories.GetById(result.Id);
                 HistoryAccount a = new();
                 a.AccountID = id; a.Datetime = DateTime.Now;
-                a.Content = "Đã thêm sản phẩm" + model.Name +"thuộc loại sản phẩm "+tam.ProductType.Name;
+                a.Content = "Đã thêm sản phẩm " + model.Name +"thuộc loại sản phẩm "+tam.ProductType.Name;
                 IHistoryAccountResponsitories.Create(a);
             }
             return ab;
@@ -170,7 +170,7 @@ namespace BaoDatShop.Service
                 var tam = productResponsitories.GetById(result.Id);
                 HistoryAccount a = new();
                 a.AccountID = ida; a.Datetime = DateTime.Now;
-                a.Content = "Đã chỉnh sửa sản phẩm" + model.Name + "thuộc loại sản phẩm " + tam.ProductType.Name;
+                a.Content = "Đã chỉnh sửa sản phẩm " + model.Name + "thuộc loại sản phẩm " + tam.ProductType.Name;
                 IHistoryAccountResponsitories.Create(a);
             }
             return ab;

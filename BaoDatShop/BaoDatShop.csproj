@@ -7,6 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\Image\New\**" />
+    <Compile Remove="wwwroot\Image\Product\bóng rổ\**" />
+    <Compile Remove="wwwroot\Image\Product\bóng đá\**" />
+    <Content Remove="wwwroot\Image\New\**" />
+    <Content Remove="wwwroot\Image\Product\bóng rổ\**" />
+    <Content Remove="wwwroot\Image\Product\bóng đá\**" />
+    <EmbeddedResource Remove="wwwroot\Image\New\**" />
+    <EmbeddedResource Remove="wwwroot\Image\Product\bóng rổ\**" />
+    <EmbeddedResource Remove="wwwroot\Image\Product\bóng đá\**" />
+    <None Remove="wwwroot\Image\New\**" />
+    <None Remove="wwwroot\Image\Product\bóng rổ\**" />
+    <None Remove="wwwroot\Image\Product\bóng đá\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.15" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.15" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.15" />
@@ -29,9 +44,7 @@
     <Folder Include="wwwroot\Image\NewDetail\" />
     <Folder Include="wwwroot\Image\AdvertisingPanel\" />
     <Folder Include="wwwroot\Image\ImageProduct\" />
-    <Folder Include="wwwroot\Image\New\" />
-    <Folder Include="wwwroot\Image\Product\bóng rổ\" />
-    <Folder Include="wwwroot\Image\Product\bóng đá\" />
+    <Folder Include="wwwroot\Image\Product\" />
   </ItemGroup>
 
 </Project>

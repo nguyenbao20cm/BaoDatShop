@@ -14,15 +14,7 @@ using System.Security.Claims;
 namespace BaoDatShop.Controllers
 {
     [Route("api/[controller]")]
-
     [ApiController]
-    public class I
-    {
-        public DateTime date { get; set; }
-        public int Doanhthu { get; set; }
-        public int LoiNhuan { get; set; }
-        public int TienXuat { get; set; }
-    }
     public class InovicesController : ControllerBase
     {
         private readonly AppDbContext context;
@@ -36,17 +28,16 @@ namespace BaoDatShop.Controllers
             this.IInvoiceResponsitories = IInvoiceResponsitories;
             this.IProductSizeResponsitories = IProductSizeResponsitories;
         }
-        //[Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetTotalByDay")]
         public async Task<IActionResult> GetTongTienTheoNgay()
         {
-            var query = await context.InvoiceDetail.Include(a=>a.ProductSize).Include(a=>a.Invoice).Where(a => a.Invoice.OrderStatus == 5)
-                .GroupBy(hd => hd.Invoice.IssuedDate.Date)
+            var query = await context.Invoice.Where(a => a.OrderStatus == 5)
+                .GroupBy(hd => hd.IssuedDate.Date)
                 .Select(g => new
                 {
                     NgayLap = g.Key,
-                    TongTien = g.Sum(hd => hd.Invoice.Total),
-                    TongTienChi=g.Sum(hd=>hd.ProductSize.ImportPrice)
+                    TongTien = g.Sum(hd => hd.Total),
                 })
                 .ToListAsync();
 

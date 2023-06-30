@@ -74,8 +74,8 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> GetAverageStartReview(int id)
         {
             var a = reviewService.GetAll().Where(a => a.ProductId == id).ToList();
-            var Average =0;
-            var b = 0;
+            float Average =0;
+            float b = 0;
             foreach(var item in a)
             {
                 b++;
