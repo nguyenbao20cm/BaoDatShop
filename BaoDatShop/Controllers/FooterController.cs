@@ -37,7 +37,7 @@ namespace BaoDatShop.Controllers
             int check = context.SaveChanges();
             return check > 0 ? Ok(true) : Ok(false);
         }
-        [Authorize(Roles = UserRole.Admin)]
+        
         [HttpPost("CreateImageFooter")]
         public async Task<IActionResult> CreateImageFooter(IFormFile model)
         {
