@@ -51,8 +51,8 @@ namespace BaoDatShop.Service
             //}
             AdvertisingPanel result = new();
             result.Image = model.Image;
-            result.ProductId = model.LinkProduct;
-            result.ProductTypeId = model.LinkProductType;
+            result.Link = model.Link;
+           
             result.Status = model.Status;
            return advertisingPanelResponsitories.Create(result);
         }
@@ -92,8 +92,7 @@ namespace BaoDatShop.Service
         //    }
             AdvertisingPanel result = advertisingPanelResponsitories.GetById(id);
             result.Image = model.Image;
-            result.ProductId = model.LinkProduct;
-            result.ProductTypeId = model.LinkProductType;
+            result.Link = model.Link;
             result.Status = model.Status;
             return advertisingPanelResponsitories.Update(result);
         }

@@ -35,7 +35,8 @@ namespace BaoDatShop.Model.Context
         public DbSet<Footer> Footer { get; set; }
         public DbSet<Voucher> Voucher { get; set; }
         public DbSet<HistoryAccount> HistoryAccount { get; set; }
-      
+        public DbSet<BrandProduct> BrandProduct { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -44,7 +45,8 @@ namespace BaoDatShop.Model.Context
                 builder.ToTable(nameof(News));
                 builder.HasKey(x => x.NewsId);
             });
-   
+            modelBuilder.Entity<BrandProduct>()
+                      .HasIndex(p => p.Name).IsUnique();
             modelBuilder.Entity<Product>()
              .HasIndex(p =>  p.SKU).IsUnique();
             modelBuilder.Entity<Product>()

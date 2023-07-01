@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,8 @@ namespace BaoDatShop.DTO
 {
     public class FooterRequest
     {
+        public IFormFile Avatar { get; set; }
+        public string Title { get; set; }
         public string Phone { get; set; }
         public string Adress { get; set; }
         public string Email { get; set; }

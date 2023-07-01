@@ -9,8 +9,8 @@ namespace BaoDatShop.DTO.AdvertisingPanel
 {
     public class CreateAdvertisingPanelRequest
     {
-        public int? LinkProduct { get; set; }
-        public int? LinkProductType { get; set; }
+        public string Link { get; set; }
+      
         public string Image { get; set; }
         public bool Status { get; set; }
     }

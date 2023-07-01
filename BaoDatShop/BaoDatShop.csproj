@@ -41,7 +41,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Image\Avatar\" />
-    <Folder Include="wwwroot\Image\NewDetail\" />
+    <Folder Include="wwwroot\Image\AvatarWebsite\" />
     <Folder Include="wwwroot\Image\AdvertisingPanel\" />
     <Folder Include="wwwroot\Image\ImageProduct\" />
     <Folder Include="wwwroot\Image\Product\" />
