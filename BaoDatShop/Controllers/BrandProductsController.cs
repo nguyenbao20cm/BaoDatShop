@@ -20,6 +20,11 @@ namespace BaoDatShop.Controllers
         {
             this.context = context;
         }
+        [HttpGet("GetProductByBrandProductsId/{id}")]
+        public async Task<IActionResult> GetProductByBrandProductsId(int id)
+        {
+            return Ok(context.Product.Where(a=>a.BrandProductId==id).ToList());
+        }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateBrandProducts/{id}")]
         public async Task<IActionResult> UpdateFooter(int id,BrandProduct model)

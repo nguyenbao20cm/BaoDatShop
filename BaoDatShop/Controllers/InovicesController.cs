@@ -29,7 +29,7 @@ namespace BaoDatShop.Controllers
             this.IInvoiceResponsitories = IInvoiceResponsitories;
             this.IProductSizeResponsitories = IProductSizeResponsitories;
         }
-        //[Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetTotalByDay")]
         public async Task<IActionResult> GetTongTienTheoNgay()
         {
@@ -39,36 +39,11 @@ namespace BaoDatShop.Controllers
                 {
                     NgayLap = g.Key,
                     TongTien = g.Sum(hd => hd.Total),
-                    ChiPhi = 0
+                    ChiPhi = g.Where(hd=>hd.PaymentMethods==true).Count(hd=>hd.PaymentMethods)
                 })
                 .ToListAsync();
-            var query1 = context.ProductSize
-            .GroupBy(hd => hd.IssuedDate.Date)
-                .Select(g => new
-                {
-               NgayLap = g.Key,
-             TongTien = g.Sum(hd => hd.ImportPrice * hd.Stock),
-                 })
-            .ToList();
-            List<Report> re = new();
-            foreach (var item in query)
-            {
-                var tam = 0;
-                var a = context.ProductSize.Where(a => a.IssuedDate == item.NgayLap).ToList();
-                if (a != null)
-                {
-                    foreach (var item1 in a)
-                    {
-                        tam += item1.ImportPrice * item1.Stock;
-                    }
-                }
-                Report b = new();
-                b.Total = item.TongTien;
-                b.TotalImport = tam;
-                b.DateTime = item.NgayLap;
-                re.Add(b);
-            }
-            return Ok(re);
+            
+            return Ok(query);
         }
         [Authorize(Roles = UserRole.Costumer)]
         [HttpPost("CreateInvoice")]

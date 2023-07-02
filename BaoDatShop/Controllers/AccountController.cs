@@ -24,10 +24,10 @@ namespace BaoDatShop.Controllers
         private readonly IConfiguration _configuration;
         public AccountController(
             IAccountService accountService,
-        IEmailSender IEmailSender,
+     
            IConfiguration configuration)
         {
-          this.IEmailSender = IEmailSender;
+         
             _configuration = configuration;
             _accountService = accountService;
         }
@@ -38,12 +38,7 @@ namespace BaoDatShop.Controllers
         //    if (result.Succeeded) return Ok(result.Succeeded);
         //    return Unauthorized(result);
         //}
-        [HttpPost("SendVoucher")]
-        public async Task<IActionResult> Index(string email, string subject, string message)
-        {
-             IEmailSender.SendEmailAsync(email, subject, message);
-            return Ok("ok");
-        }
+       
         [HttpPost("Signin")]
         public async Task<IActionResult> signin(LoginRequest model)
         {  

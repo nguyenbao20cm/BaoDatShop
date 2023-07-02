@@ -1,4 +1,5 @@
-﻿using BaoDatShop.DTO.CreateFavoriteProduct;
+﻿using BaoDatShop.DTO.AccountRequest;
+using BaoDatShop.DTO.CreateFavoriteProduct;
 using BaoDatShop.DTO.Role;
 using BaoDatShop.DTO.Voucher;
 using BaoDatShop.Service;
@@ -15,9 +16,17 @@ namespace BaoDatShop.Controllers
     public class VouchersController : ControllerBase
     {
         private readonly IVoucherService IVoucherService;
-        public VouchersController(IVoucherService IVoucherService)
+        private readonly IEmailSender IEmailSender;
+        public VouchersController(IVoucherService IVoucherService, IEmailSender IEmailSender)
         {
             this.IVoucherService = IVoucherService;
+            this.IEmailSender = IEmailSender;
+        }
+        [HttpPost("SendVoucher")]
+        public async Task<IActionResult> Index(SendVoucher model)
+        {
+            IEmailSender.SendEmailAsync(model);
+            return Ok("ok");
         }
         private string GetCorrectUserId()
         {
