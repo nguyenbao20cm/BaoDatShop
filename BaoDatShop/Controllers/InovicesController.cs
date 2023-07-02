@@ -1,11 +1,9 @@
 ﻿using BaoDatShop.DTO.Invoice;
-using BaoDatShop.DTO.Product;
 using BaoDatShop.DTO.Role;
 using BaoDatShop.Model.Context;
 using BaoDatShop.Responsitories;
 using BaoDatShop.Service;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -21,27 +19,56 @@ namespace BaoDatShop.Controllers
         private readonly IInvoiceService invoiceService;
         private readonly IInvoiceResponsitories IInvoiceResponsitories;
         private readonly IProductSizeResponsitories IProductSizeResponsitories;
-        public InovicesController(IInvoiceService invoiceService, AppDbContext context, IInvoiceResponsitories IInvoiceResponsitories, IProductSizeResponsitories IProductSizeResponsitories)
+        private readonly IProductSizeService IProductSizeService;
+        public InovicesController(IInvoiceService invoiceService, IProductSizeService IProductSizeService,
+            AppDbContext context, IInvoiceResponsitories IInvoiceResponsitories, IProductSizeResponsitories IProductSizeResponsitories)
         {
+            this.IProductSizeService = IProductSizeService;
             this.context = context;
             this.invoiceService = invoiceService;
             this.IInvoiceResponsitories = IInvoiceResponsitories;
             this.IProductSizeResponsitories = IProductSizeResponsitories;
         }
-        [Authorize(Roles = UserRole.Admin)]
+        //[Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetTotalByDay")]
         public async Task<IActionResult> GetTongTienTheoNgay()
         {
             var query = await context.Invoice.Where(a => a.OrderStatus == 5)
-                .GroupBy(hd => hd.IssuedDate.Date)
+                .GroupBy(hd => hd.IssuedDate)
                 .Select(g => new
                 {
                     NgayLap = g.Key,
                     TongTien = g.Sum(hd => hd.Total),
+                    ChiPhi = 0
                 })
                 .ToListAsync();
-
-            return Ok(query);
+            var query1 = context.ProductSize
+            .GroupBy(hd => hd.IssuedDate.Date)
+                .Select(g => new
+                {
+               NgayLap = g.Key,
+             TongTien = g.Sum(hd => hd.ImportPrice * hd.Stock),
+                 })
+            .ToList();
+            List<Report> re = new();
+            foreach (var item in query)
+            {
+                var tam = 0;
+                var a = context.ProductSize.Where(a => a.IssuedDate == item.NgayLap).ToList();
+                if (a != null)
+                {
+                    foreach (var item1 in a)
+                    {
+                        tam += item1.ImportPrice * item1.Stock;
+                    }
+                }
+                Report b = new();
+                b.Total = item.TongTien;
+                b.TotalImport = tam;
+                b.DateTime = item.NgayLap;
+                re.Add(b);
+            }
+            return Ok(re);
         }
         [Authorize(Roles = UserRole.Costumer)]
         [HttpPost("CreateInvoice")]
@@ -51,10 +78,10 @@ namespace BaoDatShop.Controllers
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPost("GetMonthInvoice")]
-        public async Task<IActionResult> GetMonthInvoice(YearAndMonth model )
+        public async Task<IActionResult> GetMonthInvoice(YearAndMonth model)
         {
             var ImportPrice = 0;
-            var ImportPiceList = IProductSizeResponsitories.GetAll().Where(a => a.IssuedDate.Month == model.Month).Where(a => a.IssuedDate.Year ==model.Year).ToList();
+            var ImportPiceList = IProductSizeResponsitories.GetAll().Where(a => a.IssuedDate.Month == model.Month).Where(a => a.IssuedDate.Year == model.Year).ToList();
             foreach (var aba in ImportPiceList)
             {
                 ImportPrice += aba.ImportPrice * aba.Stock;
@@ -66,10 +93,10 @@ namespace BaoDatShop.Controllers
                 Total += abc.Total;
             }
             var b = Total - ImportPrice;
-            var c= Total - ImportPrice;
+            var c = Total - ImportPrice;
             return Ok(c);
         }
-      
+
         [Authorize(Roles = UserRole.Costumer)]
         [HttpPost("CreateInvoiceNow")]
         public async Task<IActionResult> CreateInCreateInvoiceNowvoice(CreateInvoiceNow model)
@@ -80,14 +107,14 @@ namespace BaoDatShop.Controllers
         [HttpPost("GetAllInvoiceOfAccount")]
         public async Task<IActionResult> GetAllInvoiceOfAccount()
         {
-            return Ok(invoiceService.GetAllInvoiceOfAccount(GetCorrectUserId()).OrderByDescending(a=>a.IssuedDate).ToList());
+            return Ok(invoiceService.GetAllInvoiceOfAccount(GetCorrectUserId()).OrderByDescending(a => a.IssuedDate).ToList());
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPut("DeleteInvoice/{id}")]
         public async Task<IActionResult> DeleteInvoice(int id)
         {
-            if(invoiceService.DeleteInvoice(id)==true)
-            return Ok("Thành công");
+            if (invoiceService.DeleteInvoice(id) == true)
+                return Ok("Thành công");
             else
                 return Ok("Thất bại");
         }
@@ -110,7 +137,7 @@ namespace BaoDatShop.Controllers
         [HttpGet("GetAllInoviceHUy")]
         public async Task<IActionResult> GetAllInoviceHUy()
         {
-            return Ok(invoiceService.GetAll().Where(a=>a.OrderStatus==4).ToList());
+            return Ok(invoiceService.GetAll().Where(a => a.OrderStatus == 4).ToList());
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllInoviceHT")]
@@ -180,9 +207,9 @@ namespace BaoDatShop.Controllers
                 return Ok("Thất bại");
         }
         [Authorize(Roles = UserRole.Admin)]
-        
+
         [HttpGet("GetAllInoviceFilterByDate/{startDate},{endDate}")]
-        public async Task<IActionResult> GetAllInoviceFilterByDate(string startDate,string endDate)
+        public async Task<IActionResult> GetAllInoviceFilterByDate(string startDate, string endDate)
         {
             return Ok(invoiceService.GetAllInoviceFilterByDate(startDate, endDate));
         }
@@ -192,6 +219,6 @@ namespace BaoDatShop.Controllers
             var result = a.FindFirst("UserId").Value;
             return result;
         }
-     
+
     }
 }

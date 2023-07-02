@@ -63,7 +63,5 @@ namespace BaoDatShop.Controllers
         {
             return Ok(context.Footer.FirstOrDefault());
         }
-       
-     
     }
 }

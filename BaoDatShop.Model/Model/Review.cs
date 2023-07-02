@@ -15,6 +15,7 @@ namespace BaoDatShop.Model.Model
         public string AccountId { get; set; }
         public Account Account { get; set; }
         public string Content { get; set; }
+        public string Image { get; set; }
         public DateTime DateTime { get; set; }
         public int Star { get; set; }
         public bool Status { get; set; }

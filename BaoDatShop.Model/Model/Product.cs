@@ -21,7 +21,7 @@ namespace Eshop.Models
 
     
         public int Price { get; set; } = 0;
-    
+        public int PriceSales { get; set; } = 0;
         public int ProductTypeId { get; set; }
 
        

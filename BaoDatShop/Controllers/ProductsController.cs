@@ -38,7 +38,7 @@ namespace BaoDatShop.Controllers
         [HttpGet("GetAllProductStatusTrue")]
         public async Task<IActionResult> GetAllProductStatusTrue()
         {
-            return Ok(productService.GetAllProductStatusTrue().Where(a=>a.ProductType.Status==true));
+            return Ok(productService.GetAllProductStatusTrue().Where(a => a.BrandProduct.Status == true).Where(a=>a.ProductType.Status==true));
         }
 
         [HttpGet("GetAllProductStatusFalse")]

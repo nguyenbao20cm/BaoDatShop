@@ -19,7 +19,7 @@ namespace BaoDatShop.DTO.Product
         public string Description { get; set; }
         public int Price { get; set; } = 0;
 
-
+        public int BrandProductId { get; set; }
 
         public int ProductTypeId { get; set; }
         public string Image { get; set; }

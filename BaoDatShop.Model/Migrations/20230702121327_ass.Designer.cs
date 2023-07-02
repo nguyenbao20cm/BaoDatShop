@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaoDatShop.Model.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230701103239_1232")]
-    partial class _1232
+    [Migration("20230702121327_ass")]
+    partial class ass
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -127,6 +127,29 @@ namespace BaoDatShop.Model.Migrations
                     b.HasKey("AdvertisingPanelID");
 
                     b.ToTable("AdvertisingPanel");
+                });
+
+            modelBuilder.Entity("BaoDatShop.Model.Model.BrandProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
+
+                    b.ToTable("BrandProduct");
                 });
 
             modelBuilder.Entity("BaoDatShop.Model.Model.Disscount", b =>
@@ -375,6 +398,9 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
@@ -458,6 +484,9 @@ namespace BaoDatShop.Model.Migrations
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -615,6 +644,9 @@ namespace BaoDatShop.Model.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("BrandProductId")
+                        .HasColumnType("int");
+
                     b.Property<int>("CountSell")
                         .HasColumnType("int");
 
@@ -630,6 +662,9 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
+                    b.Property<int>("PriceSales")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProductTypeId")
                         .HasColumnType("int");
 
@@ -640,6 +675,8 @@ namespace BaoDatShop.Model.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BrandProductId");
 
                     b.HasIndex("Name")
                         .IsUnique()
@@ -963,11 +1000,19 @@ namespace BaoDatShop.Model.Migrations
 
             modelBuilder.Entity("Eshop.Models.Product", b =>
                 {
+                    b.HasOne("BaoDatShop.Model.Model.BrandProduct", "BrandProduct")
+                        .WithMany()
+                        .HasForeignKey("BrandProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Eshop.Models.ProductTypes", "ProductType")
                         .WithMany()
                         .HasForeignKey("ProductTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("BrandProduct");
 
                     b.Navigation("ProductType");
                 });

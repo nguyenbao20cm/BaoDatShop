@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BaoDatShop.Model.Migrations
 {
-    public partial class _12343 : Migration
+    public partial class ssdas : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,6 +27,21 @@ namespace BaoDatShop.Model.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Account", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AdvertisingPanel",
+                columns: table => new
+                {
+                    AdvertisingPanelID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Link = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AdvertisingPanel", x => x.AdvertisingPanelID);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,11 +90,27 @@ namespace BaoDatShop.Model.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BrandProduct",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BrandProduct", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Footer",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Adress = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -130,8 +161,10 @@ namespace BaoDatShop.Model.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Phone = table.Column<int>(type: "int", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TaxCode = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -339,6 +372,7 @@ namespace BaoDatShop.Model.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<int>(type: "int", nullable: false),
                     ProductTypeId = table.Column<int>(type: "int", nullable: false),
+                    BrandProductId = table.Column<int>(type: "int", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<bool>(type: "bit", nullable: false),
                     CountSell = table.Column<int>(type: "int", nullable: false)
@@ -347,37 +381,17 @@ namespace BaoDatShop.Model.Migrations
                 {
                     table.PrimaryKey("PK_Product", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Product_BrandProduct_BrandProductId",
+                        column: x => x.BrandProductId,
+                        principalTable: "BrandProduct",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Product_ProductType_ProductTypeId",
                         column: x => x.ProductTypeId,
                         principalTable: "ProductType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AdvertisingPanel",
-                columns: table => new
-                {
-                    AdvertisingPanelID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProductId = table.Column<int>(type: "int", nullable: true),
-                    ProductTypeId = table.Column<int>(type: "int", nullable: true),
-                    Status = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AdvertisingPanel", x => x.AdvertisingPanelID);
-                    table.ForeignKey(
-                        name: "FK_AdvertisingPanel_Product_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Product",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_AdvertisingPanel_ProductType_ProductTypeId",
-                        column: x => x.ProductTypeId,
-                        principalTable: "ProductType",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -583,16 +597,6 @@ namespace BaoDatShop.Model.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AdvertisingPanel_ProductId",
-                table: "AdvertisingPanel",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AdvertisingPanel_ProductTypeId",
-                table: "AdvertisingPanel",
-                column: "ProductTypeId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
@@ -630,6 +634,13 @@ namespace BaoDatShop.Model.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BrandProduct_Name",
+                table: "BrandProduct",
+                column: "Name",
+                unique: true,
+                filter: "[Name] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cart_AccountId",
@@ -686,6 +697,11 @@ namespace BaoDatShop.Model.Migrations
                 name: "IX_NewDetail_NewId",
                 table: "NewDetail",
                 column: "NewId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Product_BrandProductId",
+                table: "Product",
+                column: "BrandProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Product_Name",
@@ -822,6 +838,9 @@ namespace BaoDatShop.Model.Migrations
 
             migrationBuilder.DropTable(
                 name: "Supplier");
+
+            migrationBuilder.DropTable(
+                name: "BrandProduct");
 
             migrationBuilder.DropTable(
                 name: "ProductType");

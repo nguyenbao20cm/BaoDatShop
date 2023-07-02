@@ -6,6 +6,7 @@ using BaoDatShop.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -110,6 +111,7 @@ builder.Services.AddTransient<IFavoriteProductRespositories, FavoriteProductResp
 builder.Services.AddTransient<IFavoriteProductService, FavoriteProductService>();
 
 
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 // For Enity
 builder.Services.AddDbContext<AppDbContext>(options =>
