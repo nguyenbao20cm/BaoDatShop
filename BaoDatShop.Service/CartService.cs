@@ -107,11 +107,6 @@ namespace BaoDatShop.Service
                 foreach (var item in tamp)
                 {
                     var productId = IProductSizeService.GetById(item.ProductSizeId).ProductId;
-                if(IProductResponsitories.GetById(productId).PriceSales==0)
-                {
-                    Total += item.Quantity * (IProductResponsitories.GetById(productId).Price);
-                }   
-                else
                     Total += item.Quantity * (IProductResponsitories.GetById(productId).PriceSales);
                 }
                 return Total;
