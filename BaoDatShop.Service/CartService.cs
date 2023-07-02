@@ -107,21 +107,14 @@ namespace BaoDatShop.Service
                 foreach (var item in tamp)
                 {
                     var productId = IProductSizeService.GetById(item.ProductSizeId).ProductId;
-                    var disscount = 0;
-                    if (IDisscountService.GetAllDisscountPanel().Where(a => a.ProductId == productId).FirstOrDefault() != null)
-                        disscount = IDisscountService.GetAllDisscountPanel().Where(a => a.ProductId == productId).FirstOrDefault().NameDisscount;
-                    else
-                        disscount = 0;
-                    if (disscount != 0)
-                        Total += item.Quantity * (IProductResponsitories.GetById(productId).Price - (IProductResponsitories.GetById(productId).Price * (disscount / 100)));
-                    else
-                        Total += item.Quantity * (IProductResponsitories.GetById(productId).Price);
-
+                if(IProductResponsitories.GetById(productId).PriceSales==0)
+                {
+                    Total += item.Quantity * (IProductResponsitories.GetById(productId).Price);
+                }   
+                else
+                    Total += item.Quantity * (IProductResponsitories.GetById(productId).PriceSales);
                 }
                 return Total;
-            
-
-           
         }
 
         public Cart GetById(int id)

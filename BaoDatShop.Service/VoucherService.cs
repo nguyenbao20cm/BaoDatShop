@@ -13,6 +13,7 @@ namespace BaoDatShop.Service
     public interface IVoucherService
     {
         public bool Create(CreateVoucher model);
+        public bool Update(int id, CreateVoucher model);
         public bool Delete(int id);
         public List<Voucher> GetAll();
         public List<Voucher> GetAllStatusFalse();
@@ -57,6 +58,16 @@ namespace BaoDatShop.Service
         public List<Voucher> GetAllStatusTrue()
         {
             return IVoucherRespositories.GetAll().Where(a => a.Status == true).ToList();
+        }
+
+        public bool Update(int id, CreateVoucher model)
+        {
+            var a = IVoucherRespositories.GetById(id);
+            a.Name = model.Name;
+            a.Status = model.Status;
+            a.Disscount = model.Disscount;
+            a.Title = model.Title;
+          return  IVoucherRespositories.Update(a);
         }
 
         public Voucher ValidationVoucher(string Name)

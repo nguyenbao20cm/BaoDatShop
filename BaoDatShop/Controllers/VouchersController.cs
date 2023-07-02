@@ -31,6 +31,12 @@ namespace BaoDatShop.Controllers
         {
             return Ok(IVoucherService.GetAll());
         }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetVoucherByid/{id}")]
+        public async Task<IActionResult> GetVoucherByid(int id)
+        {
+            return Ok(IVoucherService.GetAll().Where(a=>a.Id==id).FirstOrDefault());
+        }
         [Authorize(Roles = UserRole.Costumer)]
         [HttpPost("ValidationVoucher")]
         public async Task<IActionResult> ValidationVoucher(ValidationVoucher ValidationVoucher)
@@ -49,6 +55,15 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> CreateVoucher(CreateVoucher model)
         {
             if (IVoucherService.Create(model) == true)
+                return Ok("Thành công");
+            else
+                return Ok("Thất bại");
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpPut("UpdateVoucher/{id}")]
+        public async Task<IActionResult> UpdateVoucher(int id,CreateVoucher model)
+        {
+            if (IVoucherService.Update(id,model) == true)
                 return Ok("Thành công");
             else
                 return Ok("Thất bại");

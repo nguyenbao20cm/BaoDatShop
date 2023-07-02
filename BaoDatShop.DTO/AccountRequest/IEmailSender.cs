@@ -33,7 +33,7 @@ namespace BaoDatShop.DTO.AccountRequest
             string pass = "upyyyjmlbqdykyvs";
             MailMessage mailMessage = new MailMessage();
             mailMessage.Subject = subject;
-            mailMessage.Body = message;
+            mailMessage.Body ="Bạn đã nhận được Voucher giảm giá, hãy nhập Voucher này để nhận được ưu đãi " +message;
             mailMessage.To.Add(new MailAddress(email));
             mailMessage.From=new MailAddress(frommail);
          

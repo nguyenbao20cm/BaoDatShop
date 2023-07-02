@@ -18,7 +18,7 @@ namespace BaoDatShop.DTO.Product
         public string Name { get; set; }
         public string Description { get; set; }
         public int Price { get; set; } = 0;
-
+        public int PriceSales { get; set; }
         public int BrandProductId { get; set; }
 
         public int ProductTypeId { get; set; }

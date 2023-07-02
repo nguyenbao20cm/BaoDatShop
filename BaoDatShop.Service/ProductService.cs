@@ -63,6 +63,7 @@ namespace BaoDatShop.Service
             Product result = new();
             result.BrandProductId = model.BrandProductId;
             result.Name = model.Name;
+            result.PriceSales = model.PriceSales;
             result.SKU = model.SKU;
             result.Description = model.Description;
             result.Price = model.Price;
@@ -156,7 +157,7 @@ namespace BaoDatShop.Service
             Product result = productResponsitories.GetById(id);
         
             result.Name = model.Name;
-    
+            result.PriceSales = model.PriceSales;
             result.SKU = model.SKU;
             result.Description = model.Description;
             result.Price = model.Price;
