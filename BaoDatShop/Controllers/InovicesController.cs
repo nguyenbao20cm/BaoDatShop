@@ -45,6 +45,7 @@ namespace BaoDatShop.Controllers
             
             return Ok(query);
         }
+        
         [Authorize(Roles = UserRole.Costumer)]
         [HttpPost("CreateInvoice")]
         public async Task<IActionResult> CreateInvoice(CreateInvoiceRequest model)
@@ -167,6 +168,27 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> GetAllInoviceTotalMonth(string year)
         {
             return Ok(invoiceService.GetAllInoviceTotalMonth(year));
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetProfit/{year}")]
+        public async Task<IActionResult> GetProfit(string year)
+        {
+          var b=  invoiceService.GetAllInoviceTotalMonth(year);
+            var c = IProductSizeService.GetAllImportPrice(year);
+            Month a = new();
+            a.Month1 = b.Month1 - c.Month1;
+            a.Month2 = b.Month2 - c.Month2;
+            a.Month3 = b.Month3 - c.Month3;
+            a.Month4 = b.Month4 - c.Month4;
+            a.Month5 = b.Month5 - c.Month5;
+            a.Month6 = b.Month6 - c.Month6;
+            a.Month7 = b.Month7 - c.Month7;
+            a.Month8 = b.Month8 - c.Month8;
+            a.Month9 = b.Month9 - c.Month9;
+            a.Month10 = b.Month10 - c.Month10;
+            a.Month11 = b.Month11 - c.Month11;
+            a.Month12 = b.Month12 - c.Month12;
+            return Ok(a);
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateInovice/{id}")]
