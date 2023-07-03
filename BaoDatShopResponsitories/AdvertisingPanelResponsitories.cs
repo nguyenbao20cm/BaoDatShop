@@ -16,6 +16,7 @@ namespace BaoDatShop.Responsitories
         public AdvertisingPanel GetById(int id);
         public bool Update( AdvertisingPanel model);
         public bool Create(AdvertisingPanel model);
+        public bool Delete(int id );
     }
     public class AdvertisingPanelResponsitories : IAdvertisingPanelResponsitories
     {
@@ -50,6 +51,11 @@ namespace BaoDatShop.Responsitories
             return context.AdvertisingPanel.Where(a => a.AdvertisingPanelID == id).FirstOrDefault();
         }
 
-        
+        public bool Delete(int id)
+        {
+            context.Remove(GetById(id));
+            int check = context.SaveChanges();
+            return check > 0 ? true : false;
+        }
     }
 }
