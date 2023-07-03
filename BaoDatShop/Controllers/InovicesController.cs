@@ -63,7 +63,7 @@ namespace BaoDatShop.Controllers
                 ImportPrice += aba.ImportPrice * aba.Stock;
             }
             var Total = 0;
-            var TotalList = IInvoiceResponsitories.GetAll().Where(a => a.IssuedDate.Month == model.Month).Where(a => a.IssuedDate.Year == model.Year).ToList();
+            var TotalList = IInvoiceResponsitories.GetAll().Where(a=>a.OrderStatus==5).Where(a => a.IssuedDate.Month == model.Month).Where(a => a.IssuedDate.Year == model.Year).ToList();
             foreach (var abc in TotalList)
             {
                 Total += abc.Total;
@@ -170,24 +170,77 @@ namespace BaoDatShop.Controllers
             return Ok(invoiceService.GetAllInoviceTotalMonth(year));
         }
         [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetAllInoviceTotal/{year}")]
+        public async Task<IActionResult> GetAllInoviceTotal(int year)
+        {
+            var a = invoiceService.GetAll().Where(a => a.OrderStatus == 5).Where(a => a.IssuedDate.Year == year).ToList();
+            var tong = 0;
+            foreach(var item in a)
+            {
+                tong += item.Total;
+            }    
+            return Ok(tong);
+        }
+        private int PhivanChuyen(int date)
+        {
+            var a = invoiceService.GetAll().Where(a => a.IssuedDate.Month == date).Where(a=>a.OrderStatus!=1|| a.OrderStatus != 2).ToList();
+            int tong = 0;
+            foreach(var item in a)
+            {
+                    tong += 20000;
+            }
+            return tong;
+        }
+
+        private int PhivanChuyenTrongNam(int year,int date)
+        {
+            var a = invoiceService.GetAll().Where(a => a.OrderStatus != 1 || a.OrderStatus != 2).Where(a => a.IssuedDate.Month == date&&  a.IssuedDate.Year == year).ToList();
+            int tong = 0;
+            foreach (var item in a)
+            {
+                    tong += 20000;
+            }
+            return tong;
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetPhiVanChuyen/{year}")]
+        public async Task<IActionResult> GetProfit(int year)
+        {
+            Month a = new();
+             a.Month1 = PhivanChuyenTrongNam(year,1);
+             a.Month2 = PhivanChuyenTrongNam(year,2);
+             a.Month3 = PhivanChuyenTrongNam(year,3);
+             a.Month4 = PhivanChuyenTrongNam(year,4);
+             a.Month5 = PhivanChuyenTrongNam(year,5);
+             a.Month6 = PhivanChuyenTrongNam(year,6);
+             a.Month7 = PhivanChuyenTrongNam(year,7);
+             a.Month8 = PhivanChuyenTrongNam(year,8);
+             a.Month9 = PhivanChuyenTrongNam(year,9);
+             a.Month10 =PhivanChuyenTrongNam(year,10);
+             a.Month11 = PhivanChuyenTrongNam(year,11);
+             a.Month12 = PhivanChuyenTrongNam(year,12);
+            return Ok(a);
+        }
+        [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetProfit/{year}")]
         public async Task<IActionResult> GetProfit(string year)
         {
           var b=  invoiceService.GetAllInoviceTotalMonth(year);
             var c = IProductSizeService.GetAllImportPrice(year);
+           
             Month a = new();
-            a.Month1 = b.Month1 - c.Month1;
-            a.Month2 = b.Month2 - c.Month2;
-            a.Month3 = b.Month3 - c.Month3;
-            a.Month4 = b.Month4 - c.Month4;
-            a.Month5 = b.Month5 - c.Month5;
-            a.Month6 = b.Month6 - c.Month6;
-            a.Month7 = b.Month7 - c.Month7;
-            a.Month8 = b.Month8 - c.Month8;
-            a.Month9 = b.Month9 - c.Month9;
-            a.Month10 = b.Month10 - c.Month10;
-            a.Month11 = b.Month11 - c.Month11;
-            a.Month12 = b.Month12 - c.Month12;
+            a.Month1 = b.Month1 - c.Month1- PhivanChuyenTrongNam(int.Parse(year),1);
+            a.Month2 = b.Month2 - c.Month2- PhivanChuyenTrongNam(int.Parse(year),2);
+            a.Month3 = b.Month3 - c.Month3- PhivanChuyenTrongNam(int.Parse(year),3);
+            a.Month4 = b.Month4 - c.Month4- PhivanChuyenTrongNam(int.Parse(year),4);
+            a.Month5 = b.Month5 - c.Month5- PhivanChuyenTrongNam(int.Parse(year),5);
+            a.Month6 = b.Month6 - c.Month6- PhivanChuyenTrongNam(int.Parse(year),6);
+            a.Month7 = b.Month7 - c.Month7- PhivanChuyenTrongNam(int.Parse(year),7);
+            a.Month8 = b.Month8 - c.Month8- PhivanChuyenTrongNam(int.Parse(year), 8);
+            a.Month9 = b.Month9 - c.Month9 - PhivanChuyenTrongNam(int.Parse(year), 9);
+            a.Month10 = b.Month10 - c.Month10- PhivanChuyenTrongNam(int.Parse(year), 10);
+            a.Month11 = b.Month11 - c.Month11- PhivanChuyenTrongNam(int.Parse(year), 11);
+            a.Month12 = b.Month12 - c.Month12 - PhivanChuyenTrongNam(int.Parse(year), 12);
             return Ok(a);
         }
         [Authorize(Roles = UserRole.Admin)]

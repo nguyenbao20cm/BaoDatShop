@@ -303,7 +303,7 @@ namespace BaoDatShop.Service
                 ImportPrice+=a.ImportPrice*a.Stock;
             }
             var Total = 0;
-            var TotalList = invoiceResponsitories.GetAll().Where(a => a.IssuedDate.Year == year).ToList();
+            var TotalList = invoiceResponsitories.GetAll().Where(a=>a.OrderStatus==5).Where(a => a.IssuedDate.Year == year).ToList();
             foreach (var a in TotalList)
             {
                 Total += a.Total;

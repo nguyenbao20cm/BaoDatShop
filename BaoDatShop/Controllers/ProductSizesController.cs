@@ -62,6 +62,18 @@ namespace BaoDatShop.Controllers
         {
             return Ok(productSizeService.GetAllImportPrice(year));
         }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetImportDayAllYear/{year}")]//  status false
+        public async Task<IActionResult> GetImportDayAllYear(int year)
+        {
+            var a = productSizeService.GetAll().Where(a=>a.IssuedDate.Year==year);
+            var tong = 0;
+            foreach(var item in a)
+            {
+                tong += item.ImportPrice;
+            }    
+            return Ok(tong);
+        }
         //[Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllImportPriceByDay")]
         public async Task<IActionResult> GetAllImportPriceByDay()
