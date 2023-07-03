@@ -65,11 +65,12 @@ namespace BaoDatShop.Controllers
             {
               
                 if ( model.Username==item.Username)
-                    return Ok("Tên đăng nhập này đã được sử dụng");
-                if (model.Phone == item.Phone) return Ok("Số điện thoại này đã được sử dụng");
+                    return Ok(1);
+                if (model.Phone == item.Phone) return Ok(2);
+                if(model.Email==item.Email) return Ok(3);
             }
             var result = await _accountService.SignUpCustomer(model);
-            if (result.Succeeded) return Ok(result.Succeeded);
+            if (result.Succeeded) return Ok("Thành công");
             return Unauthorized();
         }
         [Authorize(Roles = UserRole.Admin)]

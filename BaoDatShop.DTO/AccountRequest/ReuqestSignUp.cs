@@ -23,7 +23,7 @@ namespace BaoDatShop.DTO.AccountRequest
         [Required(ErrorMessage = "Password is required")]
         public string? Password { get; set; }
         [DisplayName("SĐT")]
-        [RegularExpression("0\\d{9}", ErrorMessage = "SĐT không hợp lệ")]
+        //[RegularExpression("0\\d{9}", ErrorMessage = "SĐT không hợp lệ")]
         public string Phone { get; set; }
 
         [DisplayName("Địa chỉ")]
