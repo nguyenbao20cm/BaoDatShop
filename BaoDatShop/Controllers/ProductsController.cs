@@ -19,7 +19,12 @@ namespace BaoDatShop.Controllers
         {
             this.productService = productService;
         }
-     
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetQuailityProduct")]
+        public async Task<IActionResult> GetQuailityProduct()
+        {
+            return Ok(productService.GetAll().Count);
+        }
         [HttpGet("GetTop10BestSeller")]
         public async Task<IActionResult> GetTop10BestSeller()
         {

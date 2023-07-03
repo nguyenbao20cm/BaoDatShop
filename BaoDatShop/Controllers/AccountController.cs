@@ -88,6 +88,13 @@ namespace BaoDatShop.Controllers
             var a = _accountService.CreateAvatarImage(model);
             return Ok(a);
         }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetQuantityAccount")]
+        public async Task<IActionResult> GetQuantityAccount()
+        {
+            var a = _accountService.GetAllAccount().Where(a=>a.Permission==3).ToList();
+            return Ok(a.Count);
+        }
         [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer)]
         [HttpPut]
         [Route("UpdateAccount")]

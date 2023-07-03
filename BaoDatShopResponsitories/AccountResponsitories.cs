@@ -114,7 +114,8 @@ public class AccountResponsitories : IAccountResponsitories
                         tamp.Address = model.Address;
                         tamp.Email = model.email;
                         tamp.Phone = model.Phone;
-                        context.Account.Update(tamp);
+                    tamp.Avatar = id+".jpg";
+                    context.Account.Update(tamp);
                         context.SaveChanges();
                         return "True";
                     }

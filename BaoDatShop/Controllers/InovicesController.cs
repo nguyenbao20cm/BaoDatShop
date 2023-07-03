@@ -110,6 +110,12 @@ namespace BaoDatShop.Controllers
             return Ok(invoiceService.GetAll());
         }
         [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetQuanlityAllInovice")]
+        public async Task<IActionResult> GetQuanlityAllInovice()
+        {
+            return Ok(invoiceService.GetAll().Where(a=>a.OrderStatus!=4).ToList().Count);
+        }
+        [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllInoviceHUy")]
         public async Task<IActionResult> GetAllInoviceHUy()
         {

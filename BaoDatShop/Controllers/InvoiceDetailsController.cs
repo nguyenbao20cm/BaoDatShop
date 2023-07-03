@@ -28,5 +28,17 @@ namespace BaoDatShop.Controllers
         {
             return Ok(invoiceDetailService.GetAll());
         }
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer)]
+        [HttpGet("GetQualityProductSell")]
+        public async Task<IActionResult> GetQualityProductSell()
+        {
+            var a = invoiceDetailService.GetAll();
+            var tamp = 0;
+            foreach(var item in a)
+            {
+                tamp += item.Quantity;
+            }    
+            return Ok(tamp);
+        }
     }
 }
