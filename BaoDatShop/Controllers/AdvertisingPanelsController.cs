@@ -50,7 +50,7 @@ namespace BaoDatShop.Controllers
         {
             AdvertisingPanel result = new();
             result.Image = model.Image;
-            result.Link = model.Link;
+            result.ProductId = model.ProductId;
             result.Status = model.Status;
             context.Add(result);
             int check = context.SaveChanges();

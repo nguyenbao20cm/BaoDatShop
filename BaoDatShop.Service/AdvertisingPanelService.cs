@@ -51,8 +51,7 @@ namespace BaoDatShop.Service
             //}
             AdvertisingPanel result = new();
             result.Image = model.Image;
-            result.Link = model.Link;
-           
+            result.ProductId = model.ProductId;
             result.Status = model.Status;
            return advertisingPanelResponsitories.Create(result);
         }
@@ -60,8 +59,7 @@ namespace BaoDatShop.Service
         public bool Delete(int id)
         {
             AdvertisingPanel result = advertisingPanelResponsitories.GetById(id);
-            result.Status = false;
-            return advertisingPanelResponsitories.Update(result);
+            return advertisingPanelResponsitories.Delete(id);
         }
 
         public List<AdvertisingPanel> GetAll()
@@ -92,7 +90,7 @@ namespace BaoDatShop.Service
         //    }
             AdvertisingPanel result = advertisingPanelResponsitories.GetById(id);
             result.Image = model.Image;
-            result.Link = model.Link;
+            result.ProductId = model.ProductId;
             result.Status = model.Status;
             return advertisingPanelResponsitories.Update(result);
         }
