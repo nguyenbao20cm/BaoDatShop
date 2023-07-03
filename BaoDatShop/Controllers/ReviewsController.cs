@@ -31,6 +31,12 @@ namespace BaoDatShop.Controllers
             return Ok(reviewService.Delete(id));
         }
         [Authorize(Roles = UserRole.Costumer)]
+        [HttpPost("CreateImageReview")]
+        public async Task<IActionResult> CreateImageReview(IFormFile model)
+        {
+            return Ok(reviewService.CreateImageReview(model));
+        }
+        [Authorize(Roles = UserRole.Costumer)]
         [HttpPut("UpdateReview/{id}")]
         public async Task<IActionResult> UpdateReview(int IdReview, ReviewRequest model)
         {

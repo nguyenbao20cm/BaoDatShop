@@ -3,6 +3,10 @@ using BaoDatShop.DTO.Review;
 using BaoDatShop.Model.Model;
 using BaoDatShop.Responsitories;
 using Eshop.Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +17,9 @@ namespace BaoDatShop.Service
 {
     public interface IReviewService
     {
-        public bool Create(string AccountID,ReviewRequest model);
+        
+        public bool CreateImageReview(IFormFile model);
+        public Review Create(string AccountID,ReviewRequest model);
         public bool Update(string AccountId,int IdReview, ReviewRequest model);
         public bool Delete(int id);
         public List<Review> GetByIdProduct(int IdProduct);
@@ -26,21 +32,46 @@ namespace BaoDatShop.Service
     public class ReviewService : IReviewService
     {
         private readonly IReviewResponsitories reviewResponsitories;
-        public ReviewService(IReviewResponsitories reviewResponsitories)
+        private readonly IWebHostEnvironment _environment;
+        public ReviewService(IWebHostEnvironment _environment,IReviewResponsitories reviewResponsitories)
         {
             this.reviewResponsitories = reviewResponsitories;
+            this._environment = _environment;
         }
 
-        public bool Create(string AccountID,ReviewRequest model)
+        public Review Create(string AccountID,ReviewRequest model)
         {
             Review result = new();
+            result.Image = model.Image;
             result.Star = model.Star;
             result.ProductId = model.ProductId;
             result.AccountId = AccountID;
             result.Content = model.Content;
             result.DateTime =DateTime.Now;
             result.Status = true;
-            return reviewResponsitories.Create(result);
+            var a= reviewResponsitories.Create(result);
+            if (a == true) return (result);
+            else return null;
+        }
+
+        public bool CreateImageReview(IFormFile model)
+        {
+            var a = reviewResponsitories.GetById(int.Parse(model.FileName));
+            var fileName = a + ".jpg";
+            var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "ReviewImage");
+            var uploadPath = Path.Combine(uploadFolder, fileName);
+            try
+            {
+                using (FileStream fs = System.IO.File.Create(uploadPath))
+                {
+                    model.CopyTo(fs);
+                    fs.Flush();
+                }
+            }
+            catch (Exception e)
+            {
+            }
+            return true;
         }
 
         public bool Delete(int id)
@@ -80,6 +111,7 @@ namespace BaoDatShop.Service
         {
             Review result = reviewResponsitories.GetById(IdReview);
             result.Star = model.Star;
+            result.Image = model.Image;
             result.ProductId = model.ProductId;
             result.AccountId = AccountId;
             result.Content = model.Content;
