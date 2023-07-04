@@ -11,10 +11,8 @@ namespace BaoDatShop.DTO
 {
     public class ApplicationUser : IdentityUser
     {
-   
-        
 
-       
+
         public string? Email { get; set; }
 
      

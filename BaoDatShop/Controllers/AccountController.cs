@@ -1,13 +1,18 @@
-﻿using BaoDatShop.DTO.AccountRequest;
+﻿using BaoDatShop.DTO;
+using BaoDatShop.DTO.AccountRequest;
 using BaoDatShop.DTO.LoginRequest;
 using BaoDatShop.DTO.Response;
 using BaoDatShop.DTO.Role;
+using BaoDatShop.DTO.Voucher;
 using BaoDatShop.Service;
+using Eshop.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -19,15 +24,19 @@ namespace BaoDatShop.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+     
         private readonly IAccountService _accountService;
         private readonly IEmailSender IEmailSender;
         private readonly IConfiguration _configuration;
+        private readonly UserManager<ApplicationUser> userManager;
         public AccountController(
             IAccountService accountService,
-     
-           IConfiguration configuration)
+            IEmailSender IEmailSender,
+            UserManager<ApplicationUser> userManager,
+            IConfiguration configuration)
         {
-         
+            this.IEmailSender = IEmailSender;
+            this.userManager = userManager;
             _configuration = configuration;
             _accountService = accountService;
         }
@@ -46,15 +55,57 @@ namespace BaoDatShop.Controllers
             await _accountService.SignIn(model);
             var result = await _accountService.SignIn(model);
             if (result== "Failed") return Ok("Failed");
+            if (result == "Chưa xác minh Email") return Ok("Chưa xác minh Email");
             return Ok(result);
         }
         [HttpPost]
         [Route("register-Admin")]
-        public async Task<IActionResult> RegisterAdmin([FromForm] RegisterRequest model)
+        public async Task<ActionResult> RegisterAdmin([FromForm] RegisterRequest model)
         {
+            var ba = _accountService.GetAllAccount();
+            foreach (var item in ba)
+            {
+
+                if (model.Username == item.Username)
+                    return Ok("User Name đã được sử dụng");
+                if (model.Phone == item.Phone) return Ok("SDt da duoc su dung");
+                if (model.Email == item.Email) return Ok("Email da duoc su dung");
+            }
             var result = await _accountService.SignUpAdmin(model);
-            if (result.Succeeded) return Ok(result.Succeeded);
-            return Unauthorized();
+            if(result.Succeeded)
+            {
+                var  user = await userManager.FindByNameAsync(model.Username);
+                if(user!=null)
+                {
+                
+                    var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                    string url = this.Url.ActionLink("ConfirmEmail", "Account",
+                     new { token, email = model.Email });
+                    SendVoucher a = new();
+                    a.email = model.Email;
+                    a.subject = "Xác minh tài khoản";
+                    a.message = "Xác minh tài khoản bằng cách nhấn vào đường link:  <a href=\""
+                                                       + url ;
+                    IEmailSender.SendEmaiValidationEmail(a);
+                }
+            }
+            if (result.Succeeded) 
+                return Ok("Thanh cong");
+            else
+                return Ok(result.Errors);
+        }
+        [HttpGet("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail(string token, string email)
+        {
+            var ba = _accountService.GetAllAccount().Where(a=>a.Email==email).FirstOrDefault();
+            var user = await userManager.FindByIdAsync(ba.Id);
+            if(user !=null)
+            {
+                var result = await userManager.ConfirmEmailAsync(user, token);
+                if (result.Succeeded)
+                    return Ok("Thành công");
+            }
+            return Ok("Người dùng không tồn tại");
         }
         [HttpPost]
         [Route("register-Customer")]
@@ -70,8 +121,27 @@ namespace BaoDatShop.Controllers
                 if(model.Email==item.Email) return Ok(3);
             }
             var result = await _accountService.SignUpCustomer(model);
-            if (result.Succeeded) return Ok("Thành công");
-            return Unauthorized();
+            if (result.Succeeded)
+            {
+                var user = await userManager.FindByNameAsync(model.Username);
+                if (user != null)
+                {
+                    var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                    string url = this.Url.ActionLink("ConfirmEmail", "Account",
+                     new { token, email = model.Email });
+                    SendVoucher a = new();
+                    a.email = model.Email;
+                    a.subject = "Xác minh tài khoản";
+                    a.message = "Xác minh tài khoản bằng cách nhấn vào đường link:  <a href=\""
+                                                       + url;
+                    IEmailSender.SendEmaiValidationEmail(a);
+                }
+            }
+            if (result.Succeeded)
+                return Ok("Thanh cong");
+            else
+                return Ok(result.Errors);
+           
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPost]
@@ -171,8 +241,10 @@ namespace BaoDatShop.Controllers
             var result = _accountService.GetAllAcountCustomer().Where(a=>a.Status==false).ToList();
             return Ok(result);
         }
+    
         private string GetCorrectUserId()
         {
+
             var a = (ClaimsIdentity)User.Identity;
             var result = a.FindFirst("UserId").Value;
             return result;

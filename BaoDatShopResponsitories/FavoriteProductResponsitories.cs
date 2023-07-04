@@ -35,7 +35,9 @@ namespace BaoDatShop.Responsitories
 
         public bool Delete(int id)
         {
-            context.Remove(context.FavoriteProduct.Where(a => a.Id == id).FirstOrDefault());
+            var a = context.FavoriteProduct.Where(a => a.Id == id).FirstOrDefault();
+            if (a == null) return false;
+            context.Remove(a);
             int check = context.SaveChanges();
             return check > 0 ? true : false;
         }

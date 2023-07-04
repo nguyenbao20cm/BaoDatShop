@@ -12,9 +12,43 @@ namespace BaoDatShop.DTO.AccountRequest
     public interface IEmailSender
     {
         void SendEmailAsync(SendVoucher model);
+        void SendEmaiValidationEmail(SendVoucher model);
     }
     public class EmailSender : IEmailSender
     {
+        public void SendEmaiValidationEmail (SendVoucher model)
+        {
+            //var client = new SmtpClient("smtp.office365.com", 587)
+            //{
+            //    EnableSsl = true,
+            //    UseDefaultCredentials = false,
+            //    Credentials = new NetworkCredential("10video10a10@gmail.com", "inuyasa951")
+            //};
+
+            //return client.SendMailAsync(
+            //    new MailMessage(from: "10video10a10@gmail.com",
+            //                    to: email,
+            //                    subject,
+            //                    message
+            //                    ));
+            string frommail = "10video10a10@gmail.com";
+            string pass = "upyyyjmlbqdykyvs";
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.Subject = model.subject;
+            mailMessage.IsBodyHtml = true;
+            mailMessage.Body =  model.message;
+            mailMessage.To.Add(new MailAddress(model.email));
+            mailMessage.From = new MailAddress(frommail);
+
+            var client = new SmtpClient("smtp.gmail.com", 587)
+            {
+                EnableSsl = true,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(frommail, pass)
+            };
+            client.Send(mailMessage);
+
+        }
         public void SendEmailAsync(SendVoucher model)
         {
             //var client = new SmtpClient("smtp.office365.com", 587)

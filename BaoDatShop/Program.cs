@@ -21,6 +21,10 @@ ConfigurationManager configuration = builder.Configuration;
 
 builder.Services.AddControllers();
 //
+// For Identity Options
+builder.Services.Configure<IdentityOptions>(
+    opts => opts.SignIn.RequireConfirmedEmail = true
+ );
 
 //builder.Services.AddCors(options =>
 //{

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.Intrinsics.X86;
 using System.Security.Claims;
@@ -201,7 +202,10 @@ public class AccountResponsitories : IAccountResponsitories
 
         public async Task<string> SignIn(LoginRequest model)
         {
+       
             var user = await userManager.FindByNameAsync(model.Username);
+           var tam= await userManager.IsEmailConfirmedAsync(user);
+            if(tam==false) return "Chưa xác minh Email";
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
                 if(user.Status==false) return "Người dùng đã bị khóa";
@@ -278,6 +282,7 @@ public class AccountResponsitories : IAccountResponsitories
         }
         public async Task<IdentityResult> SignUpAdmin(RegisterRequest model)
         {
+          
             var userExists = await userManager.FindByNameAsync(model.Username);
             var fileName = model.image.FileName;
             var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Avatar");
@@ -311,6 +316,7 @@ public class AccountResponsitories : IAccountResponsitories
            
             if (result.Succeeded)
             {
+               
                 var user1 = await userManager.FindByNameAsync(model.Username);
                 user1.Avatar = user1.Id + "jpg";
                 await userManager.UpdateAsync(user1);
