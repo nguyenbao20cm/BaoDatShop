@@ -25,7 +25,9 @@ builder.Services.AddControllers();
 builder.Services.Configure<IdentityOptions>(
     opts => opts.SignIn.RequireConfirmedEmail = true
  );
-
+//token Confirm pass
+builder.Services.Configure<DataProtectionTokenProviderOptions>(
+    a => a.TokenLifespan = TimeSpan.FromHours(10));
 //builder.Services.AddCors(options =>
 //{
 //    options.AddPolicy("AllowOrigin", options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
