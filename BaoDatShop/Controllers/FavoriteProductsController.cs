@@ -34,7 +34,7 @@ namespace BaoDatShop.Controllers
         [HttpDelete("DeleteFavoriteProduct")]
         public async Task<IActionResult> DeleteFavoriteProduct(int id)
         {
-            return Ok(IFavoriteProductService.Delete(id));
+            return Ok(IFavoriteProductService.Delete(GetCorrectUserId(),id));
         }
         [Authorize(Roles = UserRole.Costumer)]
         [HttpPost("CreateFavoriteProduct")]
@@ -42,5 +42,6 @@ namespace BaoDatShop.Controllers
         {
             return Ok(IFavoriteProductService.Create(GetCorrectUserId(), model));
         }
+       
     }
 }

@@ -14,7 +14,7 @@ namespace BaoDatShop.Service
     public interface IFavoriteProductService
     {
         public bool Create(string id,CreateFavoriteProduct model);
-        public bool Delete(int id);
+        public bool Delete(string idacc,int id);
 
         public List<FavoriteProduct> GetAll(string id);
       
@@ -37,10 +37,10 @@ namespace BaoDatShop.Service
             return IFavoriteProductRespositories.Create(a);
         }
 
-        public bool Delete(int id)
+        public bool Delete(string idacc,int id)
         {
           
-            return IFavoriteProductRespositories.Delete(id);
+            return IFavoriteProductRespositories.Delete(idacc, id);
         }
 
         public List<FavoriteProduct> GetAll(string id)

@@ -14,7 +14,7 @@ namespace BaoDatShop.Responsitories
     {
         public bool Create(FavoriteProduct model);
         public bool Update(FavoriteProduct model);
-        public bool Delete(int id );
+        public bool Delete(string idacc, int id );
         public List<FavoriteProduct> GetAll();
         public FavoriteProduct GetbyId(int id);
 
@@ -33,9 +33,9 @@ namespace BaoDatShop.Responsitories
             return check > 0 ? true : false;
         }
 
-        public bool Delete(int id)
+        public bool Delete(string idacc, int id)
         {
-            var a = context.FavoriteProduct.Where(a => a.Id == id).FirstOrDefault();
+            var a = context.FavoriteProduct.Where(a=>a.AccountId==idacc).Where(a => a.ProductId == id).FirstOrDefault();
             if (a == null) return false;
             context.Remove(a);
             int check = context.SaveChanges();
