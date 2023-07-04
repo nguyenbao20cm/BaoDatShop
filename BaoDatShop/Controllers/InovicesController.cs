@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Linq;
 using System.Security.Claims;
 
 namespace BaoDatShop.Controllers
@@ -29,23 +30,50 @@ namespace BaoDatShop.Controllers
             this.IInvoiceResponsitories = IInvoiceResponsitories;
             this.IProductSizeResponsitories = IProductSizeResponsitories;
         }
+
         [Authorize(Roles = UserRole.Admin)]
-        [HttpGet("GetTotalByDay")]
-        public async Task<IActionResult> GetTongTienTheoNgay()
+        [HttpGet("GetAllChiPhi")]
+        public async Task<IActionResult> GetAllChiPhi( )
         {
-            var query = await context.Invoice.Where(a => a.OrderStatus == 5)
-                .GroupBy(hd => hd.IssuedDate)
-                .Select(g => new
-                {
-                    NgayLap = g.Key,
-                    TongTien = g.Sum(hd => hd.Total),
-                    ChiPhi = g.Where(hd=>hd.PaymentMethods==true).Count(hd=>hd.PaymentMethods)
-                })
-                .ToListAsync();
             
-            return Ok(query);
+            var a = DateTime.Now;
+            var ngayHienTai = new DateTime(a.Year,a.Month,a.Day);
+            var ngayDauTien= new DateTime(2023, 7, 1);
+            List<Chiphi> ab = new();
+            TimeSpan Time = ngayHienTai - ngayDauTien;
+            for(var i= 0; i<= Time.Days; i++)
+            {
+                Chiphi tam = new();
+                tam.DateTime = ngayDauTien.AddDays(i);
+                var tong1 = 0;
+                var ab1=context.Invoice
+                    .Where(a => a.PaymentMethods == true).Where(a => a.IssuedDate.Date == tam.DateTime.Date && a.IssuedDate.Year == tam.DateTime.Year && a.IssuedDate.Month == tam.DateTime.Month).ToList();
+                foreach(var ch in ab1)
+                {
+                    tong1++;
+                }    
+                tam.ChiPhiVanChuyen= tong1*20000;
+                var tong2 = 0;
+                var ab12 = context.ProductSize.
+                    Where(a => a.IssuedDate.Date == tam.DateTime.Date && a.IssuedDate.Year == tam.DateTime.Year && a.IssuedDate.Month == tam.DateTime.Month).ToList();
+                foreach(var ch1 in ab12)
+                {
+                    tong2 += ch1.ImportPrice;
+                }
+                tam.ChiPhiNhap = tong2;
+                var tong3 = 0;
+                var ab123 = context.Invoice.
+                    Where(a => a.IssuedDate.Date == tam.DateTime.Date && a.IssuedDate.Year == tam.DateTime.Year && a.IssuedDate.Month == tam.DateTime.Month).ToList();
+                foreach (var ch3 in ab123)
+                {
+                    tong3 += ch3.Total;
+                }
+                tam.ThuNhap = tong3;
+                ab.Add(tam);
+            }
+            return Ok(ab);
         }
-        
+
         [Authorize(Roles = UserRole.Costumer)]
         [HttpPost("CreateInvoice")]
         public async Task<IActionResult> CreateInvoice(CreateInvoiceRequest model)
