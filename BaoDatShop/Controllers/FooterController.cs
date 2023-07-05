@@ -33,11 +33,35 @@ namespace BaoDatShop.Controllers
             a.LinkFacebook = model.LinkFacebook;
             a.LinkInstagram = model.LinkInstagram;
             a.LinkZalo = model.LinkZalo;
+            a.MaQR = model.MaQR;
+            a.SoBank = model.SoBank;
+            a.Bank = model.Bank;
+            a.TenNguoiBank = model.TenNguoiBank;
             context.Update(a);
             int check = context.SaveChanges();
             return check > 0 ? Ok(true) : Ok(false);
         }
-        
+        [HttpPost("CreateImageQRFooter")]
+        public async Task<IActionResult> CreateImageQRFooter(IFormFile model)
+        {
+            try
+            {
+                var fileName = "1.jpg";
+                var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "ImageQr");
+                var uploadPath = Path.Combine(uploadFolder, fileName);
+                using (FileStream fs = System.IO.File.Create(uploadPath))
+                {
+                    model.CopyTo(fs);
+                    fs.Flush();
+                }
+                return Ok(true);
+            }
+            catch (Exception e)
+            {
+                return Ok(false);
+            }
+
+        }
         [HttpPost("CreateImageFooter")]
         public async Task<IActionResult> CreateImageFooter(IFormFile model)
         {

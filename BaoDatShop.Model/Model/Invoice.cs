@@ -35,11 +35,9 @@ namespace Eshop.Models
         [DisplayFormat(DataFormatString = "{0:n0}")]
         [DefaultValue(0)]
         public int Total { get; set; } = 0;
-
         [DisplayName("Còn hiệu lực")]
         [DefaultValue(true)]
         public bool Status { get; set; } = true;
-
         public bool Pay { get; set; }// Thanh toán
         public int OrderStatus { get; set; }//1 chưa xác nhận //2 la chua đang chuẩn bị //3 đang giao//6 đã giao//4 đã hủy,//5hoàn tất
 
