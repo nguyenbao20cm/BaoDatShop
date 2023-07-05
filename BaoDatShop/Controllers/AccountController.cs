@@ -111,6 +111,31 @@ namespace BaoDatShop.Controllers
             }
             return Ok("Thất bại");
         }
+        [HttpPost("ForgotPasswordCustomer")]
+        public async Task<ActionResult> ForgotPasswordCustomer(ForgotPass email)
+        {
+            var ua = this.Url;
+            var ba = _accountService.GetAllAccount().Where(a => a.Email == email.Email).FirstOrDefault();
+            if (ba == null) return Ok("Email này không khớp với tài khoản nào cả");
+            var user = await userManager.FindByIdAsync(ba.Id);
+            if (user.EmailConfirmed == false) return Ok("Thất bại, vì tài khoản này chưa được kích hoạt");
+            if (user != null)
+            {
+                var token = await userManager.GeneratePasswordResetTokenAsync(user);
+
+                //string url = this.Url.ActionLink("TokenForgotPass", "Account",
+                //   new { token, email = email });
+                string url = "http://localhost:3000/auth/DoiMatKhau?Token=" + token + "&Email=" + email.Email;
+                SendVoucher a = new();
+                a.email = email.Email;
+                a.subject = "Quên mật khẩu";
+                a.message = "Đổi mật khẩu bằng cách nhấn vào đường link:  <a href=\""
+                                                                     + url + "\">link</a>";
+                IEmailSender.SendEmaiValidationEmail(a);
+                return Ok("Thành công");
+            }
+            return Ok("Thất bại");
+        }
         [HttpGet("TokenForgotPass")]
         public async Task<IActionResult> TokenForgotPass(TokenResetPassword model)
         {

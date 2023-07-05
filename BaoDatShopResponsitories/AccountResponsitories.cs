@@ -204,6 +204,8 @@ public class AccountResponsitories : IAccountResponsitories
         {
        
             var user = await userManager.FindByNameAsync(model.Username);
+            if (user == null)
+                return "Thất bại";
            var tam= await userManager.IsEmailConfirmedAsync(user);
             if(tam==false) return "Chưa xác minh Email";
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
