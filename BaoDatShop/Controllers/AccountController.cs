@@ -87,20 +87,22 @@ namespace BaoDatShop.Controllers
             return Ok(result);
         }
         [HttpPost("ForgotPassword")]
-        public async Task<ActionResult> ForgetPassword(string email)
+        public async Task<ActionResult> ForgetPassword(ForgotPass email)
         {
             var ua = this.Url;
-            var ba = _accountService.GetAllAccount().Where(a => a.Email == email).FirstOrDefault();
+            var ba = _accountService.GetAllAccount().Where(a => a.Email == email.Email).FirstOrDefault();
+            if(ba==null) return Ok("Email này không khớp với tài khoản nào cả");
             var user = await userManager.FindByIdAsync(ba.Id);
             if (user.EmailConfirmed == false) return Ok("Thất bại, vì tài khoản này chưa được kích hoạt");
             if (user != null)
             {
                 var token = await userManager.GeneratePasswordResetTokenAsync(user);
 
-                string url = this.Url.ActionLink("TokenForgotPass", "Account",
-                   new { token, email = email });
+                //string url = this.Url.ActionLink("TokenForgotPass", "Account",
+                //   new { token, email = email });
+                string url = "http://localhost:3000/auth/DoiMatKhau?Token=" + token + "&Email=" + email.Email;
                 SendVoucher a = new();
-                a.email = email;
+                a.email = email.Email;
                 a.subject = "Quên mật khẩu";
                 a.message = "Đổi mật khẩu bằng cách nhấn vào đường link:  <a href=\""
                                                                      + url + "\">link</a>";
@@ -110,9 +112,9 @@ namespace BaoDatShop.Controllers
             return Ok("Thất bại");
         }
         [HttpGet("TokenForgotPass")]
-        public async Task<IActionResult> TokenForgotPass(string token, string email)
+        public async Task<IActionResult> TokenForgotPass(TokenResetPassword model)
         {
-            return Ok(new { Email = email, Token = token });
+            return Ok(new { Email = model.Email, Token = model.Token  });
         }
         [HttpPost]
         [Route("register-Admin")]
@@ -135,8 +137,9 @@ namespace BaoDatShop.Controllers
                 {
 
                     var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                    string url = this.Url.ActionLink("ConfirmEmail", "Account",
-                     new { token, email = model.Email });
+                    //string url = this.Url.ActionLink("ConfirmEmail", "Account",
+                    // new { token, email = model.Email });
+                    string url = "http://localhost:3000/auth/DangNhap?Token=" + token + "&Email=" + model.Email;
                     SendVoucher a = new();
                     a.email = model.Email;
                     a.subject = "Xác minh tài khoản";
@@ -150,14 +153,15 @@ namespace BaoDatShop.Controllers
             else
                 return Ok(result.Errors);
         }
-        [HttpGet("ConfirmEmail")]
-        public async Task<IActionResult> ConfirmEmail(string token, string email)
+        [HttpPost("ConfirmEmail")]
+ 
+        public async Task<IActionResult> ConfirmEmail(TokenResetPassword model)
         {
-            var ba = _accountService.GetAllAccount().Where(a => a.Email == email).FirstOrDefault();
+            var ba = _accountService.GetAllAccount().Where(a => a.Email == model.Email).FirstOrDefault();
             var user = await userManager.FindByIdAsync(ba.Id);
             if (user != null)
             {
-                var result = await userManager.ConfirmEmailAsync(user, token);
+                var result = await userManager.ConfirmEmailAsync(user, model.Token);
                 if (result.Succeeded)
                     return Ok("Thành công");
             }

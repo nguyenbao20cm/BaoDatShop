@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Security.Claims;
 
 namespace BaoDatShop.Controllers
@@ -30,7 +31,6 @@ namespace BaoDatShop.Controllers
             this.IInvoiceResponsitories = IInvoiceResponsitories;
             this.IProductSizeResponsitories = IProductSizeResponsitories;
         }
-
         [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllChiPhi")]
         public async Task<IActionResult> GetAllChiPhi( )
@@ -84,6 +84,8 @@ namespace BaoDatShop.Controllers
         [HttpPost("GetMonthInvoice")]
         public async Task<IActionResult> GetMonthInvoice(YearAndMonth model)
         {
+
+           
             var ImportPrice = 0;
             var ImportPiceList = IProductSizeResponsitories.GetAll().Where(a => a.IssuedDate.Month == model.Month).Where(a => a.IssuedDate.Year == model.Year).ToList();
             foreach (var aba in ImportPiceList)
