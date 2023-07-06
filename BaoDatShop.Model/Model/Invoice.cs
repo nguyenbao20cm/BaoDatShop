@@ -14,7 +14,7 @@ namespace Eshop.Models
         public int Id { get; set; }
 
         public string NameCustomer { get; set; }
-        public bool PaymentMethods { get; set; }// true là COD flase là thanh toán ngân hàng
+        public bool PaymentMethods { get; set; }// true là COD flase la lay hang tai shop
         public string AccountId { get; set; }
 
         // Navigation reference property cho khóa ngoại đến Account 
@@ -38,7 +38,7 @@ namespace Eshop.Models
         [DisplayName("Còn hiệu lực")]
         [DefaultValue(true)]
         public bool Status { get; set; } = true;
-        public bool Pay { get; set; }// Thanh toán
+        public bool Pay { get; set; }// Thanh toán   true la
         public int OrderStatus { get; set; }//1 chưa xác nhận //2 la chua đang chuẩn bị //3 đang giao//6 đã giao//4 đã hủy,//5hoàn tất
 
         // Collection reference property cho khóa ngoại từ InvoiceDetail

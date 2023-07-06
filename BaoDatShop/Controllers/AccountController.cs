@@ -100,7 +100,11 @@ namespace BaoDatShop.Controllers
 
                 //string url = this.Url.ActionLink("TokenForgotPass", "Account",
                 //   new { token, email = email });
+                //cua tao gia bao
                 string url = "http://localhost:3000/auth/DoiMatKhau?Token=" + token + "&Email=" + email.Email;
+
+                //cua tao Dat
+                //string url = "http://localhost:3000/auth/DoiMatKhau?Token=" + token + "&Email=" + email.Email;
                 SendVoucher a = new();
                 a.email = email.Email;
                 a.subject = "Quên mật khẩu";
@@ -125,7 +129,12 @@ namespace BaoDatShop.Controllers
 
                 //string url = this.Url.ActionLink("TokenForgotPass", "Account",
                 //   new { token, email = email });
+                // cua gia bao
                 string url = "http://localhost:3000/auth/DoiMatKhau?Token=" + token + "&Email=" + email.Email;
+
+
+                //cua tao Dat
+                //string url = "http://localhost:3000/auth/DoiMatKhau?Token=" + token + "&Email=" + email.Email;
                 SendVoucher a = new();
                 a.email = email.Email;
                 a.subject = "Quên mật khẩu";
@@ -164,7 +173,11 @@ namespace BaoDatShop.Controllers
                     var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
                     //string url = this.Url.ActionLink("ConfirmEmail", "Account",
                     // new { token, email = model.Email });
+                    //cua gia bao
                     string url = "http://localhost:3000/auth/DangNhap?Token=" + token + "&Email=" + model.Email;
+
+                    //cua tao Dat
+                    //string url = "http://localhost:3000/auth/DoiMatKhau?Token=" + token + "&Email=" + email.Email;
                     SendVoucher a = new();
                     a.email = model.Email;
                     a.subject = "Xác minh tài khoản";
@@ -179,7 +192,6 @@ namespace BaoDatShop.Controllers
                 return Ok(result.Errors);
         }
         [HttpPost("ConfirmEmail")]
- 
         public async Task<IActionResult> ConfirmEmail(TokenResetPassword model)
         {
             var ba = _accountService.GetAllAccount().Where(a => a.Email == model.Email).FirstOrDefault();

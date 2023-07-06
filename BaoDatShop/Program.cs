@@ -3,6 +3,7 @@ using BaoDatShop.DTO.AccountRequest;
 using BaoDatShop.Model.Context;
 using BaoDatShop.Responsitories;
 using BaoDatShop.Service;
+using CodeMegaVNPay.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -116,6 +117,7 @@ builder.Services.AddTransient<IHistoryAccountResponsitories, HistoryAccountRespo
 builder.Services.AddTransient<IFavoriteProductRespositories, FavoriteProductResponsitories>();
 builder.Services.AddTransient<IFavoriteProductService, FavoriteProductService>();
 
+builder.Services.AddTransient<IVnPayService, VnPayService>();
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 

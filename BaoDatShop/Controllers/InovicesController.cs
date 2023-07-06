@@ -73,7 +73,7 @@ namespace BaoDatShop.Controllers
             }
             return Ok(ab);
         }
-
+       
         [Authorize(Roles = UserRole.Costumer)]
         [HttpPost("CreateInvoice")]
         public async Task<IActionResult> CreateInvoice(CreateInvoiceRequest model)
