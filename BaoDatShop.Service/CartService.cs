@@ -30,13 +30,13 @@ namespace BaoDatShop.Service
         private readonly ICartResponsitories cartResponsitories;
         private readonly IProductResponsitories IProductResponsitories;
         private readonly IProductSizeService IProductSizeService;
-        private readonly IDisscountService IDisscountService;
-        public CartService(ICartResponsitories cartResponsitories, IProductResponsitories IProductResponsitories, IProductSizeService IProductSizeService, IDisscountService IDisscountService)
+        
+        public CartService(ICartResponsitories cartResponsitories, IProductResponsitories IProductResponsitories, IProductSizeService IProductSizeService)
         {
             this.cartResponsitories = cartResponsitories;
             this.IProductResponsitories = IProductResponsitories;
             this.IProductSizeService = IProductSizeService;
-            this.IDisscountService = IDisscountService;
+
         }
 
         public bool Create(CreateCartRequest model)

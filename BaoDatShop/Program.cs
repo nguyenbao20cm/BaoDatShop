@@ -82,11 +82,6 @@ builder.Services.AddTransient<IInvoiceDetailService, InvoiceDetailService>();
 builder.Services.AddTransient<IInvoiceService, InvoiceService>();
 builder.Services.AddTransient<IInvoiceResponsitories, InvoiceResponsitories>();
 
-builder.Services.AddTransient<INewDetailResponsitories, NewDetailResponsitories>();
-builder.Services.AddTransient<INewDetailService, NewDetailService>();
-
-builder.Services.AddTransient<INewsResponsitories, NewsResponsitories>();
-builder.Services.AddTransient<INewsService, NewsService>();
 
 builder.Services.AddTransient<IProductResponsitories, ProductResponsitories>();
 builder.Services.AddTransient<IProductService, ProductService>();
@@ -100,8 +95,7 @@ builder.Services.AddTransient<IReviewService, ReviewService>();
 builder.Services.AddTransient<IAdvertisingPanelResponsitories, AdvertisingPanelResponsitories>();
 builder.Services.AddTransient<IAdvertisingPanelService, AdvertisingPanelService>();
 
-builder.Services.AddTransient<IDisscountRespositories, DisscountRespositories>();
-builder.Services.AddTransient<IDisscountService, DisscountService>();
+
 
 builder.Services.AddTransient<IProductSizeResponsitories, ProductSizeResponsitories>();
 builder.Services.AddTransient<IProductSizeService, ProductSizeService>();
