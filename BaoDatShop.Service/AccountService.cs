@@ -23,7 +23,7 @@ namespace BaoDatShop.Service
         public Task<IdentityResult> SignUpCustomer(ReuqestSignUp model);
         public Account GetDetailAccount(string id);
         public List<Account> GetAllAccount();
-        public Task<string> DeleteAccount(string id);
+        public Task<string> DeleteAccount(string idacc,string id);
         public List<Account> GetAllAcountCustomer();
         public Task<IdentityResult> RegisterStaff(ReuqestSignUp model);
         public bool CreateAvatarImage( IFormFile model);
@@ -33,11 +33,12 @@ namespace BaoDatShop.Service
     }
     public class AccountService : IAccountService
     {
-
+        private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
         private readonly IAccountResponsitories accountResponsitories;
-        public AccountService(IAccountResponsitories accountResponsitories)
+        public AccountService(IAccountResponsitories accountResponsitories, IHistoryAccountResponsitories iHistoryAccountResponsitories)
         {
             this.accountResponsitories = accountResponsitories;
+            IHistoryAccountResponsitories = iHistoryAccountResponsitories;  
         }
 
         public bool CreateAvatarImage( IFormFile model)
@@ -46,9 +47,9 @@ namespace BaoDatShop.Service
             return  accountResponsitories.CreateAvatarImage(model);
         } 
 
-        public Task<string> DeleteAccount(string id)
+        public Task<string> DeleteAccount(string idacc,string id)
         {
-            return accountResponsitories.DeleteAccount(id);
+            return accountResponsitories.DeleteAccount(idacc,id);
         }
 
         public List<Account> GetAllAccount()

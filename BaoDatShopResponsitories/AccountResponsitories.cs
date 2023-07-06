@@ -3,6 +3,7 @@ using BaoDatShop.DTO.AccountRequest;
 using BaoDatShop.DTO.LoginRequest;
 using BaoDatShop.DTO.Role;
 using BaoDatShop.Model.Context;
+using BaoDatShop.Model.Model;
 using Eshop.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -28,7 +29,7 @@ namespace BaoDatShop.Responsitories
         public Task<string> Update(string id, UpdateAccountRequest model);
         public Task<string> UpdateAccountCustomer(string id, UpdateAccountCustomerRequest model);
         public List<Account> GetAll();
-        public Task<string> DeleteAccount(string id);
+        public Task<string> DeleteAccount(string idac,string id);
         public Task<IdentityResult> RegisterStaff(ReuqestSignUp model);
         public bool CreateAvatarImage(  IFormFile model);
 
@@ -36,6 +37,7 @@ namespace BaoDatShop.Responsitories
  
 public class AccountResponsitories : IAccountResponsitories
     {
+        private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
         private IPasswordHasher<ApplicationUser> passwordHasher;
         private readonly AppDbContext context;
         private readonly IWebHostEnvironment _environment;
@@ -45,12 +47,14 @@ public class AccountResponsitories : IAccountResponsitories
         private readonly RoleManager<IdentityRole> _roleManager;
         public AccountResponsitories
             (UserManager<ApplicationUser> userManager,
-          IWebHostEnvironment _environment,
+            IHistoryAccountResponsitories IHistoryAccountResponsitories,
+        IWebHostEnvironment _environment,
         AppDbContext context,
             SignInManager<ApplicationUser> signInManager, IConfiguration configuration, RoleManager<IdentityRole> roleManager,
             IPasswordHasher<ApplicationUser> passwordHasher
             )
         {
+            this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
             this.context = context;
             this.configuration = configuration;
             this.userManager = userManager;
@@ -59,7 +63,7 @@ public class AccountResponsitories : IAccountResponsitories
             _roleManager = roleManager;
             this.passwordHasher = passwordHasher;
         }
-        public async Task<string> DeleteAccount(string id)
+        public async Task<string> DeleteAccount(string idacc,string id)
         {
            
             try {
@@ -72,8 +76,17 @@ public class AccountResponsitories : IAccountResponsitories
                     Account tamp = context.Account.Where(a => a.Id == id).FirstOrDefault();
                     tamp.Status = false;
                     context.Account.Update(tamp);
-                    context.SaveChanges();
-                    return "True";
+                   int check= context.SaveChanges();
+                    if(check>0)
+                    {
+                        HistoryAccount a = new();
+                        a.AccountID = id; a.Datetime = DateTime.Now;
+                        a.Content = "Đã ẩn tài khoản UserName" + user.UserName;
+                        IHistoryAccountResponsitories.Create(a);
+                        return "True";
+                    }    
+                    else
+                        return "Failed";
                 }
                 else
                     return "Failed";

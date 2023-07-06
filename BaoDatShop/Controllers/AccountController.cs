@@ -314,7 +314,7 @@ namespace BaoDatShop.Controllers
         [Route("DeleteAccount/{id}")]
         public async Task<IActionResult> DeleteAccount(string id)
         {
-            var result = await _accountService.DeleteAccount(id);
+            var result = await _accountService.DeleteAccount(GetCorrectUserId(),id);
             return Ok(result);
         }
         [Authorize(Roles = UserRole.Admin)]

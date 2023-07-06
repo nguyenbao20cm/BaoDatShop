@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using Microsoft.EntityFrameworkCore;
+using BaoDatShop.Responsitories;
+using System.Security.Claims;
 
 namespace BaoDatShop.Controllers
 {
@@ -15,15 +17,22 @@ namespace BaoDatShop.Controllers
     public class BrandProductsController : ControllerBase
     {
         private readonly AppDbContext context;
-       
-        public BrandProductsController(AppDbContext context)
+        private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
+        public BrandProductsController(AppDbContext context,IHistoryAccountResponsitories IHistoryAccountResponsitories)
         {
             this.context = context;
+           this. IHistoryAccountResponsitories= IHistoryAccountResponsitories;
         }
         [HttpGet("GetProductByBrandProductsId/{id}")]
         public async Task<IActionResult> GetProductByBrandProductsId(int id)
         {
             return Ok(context.Product.Where(a=>a.BrandProductId==id).ToList());
+        }
+        private string GetCorrectUserId()
+        {
+            var a = (ClaimsIdentity)User.Identity;
+            var result = a.FindFirst("UserId").Value;
+            return result;
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateBrandProducts/{id}")]
@@ -34,6 +43,13 @@ namespace BaoDatShop.Controllers
             a.Status = model.Status;
             context.Update(a);
             int check = context.SaveChanges();
+            if(check>0)
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã chỉnh sửa thương hiệu";
+                IHistoryAccountResponsitories.Create(ab);
+            }    
             return check > 0 ? Ok(true) : Ok(false);
         }
         [Authorize(Roles = UserRole.Admin)]
