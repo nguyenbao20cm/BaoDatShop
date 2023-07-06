@@ -42,7 +42,7 @@ namespace BaoDatShop.Service
         public Review Create(string AccountID,ReviewRequest model)
         {
             Review result = new();
-            result.Image = model.Image;
+            result.Image = null;
             result.Star = model.Star;
             result.ProductId = model.ProductId;
             result.AccountId = AccountID;
@@ -50,14 +50,18 @@ namespace BaoDatShop.Service
             result.DateTime =DateTime.Now;
             result.Status = true;
             var a= reviewResponsitories.Create(result);
-            if (a == true) return (result);
+            if (a == true)
+            {
+                return (result);
+            }
+
             else return null;
         }
 
         public bool CreateImageReview(IFormFile model)
         {
             var a = reviewResponsitories.GetById(int.Parse(model.FileName));
-            var fileName = a + ".jpg";
+            var fileName = model.FileName + ".jpg";
             var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "ReviewImage");
             var uploadPath = Path.Combine(uploadFolder, fileName);
             try
@@ -67,9 +71,14 @@ namespace BaoDatShop.Service
                     model.CopyTo(fs);
                     fs.Flush();
                 }
+                var c = reviewResponsitories.GetById(int.Parse(model.FileName));
+                c.Image = fileName;
+                reviewResponsitories.Update(c);
+               
             }
             catch (Exception e)
             {
+                return false;
             }
             return true;
         }
