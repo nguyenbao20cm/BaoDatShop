@@ -44,7 +44,6 @@
     <Folder Include="wwwroot\Image\AvatarWebsite\" />
     <Folder Include="wwwroot\Image\AdvertisingPanel\" />
     <Folder Include="wwwroot\Image\ImageProduct\" />
-    <Folder Include="wwwroot\Image\ImageQr\" />
     <Folder Include="wwwroot\Image\ReviewImage\" />
     <Folder Include="wwwroot\Image\Product\" />
   </ItemGroup>

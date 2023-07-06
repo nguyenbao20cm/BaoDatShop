@@ -11,6 +11,7 @@ using BaoDatShop.Service;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using System.Security.Claims;
+using BaoDatShop.Model.Model;
 
 namespace BaoDatShop.Controllers
 {
@@ -43,13 +44,16 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> PaymentCallback()
         {
             var response = _vnPayService.PaymentExecute(Request.Query);
-
-            //if(response.Success)
-            //{
-            //    CreateInvoiceRequest a = new();
-            //    a.total=response.
-            //    invoiceService.Create(GetCorrectUserId(), model)
-            //}
+       
+            if (response.Success)
+            {
+                VnpayBill a = new();
+                a.DateTime = DateTime.Now;
+                a.Total = response.Total;
+                a.VNBillId = response.PaymentId;
+                context.Add(a);
+                context.SaveChanges();
+            }
             return Ok(response);
         }
         private string GetCorrectUserId()

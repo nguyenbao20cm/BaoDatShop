@@ -1,6 +1,8 @@
 ﻿using BaoDatShop.DTO.ProductSize;
 using BaoDatShop.DTO.ProductType;
 using BaoDatShop.DTO.Role;
+using BaoDatShop.Model.Model;
+using BaoDatShop.Responsitories;
 using BaoDatShop.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,10 +18,12 @@ namespace BaoDatShop.Controllers
     {
         private readonly IProductSizeService productSizeService;
         private readonly IProductService IProductService;
-        public ProductSizesController(IProductSizeService productSizeService, IProductService IProductService)
+        private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
+        public ProductSizesController(IHistoryAccountResponsitories IHistoryAccountResponsitories,IProductSizeService productSizeService, IProductService IProductService)
         {
             this.productSizeService = productSizeService;
             this.IProductService = IProductService;
+            this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
         }
  
         [HttpGet("GetAllProductSizeStatusTrue")]//status true
@@ -88,12 +92,27 @@ namespace BaoDatShop.Controllers
                 if (item.Name == model.Name)
                 {
                     model.Status = false;
-                    if (productSizeService.Create(GetCorrectUserId(), model) == true) return Ok("Thành công, nhưng trạng thái thành Ẩn vì Size này chỉ được 1 hiện thị ");
+                    if (productSizeService.Create(GetCorrectUserId(), model) == true)
+                    {
+                        HistoryAccount ab = new();
+                        ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                        ab.Content = "Đã nhập size sản phẩm "+ IProductService.GetById(model.ProductId).Name;
+                        IHistoryAccountResponsitories.Create(ab);
+                        return Ok("Thành công, nhưng trạng thái thành Ẩn vì Size này chỉ được 1 hiện thị ");
+                    } 
                     else return Ok("Thất bại");
                 }    
             }    
             if (model.Name == string.Empty) return Ok("Không được để trống");
-            if (productSizeService.Create(GetCorrectUserId(),model) == true) return Ok("Thành công");
+            if (productSizeService.Create(GetCorrectUserId(),model) == true)
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã nhập size sản phẩm " + IProductService.GetById(model.ProductId).Name;
+                IHistoryAccountResponsitories.Create(ab);
+                return Ok("Thành công");
+            }    
+                
             else return Ok("Thất bại");
 
             return Ok(productSizeService.Create(GetCorrectUserId(),model));
@@ -115,7 +134,14 @@ namespace BaoDatShop.Controllers
                 }
             }    
             if (productSizeService.Update(id, GetCorrectUserId(), model) == true)
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã chỉnh sửa size sản phẩm " + productSizeService.GetById(id).Name;
+                IHistoryAccountResponsitories.Create(ab);
                 return Ok("Thành công");
+            }    
+               
             else
                 return Ok("Thất bại");
         }
@@ -124,7 +150,13 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> DeleteProductType(int id)
         {
             if (productSizeService.Delete(id) == true)
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã ẩn size sản phẩm " + productSizeService.GetById(id).Name;
+                IHistoryAccountResponsitories.Create(ab);
                 return Ok("Thành công");
+            } 
             else
                 return Ok("Thất bại");
         }

@@ -1,6 +1,7 @@
 ﻿using BaoDatShop.DTO.Invoice;
 using BaoDatShop.DTO.Role;
 using BaoDatShop.Model.Context;
+using BaoDatShop.Model.Model;
 using BaoDatShop.Responsitories;
 using BaoDatShop.Service;
 using Microsoft.AspNetCore.Authorization;
@@ -18,13 +19,15 @@ namespace BaoDatShop.Controllers
     public class InovicesController : ControllerBase
     {
         private readonly AppDbContext context;
+        private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
         private readonly IInvoiceService invoiceService;
         private readonly IInvoiceResponsitories IInvoiceResponsitories;
         private readonly IProductSizeResponsitories IProductSizeResponsitories;
         private readonly IProductSizeService IProductSizeService;
         public InovicesController(IInvoiceService invoiceService, IProductSizeService IProductSizeService,
-            AppDbContext context, IInvoiceResponsitories IInvoiceResponsitories, IProductSizeResponsitories IProductSizeResponsitories)
+            AppDbContext context, IInvoiceResponsitories IInvoiceResponsitories, IProductSizeResponsitories IProductSizeResponsitories, IHistoryAccountResponsitories IHistoryAccountResponsitories)
         {
+            this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
             this.IProductSizeService = IProductSizeService;
             this.context = context;
             this.invoiceService = invoiceService;
@@ -288,7 +291,13 @@ namespace BaoDatShop.Controllers
             if (model.shippingadress == null) return Ok("Thất bại");
             if (model.shippingphone == null) return Ok("Thất bại");
             if (invoiceService.UpdateInovice(id, model) == true)
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã cập nhật hóa đơn có id "+ id;
+                IHistoryAccountResponsitories.Create(ab);
                 return Ok("Thành công");
+            }    
             else
                 return Ok("Thất bại");
         }

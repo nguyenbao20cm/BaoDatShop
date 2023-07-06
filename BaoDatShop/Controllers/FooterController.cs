@@ -2,10 +2,12 @@
 using BaoDatShop.DTO.Role;
 using BaoDatShop.Model.Context;
 using BaoDatShop.Model.Model;
+using BaoDatShop.Responsitories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BaoDatShop.Controllers
 {
@@ -15,10 +17,18 @@ namespace BaoDatShop.Controllers
     {
         private readonly AppDbContext context;
         private readonly IWebHostEnvironment _environment;
-        public FooterController(AppDbContext context, IWebHostEnvironment _environment)
+        private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
+        public FooterController(AppDbContext context, IWebHostEnvironment _environment, IHistoryAccountResponsitories IHistoryAccountResponsitories)
         {
             this.context = context;
+            this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
             this._environment = _environment;
+        }
+        private string GetCorrectUserId()
+        {
+            var a = (ClaimsIdentity)User.Identity;
+            var result = a.FindFirst("UserId").Value;
+            return result;
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateFooter/{id}")]
@@ -33,35 +43,18 @@ namespace BaoDatShop.Controllers
             a.LinkFacebook = model.LinkFacebook;
             a.LinkInstagram = model.LinkInstagram;
             a.LinkZalo = model.LinkZalo;
-            a.MaQR = model.MaQR;
-            a.SoBank = model.SoBank;
-            a.Bank = model.Bank;
-            a.TenNguoiBank = model.TenNguoiBank;
             context.Update(a);
             int check = context.SaveChanges();
+            if (check > 0)
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã chỉnh sửa thông tin trang web";
+                IHistoryAccountResponsitories.Create(ab);
+            }
             return check > 0 ? Ok(true) : Ok(false);
         }
-        [HttpPost("CreateImageQRFooter")]
-        public async Task<IActionResult> CreateImageQRFooter(IFormFile model)
-        {
-            try
-            {
-                var fileName = "1.jpg";
-                var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "ImageQr");
-                var uploadPath = Path.Combine(uploadFolder, fileName);
-                using (FileStream fs = System.IO.File.Create(uploadPath))
-                {
-                    model.CopyTo(fs);
-                    fs.Flush();
-                }
-                return Ok(true);
-            }
-            catch (Exception e)
-            {
-                return Ok(false);
-            }
-
-        }
+       
         [HttpPost("CreateImageFooter")]
         public async Task<IActionResult> CreateImageFooter(IFormFile model)
         {

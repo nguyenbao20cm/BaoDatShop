@@ -1,5 +1,7 @@
 ﻿using BaoDatShop.DTO.Review;
 using BaoDatShop.DTO.Role;
+using BaoDatShop.Model.Model;
+using BaoDatShop.Responsitories;
 using BaoDatShop.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,9 +16,11 @@ namespace BaoDatShop.Controllers
     public class ReviewsController : ControllerBase
     {
         private readonly IReviewService reviewService;
-        public ReviewsController(IReviewService reviewService)
+        private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
+        public ReviewsController(IReviewService reviewService, IHistoryAccountResponsitories IHistoryAccountResponsitories)
         {
             this.reviewService = reviewService;
+            this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
         }
         [Authorize(Roles = UserRole.Costumer)]
         [HttpPost("CreateReview")]
@@ -28,6 +32,14 @@ namespace BaoDatShop.Controllers
         [HttpPut("DeleteReview/{id}")]
         public async Task<IActionResult> DeleteReview(int id)
         {
+            if(reviewService.Delete(id)==true)
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã ẩn bình luận có id: "+id ;
+                IHistoryAccountResponsitories.Create(ab);
+                return Ok("Thành công");
+            }    
             return Ok(reviewService.Delete(id));
         }
         [Authorize(Roles = UserRole.Costumer)]

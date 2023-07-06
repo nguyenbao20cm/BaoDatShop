@@ -47,7 +47,7 @@ namespace BaoDatShop.Controllers
             {
                 HistoryAccount ab = new();
                 ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
-                ab.Content = "Đã chỉnh sửa thương hiệu";
+                ab.Content = "Đã chỉnh sửa thương hiệu có id là "+id;
                 IHistoryAccountResponsitories.Create(ab);
             }    
             return check > 0 ? Ok(true) : Ok(false);
@@ -61,6 +61,13 @@ namespace BaoDatShop.Controllers
             a.Status = model.Status;
             context.Add(a);
             int check = context.SaveChanges();
+            if (check > 0)
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã tạo thương hiệu " + model.Name;
+                IHistoryAccountResponsitories.Create(ab);
+            }
             return check > 0 ? Ok(true) : Ok(false);
         }
         [Authorize(Roles = UserRole.Admin)]
@@ -71,6 +78,13 @@ namespace BaoDatShop.Controllers
             a.Status = false;
             context.Add(a);
             int check = context.SaveChanges();
+            if (check > 0)
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã xóa thương hiệu " + context.BrandProduct.Where(x => x.Id == id).FirstOrDefault().Name;
+                IHistoryAccountResponsitories.Create(ab);
+            }
             return check > 0 ? Ok(true) : Ok(false);
         }
         [HttpGet("GetAllBrandProducts")]

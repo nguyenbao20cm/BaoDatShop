@@ -18,7 +18,7 @@ public class PaymentResponseModel
     public string Time { get; set; }
     //public bool PaymentMethods { get; set; }
     //public bool Pay { get; set; }
-    //public int Total { get; set; }
+    public int Total { get; set; }
     //public string ShippingAddress { get; set; }
     //public string ShippingPhone { get; set; }
 }

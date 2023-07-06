@@ -1,5 +1,7 @@
 ﻿using BaoDatShop.DTO.Product;
 using BaoDatShop.DTO.Role;
+using BaoDatShop.Model.Model;
+using BaoDatShop.Responsitories;
 using BaoDatShop.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -15,9 +17,11 @@ namespace BaoDatShop.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductService productService;
-        public ProductsController(IProductService productService)
+        private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
+        public ProductsController(IProductService productService, IHistoryAccountResponsitories IHistoryAccountResponsitories)
         {
             this.productService = productService;
+            this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetQuailityProduct")]
@@ -83,7 +87,13 @@ namespace BaoDatShop.Controllers
         {
             
             if (productService.Create(GetCorrectUserId(),model) == true)
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã tạo sản phẩm "+model.Name;
+                IHistoryAccountResponsitories.Create(ab);
                 return Ok("Thành công");
+            }    
             else
                 return Ok("Thất bại");
         }
@@ -92,7 +102,13 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> UpdateProduct(int id,  CreateProductRequest model)
         {
             if (productService.Update(id, GetCorrectUserId(),model) == true)
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã chỉnh sửa sản phẩm " + model.Name;
+                IHistoryAccountResponsitories.Create(ab);
                 return Ok("Thành công");
+            }    
             else
                 return Ok("Thất bại");
         }
@@ -101,7 +117,13 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> DeleteProduct(int id)
         {
             if(productService.Delete(id)==true)
-            return Ok("Thành công");
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã ẩn sản phẩm " + productService.GetById(id).Name;
+                IHistoryAccountResponsitories.Create(ab);
+                return Ok("Thành công");
+            }
             else
                 return Ok("Thất bại");
 

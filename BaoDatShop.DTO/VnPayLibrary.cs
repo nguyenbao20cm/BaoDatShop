@@ -36,7 +36,7 @@ public class VnPayLibrary
         //
         //var PaymentMethods = vnPay.GetResponseData("vnp_PaymentMethods");
         //var Pay = vnPay.GetResponseData("vnp_Pay");
-        //var total = vnPay.GetResponseData("vnp_total");
+        var total = vnPay.GetResponseData("vnp_Amount");
         //var ShippingPhone = vnPay.GetResponseData("vnp_ShippingPhone");
         //var ShippingAddress = vnPay.GetResponseData("vnp_ShippingAddress");
         var datenow= vnPay.GetResponseData("vnp_CreateDate");
@@ -56,7 +56,7 @@ public class VnPayLibrary
           
             //PaymentMethods = Convert.ToBoolean(PaymentMethods),
             //Pay= Convert.ToBoolean(Pay),
-            //Total=int.Parse(total),
+            Total=int.Parse(total),
             //ShippingPhone= ShippingPhone,
             //ShippingAddress= ShippingAddress,
             Success = true,

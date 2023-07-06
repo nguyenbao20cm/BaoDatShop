@@ -2,6 +2,8 @@
 using BaoDatShop.DTO.CreateFavoriteProduct;
 using BaoDatShop.DTO.Role;
 using BaoDatShop.DTO.Voucher;
+using BaoDatShop.Model.Model;
+using BaoDatShop.Responsitories;
 using BaoDatShop.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,10 +19,12 @@ namespace BaoDatShop.Controllers
     {
         private readonly IVoucherService IVoucherService;
         private readonly IEmailSender IEmailSender;
-        public VouchersController(IVoucherService IVoucherService, IEmailSender IEmailSender)
+        private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
+        public VouchersController(IHistoryAccountResponsitories IHistoryAccountResponsitories,IVoucherService IVoucherService, IEmailSender IEmailSender)
         {
             this.IVoucherService = IVoucherService;
             this.IEmailSender = IEmailSender;
+            this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
         }
         [HttpPost("SendVoucher")]
         public async Task<IActionResult> Index(SendVoucher model)
@@ -57,6 +61,15 @@ namespace BaoDatShop.Controllers
         [HttpPut("DeleteVoucher/{id}")]
         public async Task<IActionResult> DeleteVoucher(int id)
         {
+            if(IVoucherService.Delete(id)==true)
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã ẩn đi Voucher có id=" + id;
+                IHistoryAccountResponsitories.Create(ab);
+            }    
+           
+           
             return Ok(IVoucherService.Delete(id));
         }
         [Authorize(Roles = UserRole.Admin)]
@@ -64,7 +77,13 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> CreateVoucher(CreateVoucher model)
         {
             if (IVoucherService.Create(model) == true)
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã tạo thành công Voucher "+model.Title;
+                IHistoryAccountResponsitories.Create(ab);
                 return Ok("Thành công");
+            }   
             else
                 return Ok("Thất bại");
         }
@@ -73,7 +92,13 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> UpdateVoucher(int id,CreateVoucher model)
         {
             if (IVoucherService.Update(id,model) == true)
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã chỉnh sửa Voucher " + model.Title;
+                IHistoryAccountResponsitories.Create(ab);
                 return Ok("Thành công");
+            }
             else
                 return Ok("Thất bại");
         }

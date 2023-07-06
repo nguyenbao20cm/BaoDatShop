@@ -2,6 +2,8 @@
 using BaoDatShop.DTO.Invoice;
 using BaoDatShop.DTO.Product;
 using BaoDatShop.DTO.Role;
+using BaoDatShop.Model.Model;
+using BaoDatShop.Responsitories;
 using BaoDatShop.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,16 +18,22 @@ namespace BaoDatShop.Controllers
     public class ImageProductController : ControllerBase
     {
         private readonly IImageProductService IImageProductService;
-        public ImageProductController(IImageProductService IImageProductService)
+        private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
+        public ImageProductController(IImageProductService IImageProductService, IHistoryAccountResponsitories IHistoryAccountResponsitories)
         {
             this.IImageProductService = IImageProductService;
+            this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateImageProduct/{id}")]
         public async Task<IActionResult> UpdateImageProduct(int id, CreateImageProduct model)
         {
             if (IImageProductService.Update(id, model) == true)
+            {
+                  
                 return Ok("Thành công");
+            }    
+               
             else
                 return Ok("Thất bại");
         }
@@ -33,7 +41,15 @@ namespace BaoDatShop.Controllers
         [HttpPost("CreateImagesProduct")]
         public async Task<IActionResult> CreateImagesProduct(CreateImageProduct model)
         {
-            return Ok(IImageProductService.Create(model));
+            if(IImageProductService.Create(model)==true)
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã chỉnh sửa ảnh phụ của sản phẩm";
+                IHistoryAccountResponsitories.Create(ab);
+                return Ok("Thành công");
+            }
+            return Ok("Thất bại");
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllImageProduct")]
