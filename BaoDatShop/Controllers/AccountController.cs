@@ -204,6 +204,7 @@ namespace BaoDatShop.Controllers
             }
             return Ok("Người dùng không tồn tại");
         }
+
         [HttpPost]
         [Route("register-Customer")]
         public async Task<IActionResult> RegisterCustomer(ReuqestSignUp model)
@@ -224,8 +225,10 @@ namespace BaoDatShop.Controllers
                 if (user != null)
                 {
                     var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                    string url = this.Url.ActionLink("ConfirmEmail", "Account",
-                     new { token, email = model.Email });
+                    //string url = this.Url.ActionLink("ConfirmEmail", "Account",
+                    // new { token, email = model.Email });
+                    //dat 3001
+                    string url = " http://localhost:3000/login?Token=" + token + "&Email=" + model.Email;
                     SendVoucher a = new();
                     a.email = model.Email;
                     a.subject = "Xác minh tài khoản";
