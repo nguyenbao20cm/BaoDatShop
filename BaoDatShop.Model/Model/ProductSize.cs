@@ -15,7 +15,7 @@ namespace BaoDatShop.Model.Model
         public Product Product { get; set; }
         //public DateTime IssuedDate { get; set; } = DateTime.Now;
         //public int ImportPrice { get; set; }
-        public int Stock { get; set; } = 0;
+        public int Stock { get; set; } 
 
         //public int SupplierId { get; set; }
         //public Supplier Supplier { get; set; }

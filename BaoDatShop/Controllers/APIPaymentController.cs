@@ -60,11 +60,18 @@ namespace BaoDatShop.Controllers
 
         }
         [Authorize(Roles = UserRole.Costumer)]
+        [HttpGet("CheckReuslt")]
+        public async Task<IActionResult> CheckReuslt()
+        {
+            var response = _vnPayService.PaymentExecute(Request.Query);
+            return Ok(response);
+        }
+            [Authorize(Roles = UserRole.Costumer)]
         [HttpGet("GeDATaURL")]
         public async Task<IActionResult> PaymentCallback()
         {
             var response = _vnPayService.PaymentExecute(Request.Query);
-            if (response.Success)
+            if (response.VnPayResponseCode == "00")
             {
                 var orderDescription = response.OrderDescription.Split('/');
                 var paymentmethod = orderDescription[0];
@@ -135,7 +142,7 @@ namespace BaoDatShop.Controllers
         {
             var response = _vnPayService.PaymentExecute(Request.Query);
 
-            if (response.Success)
+            if (response.VnPayResponseCode=="00")
             {
                 var orderDescription = response.OrderDescription.Split('/');
                 var paymentmethod = orderDescription[0];
@@ -145,7 +152,7 @@ namespace BaoDatShop.Controllers
                 var name = orderDescription[5];
                 var productsizeid = orderDescription[6];
                 var quanlity = orderDescription[7];
-                var Idacc = GetCorrectUserId();
+                var Idacc = GetCorrectUserId(); 
 
                 Invoice result = new();
                 result.Pay = true;
