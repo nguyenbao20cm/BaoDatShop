@@ -26,6 +26,7 @@ namespace BaoDatShop.Controllers
         private readonly IInvoiceResponsitories IInvoiceResponsitories;
         private readonly ICartResponsitories ICartResponsitories;
         private readonly IProductSizeResponsitories IProductSizeResponsitories;
+    
         public APIPaymentController(IInvoiceService invoiceService, ICartResponsitories ICartResponsitories, IInvoiceResponsitories IInvoiceResponsitories,
             AppDbContext context,IConfiguration _configuration,
             IProductSizeResponsitories IProductSizeResponsitories,
@@ -82,7 +83,13 @@ namespace BaoDatShop.Controllers
                 var name = orderDescription[5];
                 var Idacc = GetCorrectUserId();
 
+
                 var Cart = ICartResponsitories.GetAll(GetCorrectUserId());
+                foreach (var c in Cart)
+                {
+                    var a = IProductSizeResponsitories.GetById(c.ProductSizeId);
+                    if (c.Quantity > a.Stock) return Ok("Thất bại");
+                }
                 Invoice result = new();
                 result.Pay =true;
                 result.NameCustomer = name;
@@ -150,16 +157,20 @@ namespace BaoDatShop.Controllers
 
             if (response.VnPayResponseCode=="00")
             {
+
+
+               
                 var orderDescription = response.OrderDescription.Split('/');
                 var paymentmethod = orderDescription[0];
                 var total = orderDescription[2];
                 var address = orderDescription[3];
                 var phone = orderDescription[4];
                 var name = orderDescription[5];
-                var productsizeid = orderDescription[6];
-                var quanlity = orderDescription[7];
-                var Idacc = GetCorrectUserId(); 
-
+                var productsizeid = orderDescription[7];
+                var quanlity = orderDescription[6];
+                var Idacc = GetCorrectUserId();
+                var ab = IProductSizeResponsitories.GetById(int.Parse(productsizeid));
+                if (int.Parse(quanlity) >= ab.Stock) return Ok("thất bại");
                 Invoice result = new();
                 result.Pay = true;
                 result.PaymentMethods = bool.Parse(paymentmethod);
@@ -201,7 +212,7 @@ namespace BaoDatShop.Controllers
                     //a2.VNBillId = response.PaymentId;
                     a2.AccountId = GetCorrectUserId();
                     a2.InvoiceId = result.Id;
-                    context.Add(a);
+                    context.Add(a2);
                     context.SaveChanges();
                 }
             
