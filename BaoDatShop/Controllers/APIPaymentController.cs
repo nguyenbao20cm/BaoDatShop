@@ -8,6 +8,7 @@ using CodeMegaVNPay.Services;
 using Eshop.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using System.Security.Claims;
 
 namespace BaoDatShop.Controllers
@@ -98,7 +99,12 @@ namespace BaoDatShop.Controllers
                 if (tamp == true)
                 {
                     VnpayBill a = new();
-                    a.DateTime = DateTime.Now;
+                    a.DateTime = response.DateTime;
+                    a.CodeBank = response.CodeBank;
+                    a.VNBillId = response.VNBillId;
+                    a.InvoiceBankID = response.InvoiceBankID;
+                    a.CardType = response.CardType;
+
                     a.Total = response.Total;
                     a.VNBillId = response.PaymentId;
                     a.AccountId = Idacc;
@@ -169,6 +175,7 @@ namespace BaoDatShop.Controllers
                 if (tamp == true)
                 {
                     var a = IProductSizeResponsitories.GetById(int.Parse(productsizeid));
+                    a.Stock = a.Stock - int.Parse(quanlity);
                     IProductSizeResponsitories.Update(a);
                     var productId = IProductSizeResponsitories.GetById(int.Parse(productsizeid)).ProductId;
                     InvoiceDetail detal = new InvoiceDetail
@@ -184,9 +191,14 @@ namespace BaoDatShop.Controllers
                     IInvoiceDetailResponsitories.Create(detal);
 
                     VnpayBill a2 = new();
-                    a2.DateTime = DateTime.Now;
+                    a2.DateTime = response.DateTime;
+                    a2.CodeBank = response.CodeBank;
+                    a2.VNBillId = response.VNBillId;
+                    a2.InvoiceBankID = response.InvoiceBankID;
+                    a2.CardType = response.CardType;
+
                     a2.Total = response.Total;
-                    a2.VNBillId = response.PaymentId;
+                    //a2.VNBillId = response.PaymentId;
                     a2.AccountId = GetCorrectUserId();
                     a2.InvoiceId = result.Id;
                     context.Add(a);

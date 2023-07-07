@@ -39,25 +39,28 @@ public class VnPayLibrary
         var total = vnPay.GetResponseData("vnp_Amount");
         //var ShippingPhone = vnPay.GetResponseData("vnp_ShippingPhone");
         //var ShippingAddress = vnPay.GetResponseData("vnp_ShippingAddress");
-        var datenow= vnPay.GetResponseData("vnp_CreateDate");
+       
+        var DateTime = vnPay.GetResponseData("vnp_PayDate");
+        var VNBillId = vnPay.GetResponseData("vnp_TransactionNo");
+        var InvoiceBankID = vnPay.GetResponseData("vnp_BankTranNo");
+        var CodeBank = vnPay.GetResponseData("vnp_BankCode");
+        var CardType = vnPay.GetResponseData("vnp_CardType");
         //
         var checkSignature =
             vnPay.ValidateSignature(vnpSecureHash, hashSecret); //check Signature
-
         if (!checkSignature)
             return new PaymentResponseModel()
             {
                 Success = false
             };
-
         return new PaymentResponseModel()
         {
-            Time = datenow,
-            //PaymentMethods = Convert.ToBoolean(PaymentMethods),
-            //Pay= Convert.ToBoolean(Pay),
-            Total=int.Parse(total),
-            //ShippingPhone= ShippingPhone,
-            //ShippingAddress= ShippingAddress,
+            CardType= CardType,
+            VNBillId= VNBillId,
+            InvoiceBankID= InvoiceBankID,
+            CodeBank= CodeBank,
+            DateTime = DateTime,
+            Total =int.Parse(total),
             Success = true,
             PaymentMethod = "VnPay",
             OrderDescription = orderInfo,

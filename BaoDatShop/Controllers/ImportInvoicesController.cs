@@ -65,6 +65,12 @@ namespace BaoDatShop.Controllers
             }
             return Ok(false);
         }
-        
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetAllImportInvoice")]
+        public async Task<IActionResult> GetAllImportInvoice()
+        {
+            return Ok(context.ImportInvoice.ToList());
+        }
+
     }
 }

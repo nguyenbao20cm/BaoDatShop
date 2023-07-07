@@ -75,6 +75,7 @@ namespace BaoDatShop.Controllers
                     tong3 += ch3.Total;
                 }
                 tam.ThuNhap = tong3;
+                if(tam.ThuNhap!=0&&tam.ChiPhiNhap!=0&&tam.ChiPhiVanChuyen!=0)
                 ab.Add(tam);
             }
             return Ok(ab);

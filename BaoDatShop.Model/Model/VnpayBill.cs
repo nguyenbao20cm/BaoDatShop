@@ -10,9 +10,15 @@ namespace BaoDatShop.Model.Model
     public class VnpayBill
     {
         public int Id { get; set; }
+
+        public string CardType { get; set; }//Loại thẻ
+        public string CodeBank { get; set; }// mã ngân hàng
         public int Total { get; set; }
-        public string VNBillId { get; set; }
-        public DateTime DateTime { get; set; }
+        public string InvoiceBankID { get; set; }//mã giao dihc tại ngân hàng
+        public string VNBillId { get; set; }// MÃ giao dịch tại VPN PAY
+        public string DateTime { get; set; }// TG Thanh toán
+
+
         public string AccountId { get; set; }
         public Account Account { get; set; }
         public int InvoiceId { get; set; }
