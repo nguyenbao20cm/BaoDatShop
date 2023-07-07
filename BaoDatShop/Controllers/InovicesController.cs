@@ -41,7 +41,6 @@ namespace BaoDatShop.Controllers
         [HttpGet("GetAllChiPhi")]
         public async Task<IActionResult> GetAllChiPhi( )
         {
-            
             var a = DateTime.Now;
             var ngayHienTai = new DateTime(a.Year,a.Month,a.Day);
             var ngayDauTien= new DateTime(2023, 7, 1);
@@ -75,7 +74,7 @@ namespace BaoDatShop.Controllers
                     tong3 += ch3.Total;
                 }
                 tam.ThuNhap = tong3;
-                if(tam.ThuNhap!=0&&tam.ChiPhiNhap!=0&&tam.ChiPhiVanChuyen!=0)
+                if(tam.ThuNhap!=0||tam.ChiPhiNhap!=0||tam.ChiPhiVanChuyen!=0)
                 ab.Add(tam);
             }
             return Ok(ab);

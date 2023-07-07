@@ -2,6 +2,7 @@
 using BaoDatShop.DTO.Invoice;
 using BaoDatShop.DTO.Product;
 using BaoDatShop.DTO.Role;
+using BaoDatShop.Model.Context;
 using BaoDatShop.Model.Model;
 using BaoDatShop.Responsitories;
 using BaoDatShop.Service;
@@ -18,9 +19,16 @@ namespace BaoDatShop.Controllers
     public class ImageProductController : ControllerBase
     {
         private readonly IImageProductService IImageProductService;
+        private readonly AppDbContext context;
+        private readonly IWebHostEnvironment _environment;
+        private readonly IConfiguration configuration;
         private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
-        public ImageProductController(IImageProductService IImageProductService, IHistoryAccountResponsitories IHistoryAccountResponsitories)
+        public ImageProductController(IConfiguration configuration,AppDbContext context,
+            IWebHostEnvironment _environment,
+            IImageProductService IImageProductService, IHistoryAccountResponsitories IHistoryAccountResponsitories)
         {
+            this.context = context;this._environment = _environment;
+            this.configuration = configuration;
             this.IImageProductService = IImageProductService;
             this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
         }
@@ -37,15 +45,34 @@ namespace BaoDatShop.Controllers
             else
                 return Ok("Thất bại");
         }
+
         [Authorize(Roles = UserRole.Admin)]
-        [HttpPost("CreateImagesProduct")]
-        public async Task<IActionResult> CreateImagesProduct(CreateImageProduct model)
+        [HttpPost("CreateImagesProduct/{ProductId}")]
+        public async Task<IActionResult> CreateImagesProduct(int ProductId, IFormFile model)
         {
-            if(IImageProductService.Create(model)==true)
+            ImageProduct mo = new();
+            mo.ProductId = ProductId;
+            mo.Status = true;
+            mo.Image = "";
+            context.Add(mo);
+            var check = context.SaveChanges();
+            if (check>0)
             {
+                var fileName = mo.Id + ".jpg";
+                var a = context.ImageProduct.Where(a => a.Id == mo.Id).FirstOrDefault();
+                a.Image = fileName;
+                context.Update(a);
+                context.SaveChanges();
+                var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "ImageProduct");
+                var uploadPath = Path.Combine(uploadFolder, fileName);
+                    using (FileStream fs = System.IO.File.Create(uploadPath))
+                    {
+                        model.CopyTo(fs);
+                        fs.Flush();
+                    }
                 HistoryAccount ab = new();
                 ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
-                ab.Content = "Đã chỉnh sửa ảnh phụ của sản phẩm";
+                ab.Content = "Đã tạo ảnh phụ của sản phẩm "+ context.Product.Where(a=>a.Id== ProductId).FirstOrDefault().Name;
                 IHistoryAccountResponsitories.Create(ab);
                 return Ok("Thành công");
             }

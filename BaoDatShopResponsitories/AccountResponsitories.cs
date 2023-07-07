@@ -104,10 +104,6 @@ public class AccountResponsitories : IAccountResponsitories
             var user = await userManager.FindByIdAsync(id);
             if (user != null)
             {
-                if (!string.IsNullOrEmpty(model.email))
-                    user.Email = model.email;
-                else
-                    return "Failed";
                 if (!string.IsNullOrEmpty(model.FullName))
                     user.FullName = model.FullName;
                 else
@@ -126,7 +122,6 @@ public class AccountResponsitories : IAccountResponsitories
                         Account tamp = context.Account.Where(a => a.Id == id).FirstOrDefault();
                         tamp.FullName = model.FullName;
                         tamp.Address = model.Address;
-                        tamp.Email = model.email;
                         tamp.Phone = model.Phone;
                     tamp.Avatar = id+".jpg";
                     context.Account.Update(tamp);

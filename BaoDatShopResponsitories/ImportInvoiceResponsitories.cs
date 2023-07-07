@@ -43,13 +43,13 @@ namespace BaoDatShop.Responsitories
         public List<ImportInvoice> GetAll()
         {
             if (context.ImportInvoice.ToList() == null) return null;
-            return context.ImportInvoice.Include(a => a.ProductSize.Product).Include(a => a.ProductSize).Include(a => a.Supplier).ToList();
+            return context.ImportInvoice.Include(a => a.ProductSize).Include(a=>a.ProductSize.Product).Include(a => a.Supplier).ToList();
         }
 
         public ImportInvoice GetById(int id)
         {
             if (context.ImportInvoice.Where(a => a.Id == id).FirstOrDefault() == null) return null;
-            return context.ImportInvoice.Include(a => a.ProductSize.Product).Include(a => a.ProductSize).Include(a => a.Supplier).Where(a => a.Id == id).FirstOrDefault();
+            return context.ImportInvoice.Include(a => a.ProductSize).Include(a => a.Supplier).Where(a => a.Id == id).FirstOrDefault();
         }
 
         public bool Update(ImportInvoice model)

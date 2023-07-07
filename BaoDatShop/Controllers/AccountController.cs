@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -28,15 +29,19 @@ namespace BaoDatShop.Controllers
         private readonly AppDbContext context;
         private readonly IAccountService _accountService;
         private readonly IEmailSender IEmailSender;
+        private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
         private readonly UserManager<ApplicationUser> userManager;
+      
         public AccountController(
             AppDbContext context,
             IAccountService accountService,
             IEmailSender IEmailSender,
             UserManager<ApplicationUser> userManager,
+             IWebHostEnvironment _environment,
             IConfiguration configuration)
         {
+            this._environment = _environment;
             this.context = context;
             this.IEmailSender = IEmailSender;
             this.userManager = userManager;
@@ -64,6 +69,7 @@ namespace BaoDatShop.Controllers
             if (user != null)
             {
                 var a = await userManager.ResetPasswordAsync(user, model.Token, model.Password);
+                if(a.Succeeded)
                 return Ok("Thành công");
             }
             return Ok("Thất bại");
@@ -126,7 +132,7 @@ namespace BaoDatShop.Controllers
 
 
                 //cua tao Dat
-                //string url = "http://localhost:3000/auth/DoiMatKhau?Token=" + token + "&Email=" + email.Email;
+                //string url = "http://localhost:3000/DoiMatKhau?Token=" + token + "&Email=" + email.Email;
                 SendVoucher a = new();
                 a.email = email.Email;
                 a.subject = "Quên mật khẩu";
@@ -278,6 +284,44 @@ namespace BaoDatShop.Controllers
             if (result == "Failed") return Ok("Failed");
             return Ok(result);
         }
+
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer)]
+        [HttpPost]
+        [Route("UpdateAccountCustomer/{Phone}&{Address}&{FullName}")]
+        public async Task<IActionResult> UpdateAccountWithImage(string Phone,string Address,string FullName,  IFormFile model)
+        {
+
+            var a = context.Account.Where(a => a.Id == GetCorrectUserId()).FirstOrDefault();
+            if (a == null) return Ok("Thất bại");
+            a.Phone = Phone;
+            a.Address = Address;
+            a.FullName = FullName;
+            context.Update(a);
+            var check1 = context.SaveChanges();
+            if(check1 == 0) return Ok("Thất bại");
+            var user = await userManager.FindByIdAsync(GetCorrectUserId());
+            user.Phone = Phone;
+            user.Address = Address;
+            user.FullName = FullName;
+            var check= await userManager.UpdateAsync(user);
+            if(check.Succeeded)
+            {
+                var fileName = a.Id + ".jpg";
+                var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Avatar");
+                var uploadPath = Path.Combine(uploadFolder, fileName);
+                using (FileStream fs = System.IO.File.Create(uploadPath))
+                {
+                    model.CopyTo(fs);
+                    fs.Flush();
+                }
+                return Ok("Thành công");
+            }
+            else
+                return Ok("Thất bại");
+
+
+        }
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer)]
         [HttpGet]
         [Route("GetDetailAccount")]
         public async Task<IActionResult> GetDetailAccount()

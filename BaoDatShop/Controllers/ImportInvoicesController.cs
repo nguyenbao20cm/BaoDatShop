@@ -69,7 +69,7 @@ namespace BaoDatShop.Controllers
         [HttpGet("GetAllImportInvoice")]
         public async Task<IActionResult> GetAllImportInvoice()
         {
-            return Ok(context.ImportInvoice.ToList());
+            return Ok(IImportInvoiceResponsitories.GetAll().ToList());
         }
 
     }
