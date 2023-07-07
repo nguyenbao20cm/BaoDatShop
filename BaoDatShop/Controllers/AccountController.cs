@@ -58,19 +58,11 @@ namespace BaoDatShop.Controllers
 
             if (model.Password != model.ConfirmPassword) return Ok("Mật khẩu xác thực không khớp");
             var abbb = _accountService.GetAllAccount();
-            foreach (var item in abbb)
-            {
-                if (model.UserName == item.Username)
-                    return Ok("User Name đã được sử dụng");
-            }
+         
             var ba = _accountService.GetAllAccount().Where(a => a.Email == model.Email).FirstOrDefault();
             var user = await userManager.FindByIdAsync(ba.Id);
             if (user != null)
             {
-                context.Account.Where(a => a.Id == ba.Id).FirstOrDefault().Username = model.UserName;
-                context.SaveChanges();
-                user.UserName = model.UserName;
-                IdentityResult result = await userManager.UpdateAsync(user);
                 var a = await userManager.ResetPasswordAsync(user, model.Token, model.Password);
                 return Ok("Thành công");
             }
