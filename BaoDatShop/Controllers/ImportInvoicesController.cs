@@ -35,7 +35,7 @@ namespace BaoDatShop.Controllers
             result.SupplierId = model.SupplierId;
             result.ImportPrice = model.ImportPrice;
             result.Quantity=model.Quantity;
-            result.ProductId = model.ProductId;
+          
             result.ProductSizeId = model.ProductSizeId;
             result.IssuedDate = DateTime.Now;
            
@@ -57,7 +57,7 @@ namespace BaoDatShop.Controllers
             ImportInvoice result = IImportInvoiceResponsitories.GetById(id);
             result.SupplierId = model.SupplierId;
             result.ImportPrice = model.ImportPrice;
-            result.ProductId = model.ProductId;
+        
             result.ProductSizeId = model.ProductSizeId;
             if (IImportInvoiceResponsitories.Update(result) == true)
             {
