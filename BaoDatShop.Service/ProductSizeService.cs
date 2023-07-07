@@ -32,11 +32,12 @@ namespace BaoDatShop.Service
     {
         private readonly IProductSizeResponsitories IProductSizeResponsitories;
         private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
-
-        public ProductSizeService(IProductSizeResponsitories IProductSizeResponsitories, IHistoryAccountResponsitories IHistoryAccountResponsitories)
+        private readonly IImportInvoiceResponsitories IImportInvoiceResponsitories;
+        public ProductSizeService(IImportInvoiceResponsitories IImportInvoiceResponsitories,IProductSizeResponsitories IProductSizeResponsitories, IHistoryAccountResponsitories IHistoryAccountResponsitories)
         {
             this.IProductSizeResponsitories = IProductSizeResponsitories;
-            this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;  
+            this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
+            this.IImportInvoiceResponsitories = IImportInvoiceResponsitories;
         }
         public List<ProductSize> GetAllProductTypeStatusFalse()
         {
@@ -51,12 +52,13 @@ namespace BaoDatShop.Service
         {
             ProductSize result = new();
             result.Name = model.Name;
-            result.ImportPrice = model.ImportPrice;
-            result.IssuedDate = DateTime.Now;
-            result.SupplierId = model.SupplierId;
+            //result.ImportPrice = model.ImportPrice;
+            //result.IssuedDate = DateTime.Now;
+            //result.SupplierId = model.SupplierId;
             result.ProductId = model.ProductId;
             result.Status = model.Status;
-            result.Stock = model.Stock;
+            //result.Stock = model.Stock;
+            result.Stock = 0;
             var ab = IProductSizeResponsitories.Create(result);
             if (ab==true)
             {
@@ -94,11 +96,11 @@ namespace BaoDatShop.Service
         {
             ProductSize result = IProductSizeResponsitories.GetById(id);
             result.Name = model.Name;
-            result.ImportPrice = model.ImportPrice;
+            //result.ImportPrice = model.ImportPrice;
             result.Status = model.Status;
-            result.Stock = model.Stock;
+            //result.Stock = model.Stock;
             result.ProductId = model.ProductId;
-            result.SupplierId = model.SupplierId;
+            //result.SupplierId = model.SupplierId;
             var ab = IProductSizeResponsitories.Update(result);
             if (ab == true)
             {
@@ -116,81 +118,81 @@ namespace BaoDatShop.Service
         {
        
             Month result = new Month();
-            var moth1 = IProductSizeResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 2).ToList();
-            var moth12 = IProductSizeResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 13 && a.IssuedDate.Month > 11).ToList();
-            var moth2 = IProductSizeResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 3 && a.IssuedDate.Month > 1).ToList();
-            var moth3 = IProductSizeResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 4 && a.IssuedDate.Month > 2).ToList();
-            var moth4 = IProductSizeResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 5 && a.IssuedDate.Month > 3).ToList();
-            var moth5 = IProductSizeResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 6 && a.IssuedDate.Month > 4).ToList();
-            var moth6 = IProductSizeResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 7 && a.IssuedDate.Month > 5).ToList();
-            var moth7 = IProductSizeResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 8 && a.IssuedDate.Month > 6).ToList();
-            var moth8 = IProductSizeResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 9 && a.IssuedDate.Month > 7).ToList();
-            var moth9 = IProductSizeResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 10 && a.IssuedDate.Month > 8).ToList();
-            var moth10 = IProductSizeResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 11 && a.IssuedDate.Month > 9).ToList();
-            var moth11 = IProductSizeResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 12 && a.IssuedDate.Month > 10).ToList();
+            var moth1 = IImportInvoiceResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 2).ToList();
+            var moth12 = IImportInvoiceResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 13 && a.IssuedDate.Month > 11).ToList();
+            var moth2 = IImportInvoiceResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 3 && a.IssuedDate.Month > 1).ToList();
+            var moth3 = IImportInvoiceResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 4 && a.IssuedDate.Month > 2).ToList();
+            var moth4 = IImportInvoiceResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 5 && a.IssuedDate.Month > 3).ToList();
+            var moth5 = IImportInvoiceResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 6 && a.IssuedDate.Month > 4).ToList();
+            var moth6 = IImportInvoiceResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 7 && a.IssuedDate.Month > 5).ToList();
+            var moth7 = IImportInvoiceResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 8 && a.IssuedDate.Month > 6).ToList();
+            var moth8 = IImportInvoiceResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 9 && a.IssuedDate.Month > 7).ToList();
+            var moth9 = IImportInvoiceResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 10 && a.IssuedDate.Month > 8).ToList();
+            var moth10 = IImportInvoiceResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 11 && a.IssuedDate.Month > 9).ToList();
+            var moth11 = IImportInvoiceResponsitories.GetAll().Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 12 && a.IssuedDate.Month > 10).ToList();
             var total1 = 0;
             foreach (var a in moth1)
             {
-                total1 += a.ImportPrice*a.Stock;
+                total1 += a.ImportPrice*a.Quantity;
             }
             result.Month1 = total1;
             var total2 = 0;
             foreach (var a in moth2)
             {
-                total2 += a.ImportPrice * a.Stock;
+                total2 += a.ImportPrice * a.Quantity;
             }
             result.Month2 = total2;
             var total3 = 0;
             foreach (var a in moth3)
             {
-                total3 += a.ImportPrice * a.Stock;
+                total3 += a.ImportPrice * a.Quantity;
             }
             result.Month3 = total3;
             var total4 = 0;
             foreach (var a in moth4)
             {
-                total4 += a.ImportPrice * a.Stock;
+                total4 += a.ImportPrice * a.Quantity;
             }
             result.Month4 = total4;
             var total5 = 0;
             foreach (var a in moth5)
             {
-                total5 += a.ImportPrice * a.Stock;
+                total5 += a.ImportPrice * a.Quantity;
             }
             result.Month5 = total5; var total6 = 0;
             foreach (var a in moth6)
             {
-                total6 += a.ImportPrice * a.Stock;
+                total6 += a.ImportPrice * a.Quantity;
             }
             result.Month6 = total6; var total7 = 0;
             foreach (var a in moth7)
             {
-                total7 += a.ImportPrice * a.Stock;
+                total7 += a.ImportPrice * a.Quantity;
             }
             result.Month7 = total7; var total8 = 0;
             foreach (var a in moth8)
             {
-                total8 += a.ImportPrice * a.Stock;
+                total8 += a.ImportPrice * a.Quantity;
             }
             result.Month8 = total8; var total9 = 0;
             foreach (var a in moth9)
             {
-                total9 += a.ImportPrice * a.Stock;
+                total9 += a.ImportPrice * a.Quantity;
             }
             result.Month9 = total9; var total10 = 0;
             foreach (var a in moth10)
             {
-                total10 += a.ImportPrice * a.Stock;
+                total10 += a.ImportPrice * a.Quantity;
             }
             result.Month10 = total10; var total11 = 0;
             foreach (var a in moth11)
             {
-                total11 += a.ImportPrice * a.Stock;
+                total11 += a.ImportPrice * a.Quantity;
             }
             result.Month11 = total11; var total12 = 0;
             foreach (var a in moth12)
             {
-                total12 += a.ImportPrice * a.Stock;
+                total12 += a.ImportPrice * a.Quantity;
             }
             result.Month12 = total12;
             return result;

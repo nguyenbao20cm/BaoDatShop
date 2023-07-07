@@ -39,7 +39,7 @@ namespace BaoDatShop.Responsitories
         public List<ProductSize> GetAll()
         {
             if (context.ProductSize.ToList() == null) return null;
-            return context.ProductSize.Include(a => a.Supplier).Include(a=>a.Product).ToList();
+            return context.ProductSize.Include(a=>a.Product).ToList();
         }
 
 

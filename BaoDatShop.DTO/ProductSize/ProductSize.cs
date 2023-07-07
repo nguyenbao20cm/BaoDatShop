@@ -9,12 +9,12 @@ namespace BaoDatShop.DTO.ProductSize
     public class CreateProductSize
     {
         public int SupplierId { get; set; } 
-        public int Stock { get; set; } = 0;
+        //public int Stock { get; set; } = 0;
         public string Name { get; set; }
         public int ProductId { get; set; }
         public bool Status { get; set; }
         //public DateTime IssuedDate { get; set; } = DateTime.Now;
-        public int ImportPrice { get; set; }
+        //public int ImportPrice { get; set; }
     }
 }
 

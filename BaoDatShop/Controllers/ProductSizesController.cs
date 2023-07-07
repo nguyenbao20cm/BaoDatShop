@@ -16,11 +16,16 @@ namespace BaoDatShop.Controllers
     [ApiController]
     public class ProductSizesController : ControllerBase
     {
+        private readonly IImportInvoiceResponsitories IImportInvoiceResponsitories;
         private readonly IProductSizeService productSizeService;
         private readonly IProductService IProductService;
         private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
-        public ProductSizesController(IHistoryAccountResponsitories IHistoryAccountResponsitories,IProductSizeService productSizeService, IProductService IProductService)
+        public ProductSizesController(IHistoryAccountResponsitories IHistoryAccountResponsitories,
+            IProductSizeService productSizeService,
+            IImportInvoiceResponsitories IImportInvoiceResponsitories,
+            IProductService IProductService)
         {
+            this.IImportInvoiceResponsitories = IImportInvoiceResponsitories;
             this.productSizeService = productSizeService;
             this.IProductService = IProductService;
             this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
@@ -70,11 +75,11 @@ namespace BaoDatShop.Controllers
         [HttpGet("GetImportDayAllYear/{year}")]//  status false
         public async Task<IActionResult> GetImportDayAllYear(int year)
         {
-            var a = productSizeService.GetAll().Where(a=>a.IssuedDate.Year==year);
+            var a = IImportInvoiceResponsitories.GetAll().Where(a=>a.IssuedDate.Year==year);
             var tong = 0;
             foreach(var item in a)
             {
-                tong += item.ImportPrice;
+                tong += item.ImportPrice*item.Quantity;
             }    
             return Ok(tong);
         }
@@ -83,9 +88,7 @@ namespace BaoDatShop.Controllers
         [HttpPost("CreateProductSize")]
         public async Task<IActionResult> CreateProductSize(CreateProductSize model)
         {
-            if(IProductService.GetById(model.ProductId).Price<model.ImportPrice)
-                return Ok("Giá nhập không thể lớn hơn giá bán");
-            var a = 0;
+           
             var b = productSizeService.GetAll().Where(a=>a.ProductId==model.ProductId).ToList();
             foreach(var item in b)
             {
@@ -121,8 +124,8 @@ namespace BaoDatShop.Controllers
         [HttpPut("UpdateProductSize/{id}")]
         public async Task<IActionResult> UpdateProductType(int id, UpdateProductSize model)
         {
-            if (IProductService.GetById(model.ProductId).Price < model.ImportPrice)
-                return Ok("Giá nhập không thể nhỏ hơn giá bán");
+            
+              
             if (model.Status==true)
             {
                 var b = productSizeService.GetAll().Where(a => a.ProductId == model.ProductId).ToList();

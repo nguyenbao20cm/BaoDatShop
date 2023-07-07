@@ -26,6 +26,7 @@ namespace BaoDatShop.Service
     }
     public class InvoiceService : IInvoiceService
     {
+        private readonly IImportInvoiceResponsitories IImportInvoiceResponsitories;
         private readonly IProductSizeService IProductSizeService;
         private readonly IInvoiceResponsitories invoiceResponsitories;
         private readonly ICartResponsitories cartResponsitories;
@@ -34,11 +35,12 @@ namespace BaoDatShop.Service
         private readonly IProductService productService;
         private readonly IInvoiceDetailResponsitories invoiceDetailResponsitories;
         private readonly IProductSizeResponsitories productSizeResponsitories;
-        public InvoiceService(IInvoiceResponsitories invoiceResponsitories, ICartResponsitories cartResponsitories, IProductService productService, 
+        public InvoiceService(IImportInvoiceResponsitories IImportInvoiceResponsitories,IInvoiceResponsitories invoiceResponsitories, ICartResponsitories cartResponsitories, IProductService productService, 
             IInvoiceDetailResponsitories invoiceDetailResponsitories,
             IProductSizeResponsitories productSizeResponsitories, IProductResponsitories IProductResponsitories, 
             IProductSizeService IProductSizeService ,IProductSizeResponsitories IProductSizeResponsitories)
         {
+            this.IImportInvoiceResponsitories = IImportInvoiceResponsitories;
             this.invoiceResponsitories = invoiceResponsitories;
             this.cartResponsitories = cartResponsitories;
             this.productService = productService;
@@ -297,10 +299,10 @@ namespace BaoDatShop.Service
         {
 
           var ImportPrice = 0;
-          var ImportPiceList=productSizeResponsitories.GetAll().Where(a => a.IssuedDate.Year == year).ToList();
+          var ImportPiceList= IImportInvoiceResponsitories.GetAll().Where(a => a.IssuedDate.Year == year).ToList();
             foreach(var a in ImportPiceList)
             {
-                ImportPrice+=a.ImportPrice*a.Stock;
+                ImportPrice+=a.ImportPrice*a.Quantity;
             }
             var Total = 0;
             var TotalList = invoiceResponsitories.GetAll().Where(a=>a.OrderStatus==5).Where(a => a.IssuedDate.Year == year).ToList();

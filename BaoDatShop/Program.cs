@@ -115,6 +115,9 @@ builder.Services.AddTransient<IVnPayService, VnPayService>();
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
+builder.Services.AddTransient<IImportInvoiceResponsitories, ImportInvoiceResponsitories>();
+
+
 // For Enity
 builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("LMS")));

@@ -37,7 +37,7 @@ namespace BaoDatShop.Model.Context
         public DbSet<HistoryAccount> HistoryAccount { get; set; }
         public DbSet<BrandProduct> BrandProduct { get; set; }
         public DbSet<VnpayBill> VnpayBill { get; set; }
-
+        public DbSet<ImportInvoice> ImportInvoice { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

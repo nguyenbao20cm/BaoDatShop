@@ -18,9 +18,9 @@ namespace BaoDatShop.Service
 {
     public interface IAdvertisingPanelService
     {
-        public bool Create(CreateAdvertisingPanelRequest model);
+        public bool Create(AdvertisingPanel model);
         public bool Delete(int id);
-        public bool Update(int id, CreateAdvertisingPanelRequest model);
+        public bool Update(int id, AdvertisingPanel model);
         public List<AdvertisingPanel> GetAll();
         public List<AdvertisingPanel> GetAllAdvertisingPanel();
         public List<AdvertisingPanel> GetAllAdvertisingPanelStatusFalse();
@@ -37,7 +37,7 @@ namespace BaoDatShop.Service
             this.advertisingPanelResponsitories = advertisingPanelResponsitories;
         }
 
-        public bool Create(CreateAdvertisingPanelRequest model)
+        public bool Create(AdvertisingPanel model)
         {
             //var fileName = model.Image.FileName;
             ////var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "AdvertisingPanel");
@@ -51,6 +51,8 @@ namespace BaoDatShop.Service
             //}
             AdvertisingPanel result = new();
             result.Image = model.Image;
+            result.Title = model.Title;
+            result.Content = model.Content;
             result.ProductId = model.ProductId;
             result.Status = model.Status;
            return advertisingPanelResponsitories.Create(result);
@@ -77,7 +79,7 @@ namespace BaoDatShop.Service
             return advertisingPanelResponsitories.GetAll().ToList();
         }
 
-        public bool Update(int id, CreateAdvertisingPanelRequest model)
+        public bool Update(int id, AdvertisingPanel model)
         {
         //    var fileName = model.Image.FileName;
         //    var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "AdvertisingPanel");
@@ -90,6 +92,8 @@ namespace BaoDatShop.Service
         //    }
             AdvertisingPanel result = advertisingPanelResponsitories.GetById(id);
             result.Image = model.Image;
+            result.Title = model.Title;
+            result.Content = model.Content;
             result.ProductId = model.ProductId;
             result.Status = model.Status;
             return advertisingPanelResponsitories.Update(result);

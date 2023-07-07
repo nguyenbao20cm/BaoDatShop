@@ -24,9 +24,12 @@ namespace BaoDatShop.Controllers
         private readonly IInvoiceResponsitories IInvoiceResponsitories;
         private readonly IProductSizeResponsitories IProductSizeResponsitories;
         private readonly IProductSizeService IProductSizeService;
+        private readonly IImportInvoiceResponsitories IImportInvoiceResponsitories;
         public InovicesController(IInvoiceService invoiceService, IProductSizeService IProductSizeService,
+            IImportInvoiceResponsitories IImportInvoiceResponsitories,
             AppDbContext context, IInvoiceResponsitories IInvoiceResponsitories, IProductSizeResponsitories IProductSizeResponsitories, IHistoryAccountResponsitories IHistoryAccountResponsitories)
         {
+            this.IImportInvoiceResponsitories = IImportInvoiceResponsitories;
             this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
             this.IProductSizeService = IProductSizeService;
             this.context = context;
@@ -57,7 +60,7 @@ namespace BaoDatShop.Controllers
                 }    
                 tam.ChiPhiVanChuyen= tong1*20000;
                 var tong2 = 0;
-                var ab12 = context.ProductSize.
+                var ab12 = context.ImportInvoice.
                     Where(a => a.IssuedDate.Date == tam.DateTime.Date && a.IssuedDate.Year == tam.DateTime.Year && a.IssuedDate.Month == tam.DateTime.Month).ToList();
                 foreach(var ch1 in ab12)
                 {
@@ -90,10 +93,10 @@ namespace BaoDatShop.Controllers
 
            
             var ImportPrice = 0;
-            var ImportPiceList = IProductSizeResponsitories.GetAll().Where(a => a.IssuedDate.Month == model.Month).Where(a => a.IssuedDate.Year == model.Year).ToList();
+            var ImportPiceList = IImportInvoiceResponsitories.GetAll().Where(a => a.IssuedDate.Month == model.Month).Where(a => a.IssuedDate.Year == model.Year).ToList();
             foreach (var aba in ImportPiceList)
             {
-                ImportPrice += aba.ImportPrice * aba.Stock;
+                ImportPrice += aba.ImportPrice * aba.Quantity;
             }
             var Total = 0;
             var TotalList = IInvoiceResponsitories.GetAll().Where(a=>a.OrderStatus==5).Where(a => a.IssuedDate.Month == model.Month).Where(a => a.IssuedDate.Year == model.Year).ToList();

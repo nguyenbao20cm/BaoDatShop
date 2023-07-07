@@ -8,5 +8,7 @@ namespace CodeMegaVNPay.Services;
 public interface IVnPayService
 {
     string CreatePaymentUrl(CreateInvoiceRequest model, HttpContext context);
+    string CreatePaymentUrlBuyNow(CreateInvoiceNow model, HttpContext context);
     PaymentResponseModel PaymentExecute(IQueryCollection collections);
 }
+

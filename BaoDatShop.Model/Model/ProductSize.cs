@@ -13,12 +13,12 @@ namespace BaoDatShop.Model.Model
         public string Name { get; set; }
         public int ProductId { get; set; }
         public Product Product { get; set; }
-        public DateTime IssuedDate { get; set; } = DateTime.Now;
-        public int ImportPrice { get; set; }
+        //public DateTime IssuedDate { get; set; } = DateTime.Now;
+        //public int ImportPrice { get; set; }
         public int Stock { get; set; } = 0;
 
-        public int SupplierId { get; set; }
-        public Supplier Supplier { get; set; }
+        //public int SupplierId { get; set; }
+        //public Supplier Supplier { get; set; }
         public bool Status { get; set; }
 
     }

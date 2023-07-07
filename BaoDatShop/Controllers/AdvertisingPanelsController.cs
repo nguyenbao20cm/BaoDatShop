@@ -50,12 +50,14 @@ namespace BaoDatShop.Controllers
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPost("CreateAdvertisingPanel")]
-        public async Task<IActionResult> CreateAdvertisingPanel(CreateAdvertisingPanelRequest model)
+        public async Task<IActionResult> CreateAdvertisingPanel(AdvertisingPanel model)
         {
             AdvertisingPanel result = new();
             result.Image = model.Image;
             result.ProductId = model.ProductId;
             result.Status = model.Status;
+            result.Title = model.Title;
+            result.Content = model.Content;
             context.Add(result);
             int check = context.SaveChanges();
             if(check>0)
@@ -76,7 +78,7 @@ namespace BaoDatShop.Controllers
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateAdvertisingPanel/{id}")]
-        public async Task<IActionResult> UpdateAdvertisingPanel(int id, CreateAdvertisingPanelRequest model)
+        public async Task<IActionResult> UpdateAdvertisingPanel(int id, AdvertisingPanel model)
         {
           
             if (advertisingPanelService.Update(id, model) == true)

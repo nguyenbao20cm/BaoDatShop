@@ -53,7 +53,6 @@ public class VnPayLibrary
         return new PaymentResponseModel()
         {
             Time = datenow,
-          
             //PaymentMethods = Convert.ToBoolean(PaymentMethods),
             //Pay= Convert.ToBoolean(Pay),
             Total=int.Parse(total),
