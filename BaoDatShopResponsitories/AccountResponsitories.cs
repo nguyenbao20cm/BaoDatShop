@@ -116,6 +116,13 @@ public class AccountResponsitories : IAccountResponsitories
                     user.Phone = model.Phone;
                 else
                     return "Failed";
+                if(model.Phone!=user.Phone)
+                { 
+                    foreach(var a in context.Account)
+                    {
+                        if(a.Phone == model.Phone) return "Failed";// SDT bij trungf
+                    }
+                 }
                 IdentityResult result = await userManager.UpdateAsync(user);
                     if (result.Succeeded)
                     {

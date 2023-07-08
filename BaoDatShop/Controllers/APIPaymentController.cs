@@ -157,9 +157,6 @@ namespace BaoDatShop.Controllers
 
             if (response.VnPayResponseCode=="00")
             {
-
-
-               
                 var orderDescription = response.OrderDescription.Split('/');
                 var paymentmethod = orderDescription[0];
                 var total = orderDescription[2];
@@ -170,7 +167,7 @@ namespace BaoDatShop.Controllers
                 var quanlity = orderDescription[6];
                 var Idacc = GetCorrectUserId();
                 var ab = IProductSizeResponsitories.GetById(int.Parse(productsizeid));
-                if (int.Parse(quanlity) >= ab.Stock) return Ok("thất bại");
+                if (int.Parse(quanlity) > ab.Stock) return Ok("thất bại");
                 Invoice result = new();
                 result.Pay = true;
                 result.PaymentMethods = bool.Parse(paymentmethod);

@@ -128,11 +128,11 @@ namespace BaoDatShop.Controllers
                 //string url = this.Url.ActionLink("TokenForgotPass", "Account",
                 //   new { token, email = email });
                 // cua gia bao
-                string url = "http://localhost:3000/auth/DoiMatKhau?Token=" + token + "&Email=" + email.Email;
+               // string url = "http://localhost:3000/auth/DoiMatKhau?Token=" + token + "&Email=" + email.Email;
 
 
                 //cua tao Dat
-                //string url = "http://localhost:3000/DoiMatKhau?Token=" + token + "&Email=" + email.Email;
+                string url = "http://localhost:3000/DoiMatKhau?Token=" + token + "&Email=" + email.Email;
                 SendVoucher a = new();
                 a.email = email.Email;
                 a.subject = "Quên mật khẩu";

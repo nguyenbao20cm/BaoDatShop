@@ -57,7 +57,6 @@ namespace BaoDatShop.Controllers
             ImportInvoice result = IImportInvoiceResponsitories.GetById(id);
             result.SupplierId = model.SupplierId;
             result.ImportPrice = model.ImportPrice;
-        
             result.ProductSizeId = model.ProductSizeId;
             if (IImportInvoiceResponsitories.Update(result) == true)
             {
@@ -70,6 +69,18 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> GetAllImportInvoice()
         {
             return Ok(IImportInvoiceResponsitories.GetAll().ToList());
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpDelete("DeleteImportInvoice/{id}")]
+        public async Task<IActionResult> DeleteImportInvoice(int id)
+        {
+            var check=context.ImportInvoice.Where(a => a.Id == id).FirstOrDefault();
+           
+            if (context.ProductSize.Where(a => a.Id == check.ProductSizeId).FirstOrDefault().Stock<check.Quantity)
+                return Ok(false);
+            context.Remove(check);
+            var a= context.SaveChanges();
+            return a > 0 ? Ok(true) : Ok(false);
         }
 
     }
