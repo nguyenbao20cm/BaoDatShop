@@ -3,6 +3,7 @@ using BaoDatShop.Model.Context;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace BaoDatShop.Controllers
@@ -21,6 +22,12 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> GetQuantityAccount()
         {
             return Ok(context.VnpayBill.ToList());
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetVNBillFilter/{startday},{endday}")]
+        public async Task<IActionResult> GetVNBillFilter(string startday,string endday)
+        {
+            return Ok(context.VnpayBill.Where(a => DateTime.Parse(a.DateTime) >= DateTime.Parse(startday)).Where(a => DateTime.Parse(a.DateTime) <= DateTime.Parse(endday)).ToList());
         }
     }
 }

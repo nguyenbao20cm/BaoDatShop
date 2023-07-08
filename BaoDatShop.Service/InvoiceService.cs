@@ -198,7 +198,7 @@ namespace BaoDatShop.Service
         public List<Invoice> GetAllInoviceFilterByDate(string startDate, string endDate)
         {
 
-            return invoiceResponsitories.GetAll().Where(a => a.IssuedDate >= DateTime.Parse(startDate) && a.IssuedDate <= DateTime.Parse(endDate)).ToList();
+            return invoiceResponsitories.GetAll().Where(a => a.IssuedDate.Date >= DateTime.Parse(startDate) && a.IssuedDate.Date <= DateTime.Parse(endDate)).ToList();
         }
 
         public Month GetAllInoviceTotalMonth(string year)

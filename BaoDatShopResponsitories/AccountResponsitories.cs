@@ -301,15 +301,7 @@ public class AccountResponsitories : IAccountResponsitories
         {
           
             var userExists = await userManager.FindByNameAsync(model.Username);
-            var fileName = model.image.FileName;
-            var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Avatar");
-            var uploadPath = Path.Combine(uploadFolder, fileName);
-
-            using (FileStream fs = System.IO.File.Create(uploadPath))
-            {
-                model.image.CopyTo(fs);
-                fs.Flush();
-            }
+        
             var user = new ApplicationUser()
             {
                 FullName = model.FullName,
@@ -318,7 +310,7 @@ public class AccountResponsitories : IAccountResponsitories
                 UserName = model.Username,
                
                 Phone = model.Phone,
-                Avatar = fileName,
+                Avatar = "",
                 Status = true,
                 Permission = 1,
             };
@@ -333,9 +325,8 @@ public class AccountResponsitories : IAccountResponsitories
            
             if (result.Succeeded)
             {
-               
                 var user1 = await userManager.FindByNameAsync(model.Username);
-                user1.Avatar = user1.Id + "jpg";
+                user1.Avatar = user1.Id + ".jpg";
                 await userManager.UpdateAsync(user1);
                 Account tamp = new();
                 tamp.Id = user1.Id;
@@ -345,12 +336,21 @@ public class AccountResponsitories : IAccountResponsitories
                 tamp.Username = model.Username;
              
                 tamp.Phone = model.Phone;
-                tamp.Avatar = user1.Id + "jpg";
+                tamp.Avatar = user1.Id + ".jpg";
                 tamp.Status = true;
                 tamp.Permission = 1;
                 tamp.Level = 0;
                 context.Account.Add(tamp);
                 context.SaveChanges();
+                var fileName = user1.Id + ".jpg";
+                var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Avatar");
+                var uploadPath = Path.Combine(uploadFolder, fileName);
+
+                using (FileStream fs = System.IO.File.Create(uploadPath))
+                {
+                    model.image.CopyTo(fs);
+                    fs.Flush();
+                }
             }
             return result;
         }

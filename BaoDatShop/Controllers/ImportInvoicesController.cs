@@ -7,6 +7,7 @@ using BaoDatShop.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace BaoDatShop.Controllers
@@ -68,19 +69,24 @@ namespace BaoDatShop.Controllers
         [HttpGet("GetAllImportInvoice")]
         public async Task<IActionResult> GetAllImportInvoice()
         {
-            return Ok(IImportInvoiceResponsitories.GetAll().ToList());
+            return Ok(IImportInvoiceResponsitories.GetAll().OrderByDescending(a => a.IssuedDate).ToList());
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetAllImportInvoice/{startday},{endday}")]
+        public async Task<IActionResult> GetAllImportInvoice(string startday,string endday)
+        {
+            return Ok(context.ImportInvoice.Include(a => a.Supplier).Include(a => a.ProductSize).Include(a => a.ProductSize.Product).Where(a=>a.IssuedDate.Date>=DateTime.Parse(startday)).Where(a=>a.IssuedDate.Date<=DateTime.Parse(endday)).ToList());
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpDelete("DeleteImportInvoice/{id}")]
         public async Task<IActionResult> DeleteImportInvoice(int id)
         {
             var check=context.ImportInvoice.Where(a => a.Id == id).FirstOrDefault();
-           
             if (context.ProductSize.Where(a => a.Id == check.ProductSizeId).FirstOrDefault().Stock<check.Quantity)
-                return Ok(false);
+                return Ok("Thất bại vì các sản phẩm đã xuất kho");
             context.Remove(check);
             var a= context.SaveChanges();
-            return a > 0 ? Ok(true) : Ok(false);
+            return a > 0 ? Ok("Thành công") : Ok("Thất bại");
         }
 
     }

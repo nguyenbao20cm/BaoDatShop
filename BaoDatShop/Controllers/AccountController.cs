@@ -296,12 +296,14 @@ namespace BaoDatShop.Controllers
             a.Phone = Phone;
             a.Address = Address;
             a.FullName = FullName;
+            a.Avatar = a.Id+".jpg";
             context.Update(a);
             var check1 = context.SaveChanges();
             if(check1 == 0) return Ok("Thất bại");
             var user = await userManager.FindByIdAsync(GetCorrectUserId());
             user.Phone = Phone;
             user.Address = Address;
+            user.Avatar = user.Id + ".jpg";
             user.FullName = FullName;
             var check= await userManager.UpdateAsync(user);
             if(check.Succeeded)
@@ -314,7 +316,7 @@ namespace BaoDatShop.Controllers
                     model.CopyTo(fs);
                     fs.Flush();
                 }
-                return Ok("Thành công");
+                return Ok(true);
             }
             else
                 return Ok("Thất bại");

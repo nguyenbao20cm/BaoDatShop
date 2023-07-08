@@ -33,6 +33,7 @@ namespace BaoDatShop.Service
         {
             Voucher a = new();
             a.Disscount=model.Disscount;
+            a.Title = model.Title;
             a.Name = model.Name;
             a.Status = model.Status;
             return IVoucherRespositories.Create(a);
