@@ -88,17 +88,19 @@ namespace BaoDatShop.Controllers
             //return check > 0 ? Ok(new { data = result, Success = true }) : Ok(" ");
         }
         [Authorize(Roles = UserRole.Admin)]
-        [HttpPut("UpdateAdvertisingPanel/{ProductId},{Title},{Content}")]
-        public async Task<IActionResult> UpdateAdvertisingPanel(int ProductId, string Title, string Content, IFormFile model)
+        [HttpPut("UpdateAdvertisingPanel/{ProductId},{Title},{Content},{id}")]
+        public async Task<IActionResult> UpdateAdvertisingPanel(int id,int ProductId, string Title, string Content, IFormFile model)
         {
-            AdvertisingPanel result = new();
+            AdvertisingPanel result = context.AdvertisingPanel.Where(a=>a.AdvertisingPanelID==id).FirstOrDefault();
             result.ProductId = ProductId;
             result.Title = Title;
             result.Content = Content;
             context.Update(result);
             int check = context.SaveChanges();
             if (check > 0)
-            {
+            {       result.Image= result.AdvertisingPanelID + ".jpg";
+                    context.Update(result);
+                   var c= context.SaveChanges();
                     var fileName = result.AdvertisingPanelID + ".jpg";
                     var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "AdvertisingPanel");
                     var uploadPath = Path.Combine(uploadFolder, fileName);

@@ -47,7 +47,7 @@ namespace BaoDatShop.Responsitories
         public ProductSize GetById(int id)
         {
             if (context.ProductSize.Where(a => a.Id == id).FirstOrDefault() == null) return null;
-            return context.ProductSize.Where(a => a.Id == id).FirstOrDefault();
+            return context.ProductSize.Include(a => a.Product).Where(a => a.Id == id).FirstOrDefault();
         }
 
         public bool Update(ProductSize model)

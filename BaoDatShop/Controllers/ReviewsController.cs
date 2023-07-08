@@ -55,7 +55,7 @@ namespace BaoDatShop.Controllers
             return Ok(reviewService.Update( GetCorrectUserId(), IdReview, model));
         }
         [Authorize(Roles = UserRole.Admin)]
-        [HttpPut("DeleteReviewByAdmin/{id}")]
+        [HttpDelete("DeleteReviewByAdmin/{id}")]
         public async Task<IActionResult> DeleteReviewByAdmin(int id)
         {
           
@@ -73,7 +73,7 @@ namespace BaoDatShop.Controllers
         [HttpGet("GetAllReview")]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(reviewService.GetAll());
+            return Ok(reviewService.GetAll().OrderByDescending(a=>a.DateTime));
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetAllReviewStatusTrue")]

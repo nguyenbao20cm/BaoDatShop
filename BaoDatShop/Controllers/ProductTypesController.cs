@@ -43,7 +43,7 @@ namespace BaoDatShop.Controllers
         {
             return Ok(productypeService.GetById(id));
         }
-    //    [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin)]
         [HttpPost("CreateProductType")]
         public async Task<IActionResult> CreateProductType(CreateProductTypeRequest model)
         {
@@ -66,7 +66,7 @@ namespace BaoDatShop.Controllers
             var result = a.FindFirst("UserId").Value;
             return result;
         }
-        // [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateProductType/{id}")]
         public async Task<IActionResult> UpdateProductType(int id, CreateProductTypeRequest model)
         {

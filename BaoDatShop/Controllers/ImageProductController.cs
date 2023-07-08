@@ -45,7 +45,50 @@ namespace BaoDatShop.Controllers
             else
                 return Ok("Thất bại");
         }
-
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpPut("UpdateImageProductWithImage/{Id},{ProductId}")]
+        public async Task<IActionResult> UpdateImageProductWithImage(int id,int ProductId, IFormFile model)
+        {
+            ImageProduct mo = context.ImageProduct.Where(a=>a.Id==id).FirstOrDefault();
+            mo.ProductId = ProductId;
+            context.Update(mo);
+            var check = context.SaveChanges();
+            if (check > 0)
+            {
+                var fileName = mo.Id + ".jpg";
+                var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "ImageProduct");
+                var uploadPath = Path.Combine(uploadFolder, fileName);
+                using (FileStream fs = System.IO.File.Create(uploadPath))
+                {
+                    model.CopyTo(fs);
+                    fs.Flush();
+                }
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã chỉnh sửa ảnh phụ của sản phẩm" + context.Product.Where(a => a.Id == ProductId).FirstOrDefault().Name;
+                IHistoryAccountResponsitories.Create(ab);
+                return Ok(true);
+            }
+            return Ok("Thất bại");
+        }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpPut("UpdateImageProduct/{Id},{ProductId}")]
+        public async Task<IActionResult> UpdateImageProduct(int id, int ProductId)
+        {
+            ImageProduct mo = context.ImageProduct.Where(a => a.Id == id).FirstOrDefault();
+            mo.ProductId = ProductId;
+            context.Update(mo);
+            var check = context.SaveChanges();
+            if (check > 0)
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã chỉnh sửa ảnh phụ của sản phẩm " + context.Product.Where(a => a.Id == ProductId).FirstOrDefault().Name;
+                IHistoryAccountResponsitories.Create(ab);
+                return Ok(true);
+            }
+            return Ok("Thất bại");
+        }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPost("CreateImagesProduct/{ProductId}")]
         public async Task<IActionResult> CreateImagesProduct(int ProductId, IFormFile model)
@@ -74,7 +117,7 @@ namespace BaoDatShop.Controllers
                 ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
                 ab.Content = "Đã tạo ảnh phụ của sản phẩm "+ context.Product.Where(a=>a.Id== ProductId).FirstOrDefault().Name;
                 IHistoryAccountResponsitories.Create(ab);
-                return Ok("Thành công");
+                return Ok(true);
             }
             return Ok("Thất bại");
         }

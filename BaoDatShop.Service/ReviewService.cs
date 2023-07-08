@@ -85,9 +85,7 @@ namespace BaoDatShop.Service
 
         public bool Delete(int id)
         {
-            Review result = reviewResponsitories.GetById(id);
-            result.Status = false;
-            return reviewResponsitories.Update(result);
+            return reviewResponsitories.Delete(id);
         }
 
         public List<Review> GetAll()

@@ -14,6 +14,7 @@ namespace BaoDatShop.Responsitories
     {
         public bool Create(Review model);
         public bool Update(Review model);
+        public bool Delete(int id );
         public Review GetById(int id);
         public List<Review> GetAll();
     }
@@ -31,6 +32,13 @@ namespace BaoDatShop.Responsitories
             return check > 0 ? true : false;
         }
 
+        public bool Delete(int id)
+        {
+            context.Remove(context.Review.Where(a => a.ReviewId == id).FirstOrDefault());
+            int check = context.SaveChanges();
+            return check > 0 ? true : false;
+        }
+
         public List<Review> GetAll()
         {
             if (context.Review.ToList() == null) return null;
@@ -39,7 +47,7 @@ namespace BaoDatShop.Responsitories
 
         public Review GetById(int id)
         {
-            if (context.Review.Where(a => a.ReviewId == id).Where(a => a.Status == true).FirstOrDefault() == null) return null;
+            if (context.Review.Where(a => a.ReviewId == id).FirstOrDefault() == null) return null;
             return context.Review.Where(a => a.ReviewId == id).FirstOrDefault();
         }
 

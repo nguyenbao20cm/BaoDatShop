@@ -45,7 +45,7 @@ namespace BaoDatShop.Service
 
         public List<Product> GetAllProductStatusTrue()
         {
-            return productResponsitories.GetAll().Where(a => a.Status == true).ToList();
+            return productResponsitories.GetAll().Where(a => a.BrandProduct.Status == true).Where(a=>a.ProductType.Status==true).Where(a => a.Status == true).ToList();
         }
         public bool Create(string id,CreateProductRequest model)
         {

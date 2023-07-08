@@ -61,9 +61,7 @@ namespace BaoDatShop.Service
 
         public bool Delete(int id)
         {
-            ImageProduct result = IImageProductResponsitories.GetById(id);
-            result.Status = false;
-            return IImageProductResponsitories.Update(result);
+            return IImageProductResponsitories.Delete(id);
         }
 
         public List<ImageProduct> GetAll()

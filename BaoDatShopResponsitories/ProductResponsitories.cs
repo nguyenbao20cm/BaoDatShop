@@ -37,11 +37,8 @@ namespace BaoDatShop.Responsitories
         public List<Product> GetAll()
         {
             if (context.Product.ToList() == null) return null;
-            return context.Product.Include(a => a.BrandProduct).Include(a =>a.ProductType).ToList();
+            return context.Product.Include(a => a.ProductType).Include(a => a.BrandProduct).Include(a =>a.ProductType).ToList();
         }
-
-     
-
         public Product GetById(int id)
         {
            

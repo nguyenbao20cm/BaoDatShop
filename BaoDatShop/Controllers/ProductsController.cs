@@ -80,8 +80,8 @@ namespace BaoDatShop.Controllers
             return Ok(productService.GetByName(name));
 
         }
-        
-        //  [Authorize(Roles = UserRole.Admin)]
+
+        [Authorize(Roles = UserRole.Admin)]
         [HttpPost("CreateProduct")]
         public async Task<IActionResult> CreateProduct( CreateProductRequest model)
         {
@@ -97,7 +97,7 @@ namespace BaoDatShop.Controllers
             else
                 return Ok("Thất bại");
         }
-      //  [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateProduct/{id}")]
         public async Task<IActionResult> UpdateProduct(int id,  CreateProductRequest model)
         {
@@ -112,7 +112,7 @@ namespace BaoDatShop.Controllers
             else
                 return Ok("Thất bại");
         }
-        //[Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin)]
         [HttpPut("DeleteProduct/{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {

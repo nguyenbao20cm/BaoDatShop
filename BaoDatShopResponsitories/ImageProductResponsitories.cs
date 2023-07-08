@@ -1,6 +1,7 @@
 ﻿using BaoDatShop.DTO.CreateImageProduct;
 using BaoDatShop.Model.Context;
 using BaoDatShop.Model.Model;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace BaoDatShop.Responsitories
         public List<ImageProduct> GetAll();
         public ImageProduct GetById(int id);
         public bool Update(ImageProduct model);
+        public bool Delete(int id );
         public bool Create(ImageProduct model);
     }
     public class ImageProductResponsitories : IImageProductResponsitories
@@ -33,7 +35,7 @@ namespace BaoDatShop.Responsitories
         public List<ImageProduct> GetAll()
         {
             if (context.ImageProduct.ToList() == null) return null;
-            return context.ImageProduct.ToList();
+            return context.ImageProduct.Include(a=>a.Product    ).ToList();
         }
 
         public bool Update(ImageProduct model)
@@ -49,5 +51,11 @@ namespace BaoDatShop.Responsitories
             return context.ImageProduct.Where(a => a.Id == id).FirstOrDefault();
         }
 
+        public bool Delete(int id)
+        {
+            context.Remove(context.ImageProduct.Where(a => a.Id == id).FirstOrDefault());
+            int check = context.SaveChanges();
+            return check > 0 ? true : false;
+        }
     }
 }
