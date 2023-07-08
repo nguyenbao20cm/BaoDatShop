@@ -19,11 +19,13 @@ namespace BaoDatShop.Controllers
         private readonly IAdvertisingPanelService advertisingPanelService; 
         private readonly AppDbContext context;
         private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
-        public AdvertisingPanelsController(IAdvertisingPanelService advertisingPanelService, AppDbContext context, IHistoryAccountResponsitories IHistoryAccountResponsitories)
+        private readonly IWebHostEnvironment _environment;
+        public AdvertisingPanelsController(IWebHostEnvironment _environment,IAdvertisingPanelService advertisingPanelService, AppDbContext context, IHistoryAccountResponsitories IHistoryAccountResponsitories)
         {
             this.advertisingPanelService = advertisingPanelService;
             this.context = context;
             this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
+            this._environment = _environment;
         }
 
         [HttpGet("GetAllAdvertisingPanelStatusTrue")]
@@ -49,27 +51,72 @@ namespace BaoDatShop.Controllers
             return Ok(advertisingPanelService.GetByid(id));
         }
         [Authorize(Roles = UserRole.Admin)]
-        [HttpPost("CreateAdvertisingPanel")]
-        public async Task<IActionResult> CreateAdvertisingPanel(AdvertisingPanel model)
+        [HttpPost("CreateAdvertisingPanel/{ProductId},{Title},{Content}")]
+        public async Task<IActionResult> CreateAdvertisingPanel(int ProductId,string Title, string Content, IFormFile model)
         {
             AdvertisingPanel result = new();
-            result.Image = model.Image;
-            result.ProductId = model.ProductId;
-            result.Status = model.Status;
-            result.Title = model.Title;
-            result.Content = model.Content;
+            result.Image = "";
+            result.ProductId = ProductId;
+            result.Status = true;
+            result.Title = Title;
+            result.Content = Content;
             context.Add(result);
             int check = context.SaveChanges();
             if(check>0)
             {
-                HistoryAccount a = new();
-                a.AccountID = GetCorrectUserId(); a.Datetime = DateTime.Now;
-                a.Content = "Đã thêm 1 pannel quảng cáo";
-                IHistoryAccountResponsitories.Create(a);
-            }    
-            return check > 0 ? Ok(new { data = result, Success = true }) : Ok(" ");
+                result.Image = result.AdvertisingPanelID+".jpg";
+                context.Update(result);
+                var check1=context.SaveChanges();
+                if(check1>0)
+                {
+                    var fileName = result.AdvertisingPanelID + ".jpg";
+                    var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "AdvertisingPanel");
+                    var uploadPath = Path.Combine(uploadFolder, fileName);
+                    using (FileStream fs = System.IO.File.Create(uploadPath))
+                    {
+                        model.CopyTo(fs);
+                        fs.Flush();
+                    }
+                    HistoryAccount a = new();
+                    a.AccountID = GetCorrectUserId(); a.Datetime = DateTime.Now;
+                    a.Content = "Đã thêm 1 pannel quảng cáo";
+                    IHistoryAccountResponsitories.Create(a);
+                    return Ok(true);
+                }    
+            }
+            return Ok(false);
+            //return check > 0 ? Ok(new { data = result, Success = true }) : Ok(" ");
         }
-       
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpPut("UpdateAdvertisingPanel/{ProductId},{Title},{Content}")]
+        public async Task<IActionResult> UpdateAdvertisingPanel(int ProductId, string Title, string Content, IFormFile model)
+        {
+            AdvertisingPanel result = new();
+            result.ProductId = ProductId;
+            result.Title = Title;
+            result.Content = Content;
+            context.Update(result);
+            int check = context.SaveChanges();
+            if (check > 0)
+            {
+                    var fileName = result.AdvertisingPanelID + ".jpg";
+                    var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "AdvertisingPanel");
+                    var uploadPath = Path.Combine(uploadFolder, fileName);
+                    using (FileStream fs = System.IO.File.Create(uploadPath))
+                    {
+                        model.CopyTo(fs);
+                        fs.Flush();
+                    }
+                    HistoryAccount a = new();
+                    a.AccountID = GetCorrectUserId(); a.Datetime = DateTime.Now;
+                    a.Content = "Đã sửa 1 pannel quảng cáo";
+                    IHistoryAccountResponsitories.Create(a);
+                    return Ok(true);
+            
+            }
+            return Ok(false);
+            //return check > 0 ? Ok(new { data = result, Success = true }) : Ok(" ");
+        }
         [HttpPost("CreateImageAdvertisingPanel")]
         public async Task<IActionResult> CreateImageAdvertisingPanel(IFormFile model)
         {
@@ -94,14 +141,14 @@ namespace BaoDatShop.Controllers
                 return Ok("Thất bại");
         }
         [Authorize(Roles = UserRole.Admin)]
-        [HttpPut("DeleteAdvertisingPanel/{id}")]
+        [HttpDelete("DeleteAdvertisingPanel/{id}")]
         public async Task<IActionResult> DeleteAdvertisingPanel(int id)
         {
             if(advertisingPanelService.Delete(id)==true)
             {
                 HistoryAccount a = new();
                 a.AccountID = GetCorrectUserId(); a.Datetime = DateTime.Now;
-                a.Content = "Đã xóa pannel quảng cáo";
+                a.Content = "Đã xóa 1 pannel quảng cáo";
                 IHistoryAccountResponsitories.Create(a);
                 return Ok("Thành công");
             }    

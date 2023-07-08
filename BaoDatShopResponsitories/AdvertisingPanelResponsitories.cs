@@ -35,7 +35,7 @@ namespace BaoDatShop.Responsitories
         public List<AdvertisingPanel> GetAll()
         {
             if (context.AdvertisingPanel.ToList() == null) return null;
-            return context.AdvertisingPanel.ToList();
+            return context.AdvertisingPanel.Include(a=>a.Product).ToList();
         }
 
         public bool Update(AdvertisingPanel model)

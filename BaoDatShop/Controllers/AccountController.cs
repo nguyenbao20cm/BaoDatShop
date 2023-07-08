@@ -233,8 +233,6 @@ namespace BaoDatShop.Controllers
 
                     a.message = "Xác minh tài khoản bằng cách nhấn vào đường link:  <a href=\""
                                                                        + url + "\">link</a>";
-
-
                     IEmailSender.SendEmaiValidationEmail(a);
                 }
             }
@@ -292,7 +290,13 @@ namespace BaoDatShop.Controllers
         {
 
             var a = context.Account.Where(a => a.Id == GetCorrectUserId()).FirstOrDefault();
-            if (a == null) return Ok("Thất bại");
+            if (Phone != a.Phone)
+            {
+                foreach (var abc in context.Account)
+                {
+                    if (abc.Phone == Phone) return Ok("SDT");// SDT bij trungf
+                }
+            }
             a.Phone = Phone;
             a.Address = Address;
             a.FullName = FullName;

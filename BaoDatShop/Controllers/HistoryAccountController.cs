@@ -35,13 +35,19 @@ namespace BaoDatShop.Controllers
             return Ok(IHistoryAccountResponsitories.GetAll().Where(a => a.AccountID == id).ToList());
         }
         [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetHistoryAccountFilter/{startday},{endday}")]
+        public async Task<IActionResult> GetHistoryAccountFilter(string startday,string endday)
+        {
+            return Ok(IHistoryAccountResponsitories.GetAll().Where(a => a.AccountID == GetCorrectUserId()).Where(a => a.Datetime.Date >= DateTime.Parse(startday)).Where(a => a.Datetime.Date <= DateTime.Parse(endday)).ToList());
+        }
+        [Authorize(Roles = UserRole.Admin)]
         [HttpGet("GetHistoryAccountAdmin")]
         public async Task<IActionResult> GetHistoryAccountAdmin()
         {
             var a = IHistoryAccountResponsitories.GetAll();
             if (a.Where(a => a.AccountID == GetCorrectUserId()) == null)
                 return Ok();
-            return Ok(IHistoryAccountResponsitories.GetAll().Where(a => a.AccountID == GetCorrectUserId()).ToList());
+            return Ok(IHistoryAccountResponsitories.GetAll().Where(a => a.AccountID == GetCorrectUserId()).OrderByDescending(a=>a.Datetime).ToList());
         }
         private string GetCorrectUserId()
         {

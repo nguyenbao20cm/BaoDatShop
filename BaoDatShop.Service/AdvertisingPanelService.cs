@@ -91,11 +91,11 @@ namespace BaoDatShop.Service
         //        fs.Flush();
         //    }
             AdvertisingPanel result = advertisingPanelResponsitories.GetById(id);
-            result.Image = model.Image;
+  
             result.Title = model.Title;
             result.Content = model.Content;
             result.ProductId = model.ProductId;
-            result.Status = model.Status;
+          
             return advertisingPanelResponsitories.Update(result);
         }
 

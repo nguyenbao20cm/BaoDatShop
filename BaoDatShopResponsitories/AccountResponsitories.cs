@@ -120,7 +120,7 @@ public class AccountResponsitories : IAccountResponsitories
                 { 
                     foreach(var a in context.Account)
                     {
-                        if(a.Phone == model.Phone) return "Failed";// SDT bij trungf
+                        if(a.Phone == model.Phone) return "SDT";// SDT bij trungf
                     }
                  }
                 IdentityResult result = await userManager.UpdateAsync(user);
