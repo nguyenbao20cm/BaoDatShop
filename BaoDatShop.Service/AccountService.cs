@@ -27,8 +27,7 @@ namespace BaoDatShop.Service
         public List<Account> GetAllAcountCustomer();
         public Task<IdentityResult> RegisterStaff(ReuqestSignUp model);
         public bool CreateAvatarImage( IFormFile model);
-
-
+        public Task<bool> ActiveAccount(string idacc,string id);
 
     }
     public class AccountService : IAccountService
@@ -39,6 +38,11 @@ namespace BaoDatShop.Service
         {
             this.accountResponsitories = accountResponsitories;
             IHistoryAccountResponsitories = iHistoryAccountResponsitories;  
+        }
+
+        public async Task<bool> ActiveAccount(string idacc,string id)
+        {
+            return await accountResponsitories.ActiveAccount(idacc,id);
         }
 
         public bool CreateAvatarImage( IFormFile model)

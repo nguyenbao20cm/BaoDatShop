@@ -79,7 +79,47 @@ namespace BaoDatShop.Controllers
             }
             return Ok(ab);
         }
-       
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("GetAllChiPhiFliter/{startday},{endday}")]
+        public async Task<IActionResult> GetAllChiPhiFliter(string startday,string endday)
+        {
+            var ngayHienTai =  DateTime.Parse(startday);
+            var ngayDauTien = DateTime.Parse(endday);
+            List<Chiphi> ab = new();
+            TimeSpan Time = ngayHienTai - ngayDauTien;
+            for (var i = 0; i <= Time.Days; i++)
+            {
+                Chiphi tam = new();
+                tam.DateTime = ngayDauTien.AddDays(i);
+                var tong1 = 0;
+                var ab1 = context.Invoice
+                    .Where(a => a.PaymentMethods == true).Where(a => a.IssuedDate.Date == tam.DateTime.Date && a.IssuedDate.Year == tam.DateTime.Year && a.IssuedDate.Month == tam.DateTime.Month).ToList();
+                foreach (var ch in ab1)
+                {
+                    tong1++;
+                }
+                tam.ChiPhiVanChuyen = tong1 * 20000;
+                var tong2 = 0;
+                var ab12 = context.ImportInvoice.
+                    Where(a => a.IssuedDate.Date == tam.DateTime.Date && a.IssuedDate.Year == tam.DateTime.Year && a.IssuedDate.Month == tam.DateTime.Month).ToList();
+                foreach (var ch1 in ab12)
+                {
+                    tong2 += ch1.ImportPrice;
+                }
+                tam.ChiPhiNhap = tong2;
+                var tong3 = 0;
+                var ab123 = context.Invoice.
+                    Where(a => a.IssuedDate.Date == tam.DateTime.Date && a.IssuedDate.Year == tam.DateTime.Year && a.IssuedDate.Month == tam.DateTime.Month).ToList();
+                foreach (var ch3 in ab123)
+                {
+                    tong3 += ch3.Total;
+                }
+                tam.ThuNhap = tong3;
+                if (tam.ThuNhap != 0 || tam.ChiPhiNhap != 0 || tam.ChiPhiVanChuyen != 0)
+                    ab.Add(tam);
+            }
+            return Ok(ab);
+        }
         [Authorize(Roles = UserRole.Costumer)]
         [HttpPost("CreateInvoice")]
         public async Task<IActionResult> CreateInvoice(CreateInvoiceRequest model)

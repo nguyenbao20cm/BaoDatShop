@@ -48,8 +48,7 @@ namespace Eshop.Models
 
         public int Permission { get; set; }  // Quân quyền 1 là admin //2 là Nhân viên //3 là khách hàng
 
-        public int Level { get; set; } // 0 là admin,nhân viên //1//2//3//4//5
-        // Collection reference property cho khóa ngoại từ Invoice
+       
 
         public List<Invoice> Invoices { get; set; }
 

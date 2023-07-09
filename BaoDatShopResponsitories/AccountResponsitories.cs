@@ -32,10 +32,12 @@ namespace BaoDatShop.Responsitories
         public Task<string> DeleteAccount(string idac,string id);
         public Task<IdentityResult> RegisterStaff(ReuqestSignUp model);
         public bool CreateAvatarImage(  IFormFile model);
+        public  Task<bool> ActiveAccount(string idacc,string id);
+
 
     }
- 
-public class AccountResponsitories : IAccountResponsitories
+
+    public class AccountResponsitories : IAccountResponsitories
     {
         private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
         private IPasswordHasher<ApplicationUser> passwordHasher;
@@ -68,7 +70,7 @@ public class AccountResponsitories : IAccountResponsitories
            
             try {
                 var user = await userManager.FindByIdAsync(id);
-                if (user == null) return "Failed";
+                if (user == null) return "Thất bại";
                 user.Status = false;
                 IdentityResult result = await userManager.UpdateAsync(user);
                 if (result.Succeeded)
@@ -76,26 +78,26 @@ public class AccountResponsitories : IAccountResponsitories
                     Account tamp = context.Account.Where(a => a.Id == id).FirstOrDefault();
                     tamp.Status = false;
                     context.Account.Update(tamp);
-                   int check= context.SaveChanges();
+                    int check= context.SaveChanges();
                     if(check>0)
                     {
                         HistoryAccount a = new();
-                        a.AccountID = id; a.Datetime = DateTime.Now;
+                        a.AccountID = idacc; a.Datetime = DateTime.Now;
                         a.Content = "Đã ẩn tài khoản UserName" + user.UserName;
                         IHistoryAccountResponsitories.Create(a);
-                        return "True";
+                        return "Thành công";
                     }    
                     else
-                        return "Failed";
+                        return "Thất bại";
                 }
                 else
-                    return "Failed";
+                    return "Thất bại";
             }
             catch (Exception ex)
             {
                 Console.WriteLine("{0} First exception caught.", ex.Message);
             }
-            return "Failed";
+            return "Thất bại";
 
         }
         public async Task<string> UpdateAccountCustomer(string id, UpdateAccountCustomerRequest model)
@@ -291,7 +293,7 @@ public class AccountResponsitories : IAccountResponsitories
                 tamp.Avatar = user1.Id + "jpg";
                 tamp.Status = true;
                 tamp.Permission = 2;
-                tamp.Level = 0;
+              
                 context.Account.Add(tamp);
                 context.SaveChanges();
             }
@@ -339,7 +341,7 @@ public class AccountResponsitories : IAccountResponsitories
                 tamp.Avatar = user1.Id + ".jpg";
                 tamp.Status = true;
                 tamp.Permission = 1;
-                tamp.Level = 0;
+          
                 context.Account.Add(tamp);
                 context.SaveChanges();
                 var fileName = user1.Id + ".jpg";
@@ -403,7 +405,7 @@ public class AccountResponsitories : IAccountResponsitories
                 tamp.Avatar = user1.Id + ".jpg";
                 tamp.Status = true;
                 tamp.Permission = 3;
-                tamp.Level = 1;
+               
                 context.Account.Add(tamp);
                 context.SaveChanges();
             }
@@ -451,14 +453,20 @@ public class AccountResponsitories : IAccountResponsitories
                 Permission = 2,
             };
             var result = await userManager.CreateAsync(user, model.Password);
-            if (!await _roleManager.RoleExistsAsync(UserRole.Staff))
-                await _roleManager.CreateAsync(new IdentityRole(UserRole.Staff));
+            //if (!await _roleManager.RoleExistsAsync(UserRole.Staff))
+            //    await _roleManager.CreateAsync(new IdentityRole(UserRole.Staff));
 
-            if (await _roleManager.RoleExistsAsync(UserRole.Staff))
+            //if (await _roleManager.RoleExistsAsync(UserRole.Staff))
+            //{
+            //    await userManager.AddToRoleAsync(user, UserRole.Staff);
+            //}
+            if (!await _roleManager.RoleExistsAsync(UserRole.Admin))
+                await _roleManager.CreateAsync(new IdentityRole(UserRole.Admin));
+
+            if (await _roleManager.RoleExistsAsync(UserRole.Admin))
             {
-                await userManager.AddToRoleAsync(user, UserRole.Staff);
+                await userManager.AddToRoleAsync(user, UserRole.Admin);
             }
-
             if (result.Succeeded)
             {
                 var user1 = await userManager.FindByNameAsync(model.Username);
@@ -474,7 +482,7 @@ public class AccountResponsitories : IAccountResponsitories
                 tamp.Avatar = user1.Id + ".jpg";
                 tamp.Status = model.status ;
                 tamp.Permission = 2;
-                tamp.Level = 0;
+                
                 context.Account.Add(tamp);
                 context.SaveChanges();
             }
@@ -511,6 +519,26 @@ public class AccountResponsitories : IAccountResponsitories
          
         }
 
-      
+        public async Task<bool> ActiveAccount(string idacc,string id)
+        {
+            var user = await userManager.FindByIdAsync(id);
+            user.Status = false;
+          await  userManager.UpdateAsync(user);
+            var a = context.Account.Where(a => a.Id == id).FirstOrDefault();
+            a.Status = true;
+            context.Account.Update(a);
+            int check = context.SaveChanges();
+             if (check > 0)
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = idacc; ab.Datetime = DateTime.Now;
+                ab.Content = "Đã ẩn tài khoản UserName" + user.UserName;
+                IHistoryAccountResponsitories.Create(ab);
+                return  true;
+            }
+            else
+                return false;
+       
+        }
     }
 }

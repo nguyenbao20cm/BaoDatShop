@@ -76,18 +76,6 @@ public class VnPayLibrary
             VnPayResponseCode = vnpResponseCode
         };
     }
-    private JwtSecurityToken GetToken(List<Claim> authClaims)
-    {
-        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("JWTAuthenticationHIGHsecuredPasswordVVVp1OH7Xzyr"));
-        var token = new JwtSecurityToken(
-            issuer: "http://localhost:5000",
-            audience: "http://localhost:4200",
-            expires: DateTime.Now.AddDays(7),
-            claims: authClaims,
-            signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-            );
-        return token;
-    }
     public string GetIpAddress(HttpContext context)
     {
         var ipAddress = string.Empty;

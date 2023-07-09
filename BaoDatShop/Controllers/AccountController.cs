@@ -56,7 +56,27 @@ namespace BaoDatShop.Controllers
         //    return Unauthorized(result);
         //}
 
-
+   
+        [HttpGet("GetAllAccountCustomerStatusFalse")]
+        public async Task<IActionResult> GetAllAccountCustomerStatusFalse()
+        {
+            return Ok(context.Account.Where(a=>a.Status==false).Where(a=>a.Permission==3).ToList());
+        }
+        [HttpGet("GetAllAccountCustomerStatusTrue")]
+        public async Task<IActionResult> GetAllAccountCustomerStatusTrue()
+        {
+            return Ok(context.Account.Where(a => a.Status == true).Where(a => a.Permission == 3).ToList());
+        }
+        [HttpGet("GetAllAccountStaffStatusFalse")]
+        public async Task<IActionResult> GetAllAccountStaffStatusFalse()
+        {
+            return Ok(context.Account.Where(a => a.Status == false).Where(a => a.Permission == 2).ToList());
+        }
+        [HttpGet("GetAllAccountStaffStatusTrue")]
+        public async Task<IActionResult> GetAllAccountStaffStatusTrue()
+        {
+            return Ok(context.Account.Where(a => a.Status == true).Where(a => a.Permission == 2).ToList());
+        }
         [HttpPost("ResetPassWord")]
         public async Task<IActionResult> ChangePassWordForgot(ResetPassWordWithToken model)
         {
@@ -202,6 +222,17 @@ namespace BaoDatShop.Controllers
             }
             return Ok("Người dùng không tồn tại");
         }
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpPut("ActiveAccount/{id}")]
+        public async Task<IActionResult> ActiveAccount(string id)
+        {
+            var check= await _accountService.ActiveAccount(GetCorrectUserId(),id);
+            if(check==true)
+            {
+                return Ok(true);
+            }
+            else return Ok(false);
+        }
 
         [HttpPost]
         [Route("register-Customer")]
@@ -247,7 +278,37 @@ namespace BaoDatShop.Controllers
         [Route("register-Staff")]
         public async Task<IActionResult> RegisterStaff(ReuqestSignUp model)
         {
+            var ab = _accountService.GetAllAccount();
+            foreach (var item in ab)
+            {
+                if (model.Username == item.Username)
+                    return Ok("12");
+                if (model.Phone == item.Phone) return Ok(2);
+                if (model.Email == item.Email) return Ok(3);
+            }
             var result = await _accountService.RegisterStaff(model);
+            if (result.Succeeded)
+            {
+                var user = await userManager.FindByNameAsync(model.Username);
+                if (user != null)
+                {
+
+                    var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                    //string url = this.Url.ActionLink("ConfirmEmail", "Account",
+                    // new { token, email = model.Email });
+                    //cua gia bao
+                    string url = "http://localhost:3000/auth/DangNhap?Token=" + token + "&Email=" + model.Email;
+
+                    //cua tao Dat
+                    //string url = "http://localhost:3000/auth/DoiMatKhau?Token=" + token + "&Email=" + email.Email;
+                    SendVoucher a = new();
+                    a.email = model.Email;
+                    a.subject = "Xác minh tài khoản";
+                    a.message = "Xác minh tài khoản bằng cách nhấn vào đường link:  <a href=\""
+                                                                      + url + "\">link</a>";
+                    IEmailSender.SendEmaiValidationEmail(a);
+                }
+            }
             if (result.Succeeded) return Ok(result.Succeeded);
             return Unauthorized();
         }
