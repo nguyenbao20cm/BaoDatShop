@@ -1,11 +1,15 @@
 ﻿using CodeMegaVNPay.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -17,7 +21,8 @@ public class VnPayLibrary
 
     public PaymentResponseModel GetFullResponseData(IQueryCollection collection, string hashSecret)
     {
-        var vnPay = new VnPayLibrary();
+        
+         var vnPay = new VnPayLibrary();
 
         foreach (var (key, value) in collection)
         {
@@ -70,6 +75,18 @@ public class VnPayLibrary
             Token = vnpSecureHash,
             VnPayResponseCode = vnpResponseCode
         };
+    }
+    private JwtSecurityToken GetToken(List<Claim> authClaims)
+    {
+        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("JWTAuthenticationHIGHsecuredPasswordVVVp1OH7Xzyr"));
+        var token = new JwtSecurityToken(
+            issuer: "http://localhost:5000",
+            audience: "http://localhost:4200",
+            expires: DateTime.Now.AddDays(7),
+            claims: authClaims,
+            signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+            );
+        return token;
     }
     public string GetIpAddress(HttpContext context)
     {
