@@ -11,6 +11,6 @@ namespace BaoDatShop.DTO.Voucher
         public string Name { get; set; }
         public string Title { get; set; }
         public int Disscount { get; set; }
-        public bool Status { get; set; }
+        //public bool Status { get; set; }
     }
 }

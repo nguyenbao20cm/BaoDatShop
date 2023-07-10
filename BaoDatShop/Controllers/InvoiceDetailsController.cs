@@ -32,7 +32,7 @@ namespace BaoDatShop.Controllers
         [HttpGet("GetQualityProductSell")]
         public async Task<IActionResult> GetQualityProductSell()
         {
-            var a = invoiceDetailService.GetAll();
+            var a = invoiceDetailService.GetAll().Where(a=>a.Invoice.OrderStatus==5).ToList();
             var tamp = 0;
             foreach(var item in a)
             {

@@ -13,6 +13,7 @@ namespace BaoDatShop.Responsitories
     {
         public bool Create(Voucher model);
         public bool Update(Voucher model);
+        public bool Delete(int id );
         public Voucher GetById(int id);
         public Voucher GetByName(string Name);
         public List<Voucher> GetAll();
@@ -27,6 +28,13 @@ namespace BaoDatShop.Responsitories
         public bool Create(Voucher model)
         {
             context.Add(model);
+            int check = context.SaveChanges();
+            return check > 0 ? true : false;
+        }
+
+        public bool Delete(int id)
+        {
+            context.Remove(context.Voucher.Where(a=>a.Id==id).FirstOrDefault());
             int check = context.SaveChanges();
             return check > 0 ? true : false;
         }
@@ -46,7 +54,7 @@ namespace BaoDatShop.Responsitories
         public Voucher GetByName(string Name)
         {
             if (context.Voucher.Where(a => a.Name == Name).ToList() == null) return null;
-            return context.Voucher.Where(a => a.Name == Name).Where(a=>a.Status==true).FirstOrDefault();
+            return context.Voucher.Where(a => a.Name == Name).FirstOrDefault();
         }
 
         public bool Update(Voucher model)

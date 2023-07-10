@@ -35,15 +35,13 @@ namespace BaoDatShop.Service
             a.Disscount=model.Disscount;
             a.Title = model.Title;
             a.Name = model.Name;
-            a.Status = model.Status;
             return IVoucherRespositories.Create(a);
         }
 
         public bool Delete(int id)
         {
-            var a = IVoucherRespositories.GetById(id);
-            a.Status = false;
-            return IVoucherRespositories.Update(a);
+         
+            return IVoucherRespositories.Delete(id);
         }
 
         public List<Voucher> GetAll()
@@ -53,19 +51,27 @@ namespace BaoDatShop.Service
 
         public List<Voucher> GetAllStatusFalse()
         {
-            return IVoucherRespositories.GetAll().Where(a=>a.Status==false).ToList();
+            return IVoucherRespositories.GetAll().ToList();
         }
 
         public List<Voucher> GetAllStatusTrue()
         {
-            return IVoucherRespositories.GetAll().Where(a => a.Status == true).ToList();
+            return IVoucherRespositories.GetAll().ToList();
         }
 
         public bool Update(int id, CreateVoucher model)
         {
             var a = IVoucherRespositories.GetById(id);
+            if(model.Name!=a.Name)
+            {
+                foreach(var item in IVoucherRespositories.GetAll())
+                {
+                    if (model.Name == item.Name)
+                        return false;
+                }    
+            }
             a.Name = model.Name;
-            a.Status = model.Status;
+            //a.Status = model.Status;
             a.Disscount = model.Disscount;
             a.Title = model.Title;
           return  IVoucherRespositories.Update(a);

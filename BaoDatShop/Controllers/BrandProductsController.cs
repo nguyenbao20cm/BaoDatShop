@@ -50,7 +50,7 @@ namespace BaoDatShop.Controllers
                 ab.Content = "Đã chỉnh sửa thương hiệu có id là "+id;
                 IHistoryAccountResponsitories.Create(ab);
             }    
-            return check > 0 ? Ok(true) : Ok(false);
+            return check > 0 ? Ok(true) : Ok("Thất bại");
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPost("CreateBrandProducts")]

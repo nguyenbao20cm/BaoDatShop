@@ -10,7 +10,7 @@ namespace BaoDatShop.DTO.Invoice
     {
         public string shippingphone { get; set; }
         public string shippingadress { get; set; }
-        public bool pay { get; set; }
+        //public bool pay { get; set; }
         public int orderStatus { get; set; }
     }
 }

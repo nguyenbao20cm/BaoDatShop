@@ -41,7 +41,7 @@ namespace BaoDatShop.Responsitories
         public List<InvoiceDetail> GetAll()
         {
             if (context.InvoiceDetail.ToList() == null) return null;
-            return context.InvoiceDetail.Include(a => a.ProductSize).Include(a => a.ProductSize.Product).ToList();
+            return context.InvoiceDetail.Include(a => a.Invoice).Include(a => a.ProductSize).Include(a => a.ProductSize.Product).ToList();
         }
 
         public InvoiceDetail GetById(int id)

@@ -1,10 +1,13 @@
-﻿using BaoDatShop.DTO.Role;
+﻿using BaoDatShop.DTO.Invoice;
+using BaoDatShop.DTO.Role;
 using BaoDatShop.Model.Context;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Data;
+using System.Globalization;
 
 namespace BaoDatShop.Controllers
 {
@@ -27,7 +30,16 @@ namespace BaoDatShop.Controllers
         [HttpGet("GetVNBillFilter/{startday},{endday}")]
         public async Task<IActionResult> GetVNBillFilter(string startday,string endday)
         {
-            return Ok(context.VnpayBill.Where(a => DateTime.Parse(a.DateTime) >= DateTime.Parse(startday)).Where(a => DateTime.Parse(a.DateTime) <= DateTime.Parse(endday)).ToList());
+            var result = context.VnpayBill
+                .Where(a => a.DateTime.Date >= DateTime.Parse(startday).Date)
+                .Where(a => a.DateTime.Month >= DateTime.Parse(startday).Month)
+                .Where(a => a.DateTime.Year >= DateTime.Parse(startday).Year)
+                .Where(a => a.DateTime.Date <= DateTime.Parse(endday).Date)
+                     .Where(a => a.DateTime.Month <= DateTime.Parse(endday).Month)
+                          .Where(a => a.DateTime.Year <= DateTime.Parse(endday).Year)
+                .ToList();
+            return Ok(result);
         }
+       
     }
 }

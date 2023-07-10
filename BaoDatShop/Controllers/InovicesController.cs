@@ -4,6 +4,7 @@ using BaoDatShop.Model.Context;
 using BaoDatShop.Model.Model;
 using BaoDatShop.Responsitories;
 using BaoDatShop.Service;
+using Eshop.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ namespace BaoDatShop.Controllers
     public class InovicesController : ControllerBase
     {
         private readonly AppDbContext context;
+        private readonly IProductService IProductService;
         private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
         private readonly IInvoiceService invoiceService;
         private readonly IInvoiceResponsitories IInvoiceResponsitories;
@@ -27,8 +29,10 @@ namespace BaoDatShop.Controllers
         private readonly IImportInvoiceResponsitories IImportInvoiceResponsitories;
         public InovicesController(IInvoiceService invoiceService, IProductSizeService IProductSizeService,
             IImportInvoiceResponsitories IImportInvoiceResponsitories,
+            IProductService IProductService,
             AppDbContext context, IInvoiceResponsitories IInvoiceResponsitories, IProductSizeResponsitories IProductSizeResponsitories, IHistoryAccountResponsitories IHistoryAccountResponsitories)
         {
+            this.IProductService = IProductService;
             this.IImportInvoiceResponsitories = IImportInvoiceResponsitories;
             this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
             this.IProductSizeService = IProductSizeService;
@@ -74,7 +78,8 @@ namespace BaoDatShop.Controllers
                     tong3 += ch3.Total;
                 }
                 tam.ThuNhap = tong3;
-                if(tam.ThuNhap!=0||tam.ChiPhiNhap!=0||tam.ChiPhiVanChuyen!=0)
+            
+                if (tam.ThuNhap!=0||tam.ChiPhiNhap!=0||tam.ChiPhiVanChuyen!=0)
                 ab.Add(tam);
             }
             return Ok(ab);
@@ -329,12 +334,22 @@ namespace BaoDatShop.Controllers
         [HttpPut("UpdateInovice/{id}")]
         public async Task<IActionResult> UpdateInovice(int id, UpdateInvoice model)
         {
-            if (model.pay == null) return Ok("Thất bại");
+            //if (model.pay == null) return Ok("Thất bại");
             if (model.orderStatus == null) return Ok("Thất bại");
             if (model.shippingadress == null) return Ok("Thất bại");
             if (model.shippingphone == null) return Ok("Thất bại");
             if (invoiceService.UpdateInovice(id, model) == true)
             {
+                if (model.orderStatus == 5)
+                {
+                    foreach (var item in context.InvoiceDetail.Include(a=>a.ProductSize).Include(a => a.ProductSize.Product).Where(a => a.InvoiceId == id))
+                    {
+                        var b = IProductService.GetById(item.ProductSize.ProductId);
+                        b.CountSell = b.CountSell + item.Quantity;
+                        context.Update(b);
+                    }
+                }
+                context.SaveChanges();
                 HistoryAccount ab = new();
                 ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
                 ab.Content = "Đã cập nhật hóa đơn có id "+ id;

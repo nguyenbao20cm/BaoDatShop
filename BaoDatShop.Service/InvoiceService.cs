@@ -76,7 +76,6 @@ namespace BaoDatShop.Service
             //    toal += item.Quantity * productService.GetById(productId).Price;
             //}
             result.Total = toal;
-          
             result.Status = true;
             result.OrderStatus = 1;
             var tamp = invoiceResponsitories.Create(result);
@@ -95,11 +94,11 @@ namespace BaoDatShop.Service
                         InvoiceId = result.Id,
                         ProductSizeId = c.ProductSizeId,
                         Quantity = c.Quantity,
-                        UnitPrice = productService.GetById(productId).Price,
+                        UnitPrice = productService.GetById(productId).PriceSales,
                     };
-                    var b=  productService.GetById(productId);
-                    b.CountSell= b.CountSell+ c.Quantity;
-                    IProductResponsitories.Update(b);
+                    //var b=  productService.GetById(productId);
+                    //b.CountSell= b.CountSell+ c.Quantity;
+                    //IProductResponsitories.Update(b);
                     invoiceDetailResponsitories.Create(detal);
                     cartResponsitories.DeleteAll(AccountId);
                 }
@@ -137,11 +136,11 @@ namespace BaoDatShop.Service
                         InvoiceId = result.Id,
                         ProductSizeId = model.ProductSizeID,
                         Quantity = model.Quantity,
-                        UnitPrice = productService.GetById(productId).Price,
+                        UnitPrice = productService.GetById(productId).PriceSales,
                     };
-                    var b = productService.GetById(productId);
-                    b.CountSell = b.CountSell + model.Quantity;
-                    IProductResponsitories.Update(b);
+                    //var b = productService.GetById(productId);
+                    //b.CountSell = b.CountSell + model.Quantity;
+                    //IProductResponsitories.Update(b);
                     invoiceDetailResponsitories.Create(detal);
                 return true;
             }
@@ -336,9 +335,9 @@ namespace BaoDatShop.Service
  
             result.ShippingAddress = model.shippingadress;
             result.ShippingPhone = model.shippingphone;
-                    if(model.orderStatus==5) result.Pay = true;
-            else
-            result.Pay = model.pay;
+            if(model.orderStatus==5) result.Pay = true;
+            //else
+            //result.Pay = model.pay;
             return invoiceResponsitories.Update(result);
         }
     }

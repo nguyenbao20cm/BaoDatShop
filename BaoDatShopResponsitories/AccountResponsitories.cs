@@ -83,7 +83,7 @@ namespace BaoDatShop.Responsitories
                     {
                         HistoryAccount a = new();
                         a.AccountID = idacc; a.Datetime = DateTime.Now;
-                        a.Content = "Đã ẩn tài khoản UserName" + user.UserName;
+                        a.Content = "Đã khóa tài khoản UserName" + user.UserName;
                         IHistoryAccountResponsitories.Create(a);
                         return "Thành công";
                     }    
@@ -532,7 +532,7 @@ namespace BaoDatShop.Responsitories
             {
                 HistoryAccount ab = new();
                 ab.AccountID = idacc; ab.Datetime = DateTime.Now;
-                ab.Content = "Đã ẩn tài khoản UserName" + user.UserName;
+                ab.Content = "Đã khóa tài khoản UserName" + user.UserName;
                 IHistoryAccountResponsitories.Create(ab);
                 return  true;
             }

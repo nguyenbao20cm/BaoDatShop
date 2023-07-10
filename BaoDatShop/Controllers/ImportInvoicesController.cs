@@ -83,7 +83,7 @@ namespace BaoDatShop.Controllers
         {
             var check=context.ImportInvoice.Where(a => a.Id == id).FirstOrDefault();
             if (context.ProductSize.Where(a => a.Id == check.ProductSizeId).FirstOrDefault().Stock<check.Quantity)
-                return Ok("Thất bại vì các sản phẩm đã xuất kho");
+                return Ok("Thất bại vì sản phẩm đã xuất kho");
             context.Remove(check);
             var a= context.SaveChanges();
             return a > 0 ? Ok("Thành công") : Ok("Thất bại");

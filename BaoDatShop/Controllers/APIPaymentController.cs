@@ -9,6 +9,7 @@ using Eshop.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
+using System.Globalization;
 using System.Security.Claims;
 
 namespace BaoDatShop.Controllers
@@ -106,13 +107,12 @@ namespace BaoDatShop.Controllers
                 if (tamp == true)
                 {
                     VnpayBill a = new();
-                    a.DateTime = response.DateTime;
+                    a.DateTime = FormatDate(response.DateTime);
                     a.CodeBank = response.CodeBank;
                     a.VNBillId = response.VNBillId;
                     a.InvoiceBankID = response.InvoiceBankID;
                     a.CardType = response.CardType;
-
-                    a.Total = response.Total;
+                    a.Total = int.Parse(total);
                     a.VNBillId = response.PaymentId;
                     a.AccountId = Idacc;
                     a.InvoiceId = result.Id;
@@ -129,7 +129,7 @@ namespace BaoDatShop.Controllers
                             InvoiceId = result.Id,
                             ProductSizeId = c.ProductSizeId,
                             Quantity = c.Quantity,
-                            UnitPrice = IProductService.GetById(productId).Price,
+                            UnitPrice = IProductService.GetById(productId).PriceSales,
                         };
                         var b = IProductService.GetById(productId);
                         b.CountSell = b.CountSell + c.Quantity;
@@ -191,7 +191,7 @@ namespace BaoDatShop.Controllers
                         InvoiceId = result.Id,
                         ProductSizeId = int.Parse(productsizeid),
                         Quantity = int.Parse(quanlity),
-                        UnitPrice = IProductService.GetById(productId).Price,
+                        UnitPrice = IProductService.GetById(productId).PriceSales,
                     };
                     var b = IProductService.GetById(productId);
                     b.CountSell = b.CountSell + int.Parse(quanlity);
@@ -199,13 +199,12 @@ namespace BaoDatShop.Controllers
                     IInvoiceDetailResponsitories.Create(detal);
 
                     VnpayBill a2 = new();
-                    a2.DateTime = response.DateTime;
+                    a2.DateTime = FormatDate(response.DateTime);
                     a2.CodeBank = response.CodeBank;
                     a2.VNBillId = response.VNBillId;
                     a2.InvoiceBankID = response.InvoiceBankID;
                     a2.CardType = response.CardType;
-
-                    a2.Total = response.Total;
+                    a2.Total = int.Parse(total);
                     //a2.VNBillId = response.PaymentId;
                     a2.AccountId = GetCorrectUserId();
                     a2.InvoiceId = result.Id;
@@ -215,6 +214,14 @@ namespace BaoDatShop.Controllers
             
             }
             return Ok(response);
+        }
+        private DateTime FormatDate(string e)
+        {
+            string dateString = e;
+            string format = "yyyyMMddHHmmss";
+            DateTime result = DateTime.ParseExact(dateString, format, CultureInfo.InvariantCulture);
+            return result;
+
         }
         private string GetCorrectUserId()
         {

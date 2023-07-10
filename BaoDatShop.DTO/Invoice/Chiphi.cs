@@ -12,5 +12,6 @@ namespace BaoDatShop.DTO.Invoice
         public int ChiPhiVanChuyen { get; set; }
         public int ChiPhiNhap { get; set; }
         public int ThuNhap { get; set; }
+
     }
 }

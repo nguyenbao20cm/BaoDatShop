@@ -58,24 +58,30 @@ namespace BaoDatShop.Controllers
             return Ok(IVoucherService.ValidationVoucher(ValidationVoucher.Name));
         }
         [Authorize(Roles = UserRole.Admin)]
-        [HttpPut("DeleteVoucher/{id}")]
+        [HttpDelete("DeleteVoucher/{id}")]
         public async Task<IActionResult> DeleteVoucher(int id)
         {
             if(IVoucherService.Delete(id)==true)
             {
                 HistoryAccount ab = new();
                 ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
-                ab.Content = "Đã ẩn đi Voucher có id=" + id;
+                ab.Content = "Đã xóa đi Voucher có id=" + id;
                 IHistoryAccountResponsitories.Create(ab);
-            }    
-           
-           
-            return Ok(IVoucherService.Delete(id));
+                return Ok(true);
+            }   
+            else
+                return Ok(false);
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPost("CreateVoucher")]
         public async Task<IActionResult> CreateVoucher(CreateVoucher model)
         {
+            var tam = IVoucherService.GetAll();
+            foreach(var item in tam)
+            {
+                if (model.Name == item.Name)
+                    return Ok(1);
+            }    
             if (IVoucherService.Create(model) == true)
             {
                 HistoryAccount ab = new();
@@ -91,6 +97,7 @@ namespace BaoDatShop.Controllers
         [HttpPut("UpdateVoucher/{id}")]
         public async Task<IActionResult> UpdateVoucher(int id,CreateVoucher model)
         {
+            
             if (IVoucherService.Update(id,model) == true)
             {
                 HistoryAccount ab = new();
@@ -100,7 +107,7 @@ namespace BaoDatShop.Controllers
                 return Ok("Thành công");
             }
             else
-                return Ok("Thất bại");
+                return Ok(false);
         }
     }
 }

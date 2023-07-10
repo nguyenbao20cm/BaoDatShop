@@ -16,7 +16,7 @@ namespace BaoDatShop.Model.Model
         public int Total { get; set; }
         public string InvoiceBankID { get; set; }//mã giao dihc tại ngân hàng
         public string VNBillId { get; set; }// MÃ giao dịch tại VPN PAY
-        public string DateTime { get; set; }// TG Thanh toán
+        public DateTime DateTime { get; set; }// TG Thanh toán
 
 
         public string AccountId { get; set; }

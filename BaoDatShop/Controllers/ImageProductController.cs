@@ -32,6 +32,17 @@ namespace BaoDatShop.Controllers
             this.IImageProductService = IImageProductService;
             this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
         }
+
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpDelete("DeleteImageProduct/{id}")]
+        public async Task<IActionResult> UpdateImageProduct(int id)
+        {
+            context.Remove(context.ImageProduct.Where(a => a.Id == id).FirstOrDefault());
+           var check= context.SaveChanges();
+            if (check < 0) return Ok(false);
+            else
+                return Ok(true);
+        }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateImageProduct/{id}")]
         public async Task<IActionResult> UpdateImageProduct(int id, CreateImageProduct model)
