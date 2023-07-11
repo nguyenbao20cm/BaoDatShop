@@ -16,19 +16,19 @@ namespace BaoDatShop.Controllers
         {
             this.invoiceDetailService = invoiceDetailService;
         }
-        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer + "," + UserRole.Staff)]
         [HttpGet("GetAllInvoiceDetails/{id}")]
         public async Task<IActionResult> GetAllNewDetail(int id)
         { 
             return Ok(invoiceDetailService.GetAll(id));
         }
-        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer + "," + UserRole.Staff)]
         [HttpGet("GetAllInvoiceDetails")]
         public async Task<IActionResult> GetAllInvoiceDetails()
         {
             return Ok(invoiceDetailService.GetAll());
         }
-        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer + "," + UserRole.Staff)]
         [HttpGet("GetQualityProductSell")]
         public async Task<IActionResult> GetQualityProductSell()
         {

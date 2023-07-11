@@ -33,7 +33,7 @@ namespace BaoDatShop.Controllers
             this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
         }
 
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpDelete("DeleteImageProduct/{id}")]
         public async Task<IActionResult> UpdateImageProduct(int id)
         {
@@ -43,7 +43,7 @@ namespace BaoDatShop.Controllers
             else
                 return Ok(true);
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpPut("UpdateImageProduct/{id}")]
         public async Task<IActionResult> UpdateImageProduct(int id, CreateImageProduct model)
         {
@@ -56,7 +56,7 @@ namespace BaoDatShop.Controllers
             else
                 return Ok("Thất bại");
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpPut("UpdateImageProductWithImage/{Id},{ProductId}")]
         public async Task<IActionResult> UpdateImageProductWithImage(int id,int ProductId, IFormFile model)
         {
@@ -82,7 +82,7 @@ namespace BaoDatShop.Controllers
             }
             return Ok("Thất bại");
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpPut("UpdateImageProduct/{Id},{ProductId}")]
         public async Task<IActionResult> UpdateImageProduct(int id, int ProductId)
         {
@@ -100,7 +100,7 @@ namespace BaoDatShop.Controllers
             }
             return Ok("Thất bại");
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpPost("CreateImagesProduct/{ProductId}")]
         public async Task<IActionResult> CreateImagesProduct(int ProductId, IFormFile model)
         {
@@ -132,7 +132,7 @@ namespace BaoDatShop.Controllers
             }
             return Ok("Thất bại");
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpGet("GetAllImageProduct")]
         public async Task<IActionResult> GetAllImageProduct()
         {

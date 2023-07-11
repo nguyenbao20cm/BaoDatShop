@@ -428,8 +428,7 @@ namespace BaoDatShop.Responsitories
         {
             return context.Account.ToList();
         }
-
-        public async Task<IdentityResult> RegisterStaff(ReuqestSignUp model)
+        public async Task<IdentityResult> RegisterStaffKHO(ReuqestSignUp model)//QL KHO
         {
             //var userExists = await userManager.FindByNameAsync(model.Username);
             //var fileName = model.image.FileName;
@@ -460,12 +459,71 @@ namespace BaoDatShop.Responsitories
             //{
             //    await userManager.AddToRoleAsync(user, UserRole.Staff);
             //}
-            if (!await _roleManager.RoleExistsAsync(UserRole.Admin))
-                await _roleManager.CreateAsync(new IdentityRole(UserRole.Admin));
+            if (!await _roleManager.RoleExistsAsync(UserRole.StaffKHO))
+                await _roleManager.CreateAsync(new IdentityRole(UserRole.StaffKHO));
 
-            if (await _roleManager.RoleExistsAsync(UserRole.Admin))
+            if (await _roleManager.RoleExistsAsync(UserRole.StaffKHO))
             {
-                await userManager.AddToRoleAsync(user, UserRole.Admin);
+                await userManager.AddToRoleAsync(user, UserRole.StaffKHO);
+            }
+            if (result.Succeeded)
+            {
+                var user1 = await userManager.FindByNameAsync(model.Username);
+                user1.Avatar = user1.Id + ".jpg";
+                await userManager.UpdateAsync(user1);
+                Account tamp = new();
+                tamp.Id = user1.Id;
+                tamp.FullName = model.FullName;
+                tamp.Address = model.Address;
+                tamp.Email = model.Email;
+                tamp.Username = model.Username;
+                tamp.Phone = model.Phone;
+                tamp.Avatar = user1.Id + ".jpg";
+                tamp.Status = model.status;
+                tamp.Permission = 2;
+
+                context.Account.Add(tamp);
+                context.SaveChanges();
+            }
+            return result;
+        }
+        public async Task<IdentityResult> RegisterStaff(ReuqestSignUp model)//QL BANHANG
+        {
+            //var userExists = await userManager.FindByNameAsync(model.Username);
+            //var fileName = model.image.FileName;
+            //var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Avatar");
+            //var uploadPath = Path.Combine(uploadFolder, fileName);
+
+            //using (FileStream fs = System.IO.File.Create(uploadPath))
+            //{
+            //    model.image.CopyTo(fs);
+            //    fs.Flush();
+            //}
+            var user = new ApplicationUser()
+            {
+                FullName = model.FullName,
+                Address = model.Address,
+                Email = model.Email,
+                UserName = model.Username,
+                Phone = model.Phone,
+                Avatar = model.image,
+                Status = model.status,
+                Permission = 4,
+            };
+            var result = await userManager.CreateAsync(user, model.Password);
+            //if (!await _roleManager.RoleExistsAsync(UserRole.Staff))
+            //    await _roleManager.CreateAsync(new IdentityRole(UserRole.Staff));
+
+            //if (await _roleManager.RoleExistsAsync(UserRole.Staff))
+            //{
+            //    await userManager.AddToRoleAsync(user, UserRole.Staff);
+            //}
+            if (!await _roleManager.RoleExistsAsync(UserRole.Staff))
+                await _roleManager.CreateAsync(new IdentityRole(UserRole.Staff));
+
+            if (await _roleManager.RoleExistsAsync(UserRole.Staff))
+            {
+                await userManager.AddToRoleAsync(user, UserRole.Staff);
             }
             if (result.Succeeded)
             {
@@ -481,7 +539,7 @@ namespace BaoDatShop.Responsitories
                 tamp.Phone = model.Phone;
                 tamp.Avatar = user1.Id + ".jpg";
                 tamp.Status = model.status ;
-                tamp.Permission = 2;
+                tamp.Permission = 4;
                 
                 context.Account.Add(tamp);
                 context.SaveChanges();

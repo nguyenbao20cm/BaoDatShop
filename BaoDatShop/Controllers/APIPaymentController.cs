@@ -113,8 +113,8 @@ namespace BaoDatShop.Controllers
                 if (tamp == true)
                 {
                     SendVoucher mail = new();
-                    mail.subject = "Cảm ơn bạn đã lựa chọn dịch vụ của chúng tui";
-                    mail.message = "Bạn đã thanh toán thành công đơn hàng với mã ID là: "+result.Id;
+                    mail.subject = "Xác nhận thanh toán trực tuyến thành công";
+                    mail.message = "Chúng tôi xin thông báo rằng thanh toán trực tuyến của bạn đã thành công. Dưới đây là mã hóa đơn giao dịch:" + result.Id;
                     mail.email = context.Account.Where(a => a.Id == GetCorrectUserId()).FirstOrDefault().Email;
                     IEmailSender.SendEmailAsync(mail);
                     VnpayBill a = new();

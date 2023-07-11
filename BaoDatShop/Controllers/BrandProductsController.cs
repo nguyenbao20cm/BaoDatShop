@@ -34,7 +34,8 @@ namespace BaoDatShop.Controllers
             var result = a.FindFirst("UserId").Value;
             return result;
         }
-        [Authorize(Roles = UserRole.Admin)]
+      
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
         [HttpPut("UpdateBrandProducts/{id}")]
         public async Task<IActionResult> UpdateFooter(int id,BrandProduct model)
         {
@@ -52,7 +53,7 @@ namespace BaoDatShop.Controllers
             }    
             return check > 0 ? Ok(true) : Ok("Thất bại");
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
         [HttpPost("CreateBrandProducts")]
         public async Task<IActionResult> CreateBrandProducts(BrandProduct model)
         {
@@ -70,7 +71,7 @@ namespace BaoDatShop.Controllers
             }
             return check > 0 ? Ok(true) : Ok(false);
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
         [HttpPut("DeleteBrandProducts")]
         public async Task<IActionResult> DeleteBrandProducts(int id )
         {

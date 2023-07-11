@@ -20,13 +20,13 @@ namespace BaoDatShop.Controllers
         {
             this.context = context;
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
         [HttpGet("GetAllVnPayBill")]
         public async Task<IActionResult> GetQuantityAccount()
         {
             return Ok(context.VnpayBill.ToList());
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
         [HttpGet("GetVNBillFilter/{startday},{endday}")]
         public async Task<IActionResult> GetVNBillFilter(string startday,string endday)
         {

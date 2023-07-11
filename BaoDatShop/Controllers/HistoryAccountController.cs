@@ -25,7 +25,7 @@ namespace BaoDatShop.Controllers
         {
             this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer + "," + UserRole.Staff + "," + UserRole.StaffKHO)]
         [HttpGet("GetHistoryAccount/{id}")]
         public async Task<IActionResult> GetHistoryAccount(string id)
         {
@@ -34,7 +34,7 @@ namespace BaoDatShop.Controllers
                 return Ok();
             return Ok(IHistoryAccountResponsitories.GetAll().Where(a => a.AccountID == id).ToList());
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer + "," + UserRole.Staff + "," + UserRole.StaffKHO)]
         [HttpGet("GetHistoryAccountFilter/{startday},{endday}")]
         public async Task<IActionResult> GetHistoryAccountFilter(string startday,string endday)
         {

@@ -23,13 +23,13 @@ namespace BaoDatShop.Controllers
             this.IHistoryAccountResponsitories =IHistoryAccountResponsitories;
             this.context = context;
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpGet("GetAllSupplier")]
         public async Task<IActionResult> GetAllSupplier()
         {
             return Ok(context.Supplier.ToList());
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpPost("CreateSupplier")]
         public async Task<IActionResult> CreateSupplier(Supplier model)
         {
@@ -56,7 +56,7 @@ namespace BaoDatShop.Controllers
             var result = a.FindFirst("UserId").Value;
             return result;
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpPut("UpdateSupplier/{id}")]
         public async Task<IActionResult> UpdateSupplier(int id,Supplier model)
         {

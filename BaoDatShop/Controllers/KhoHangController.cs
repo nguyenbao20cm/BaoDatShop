@@ -17,13 +17,12 @@ namespace BaoDatShop.Controllers
         {
             this.IKhoHangResposirity = IKhoHangResposirity;
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpGet("GetAllKhoHang")]
         public async Task<IActionResult> GetAllKhoHang()
         {
             return Ok(IKhoHangResposirity.GetAll());
         }
-        [Authorize(Roles = UserRole.Costumer)]
         [HttpGet("GetSizeOfProduct/{id}")]
         public async Task<IActionResult> GetSizeOfProduct(int id)
         {

@@ -11,5 +11,6 @@ namespace BaoDatShop.DTO.Role
         public const string Admin = "Admin";
         public const string Costumer = "Costumer";
         public const string Staff = "Staff";
+        public const string StaffKHO = "StaffKHO";
     }
 }

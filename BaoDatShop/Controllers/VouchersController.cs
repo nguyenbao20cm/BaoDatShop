@@ -44,7 +44,7 @@ namespace BaoDatShop.Controllers
         {
             return Ok(IVoucherService.GetAll());
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
         [HttpGet("GetVoucherByid/{id}")]
         public async Task<IActionResult> GetVoucherByid(int id)
         {
@@ -57,7 +57,7 @@ namespace BaoDatShop.Controllers
             if (IVoucherService.ValidationVoucher(ValidationVoucher.Name) == null) return Ok("null");
             return Ok(IVoucherService.ValidationVoucher(ValidationVoucher.Name));
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
         [HttpDelete("DeleteVoucher/{id}")]
         public async Task<IActionResult> DeleteVoucher(int id)
         {
@@ -72,7 +72,7 @@ namespace BaoDatShop.Controllers
             else
                 return Ok(false);
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
         [HttpPost("CreateVoucher")]
         public async Task<IActionResult> CreateVoucher(CreateVoucher model)
         {
@@ -93,7 +93,7 @@ namespace BaoDatShop.Controllers
             else
                 return Ok("Thất bại");
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
         [HttpPut("UpdateVoucher/{id}")]
         public async Task<IActionResult> UpdateVoucher(int id,CreateVoucher model)
         {

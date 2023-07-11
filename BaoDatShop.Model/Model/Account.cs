@@ -46,7 +46,7 @@ namespace Eshop.Models
         [DefaultValue(true)]
         public bool Status { get; set; } = true;
 
-        public int Permission { get; set; }  // Quân quyền 1 là admin //2 là Nhân viên //3 là khách hàng
+        public int Permission { get; set; }  // Quân quyền 1 là admin //2 là Nhân viên kho //3 là khách hàng  //4 là nhân viên bán hàng
 
        
 

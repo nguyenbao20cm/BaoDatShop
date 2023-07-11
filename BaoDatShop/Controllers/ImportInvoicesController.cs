@@ -28,7 +28,8 @@ namespace BaoDatShop.Controllers
             this.IImportInvoiceResponsitories = IImportInvoiceResponsitories;
             this.IHistoryAccountResponsitories =IHistoryAccountResponsitories;
         }
-        [Authorize(Roles = UserRole.Admin)]
+   
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpPost("CreateImportInvoice")]
         public async Task<IActionResult> CreateImportInvoice(ImportInvoice model)
         {
@@ -52,7 +53,7 @@ namespace BaoDatShop.Controllers
             }
             return Ok(false);
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpPost("UpdateImportInvoice/{id}")]
         public async Task<IActionResult> UpdateImportInvoice(int id,ImportInvoice model)
         {
@@ -66,19 +67,19 @@ namespace BaoDatShop.Controllers
             }
             return Ok(false);
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpGet("GetAllImportInvoice")]
         public async Task<IActionResult> GetAllImportInvoice()
         {
             return Ok(IImportInvoiceResponsitories.GetAll().OrderByDescending(a => a.IssuedDate).ToList());
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpGet("GetAllImportInvoice/{startday},{endday}")]
         public async Task<IActionResult> GetAllImportInvoice(string startday,string endday)
         {
             return Ok(context.ImportInvoice.Include(a => a.Supplier).Include(a => a.ProductSize).Include(a => a.ProductSize.Product).Where(a=>a.IssuedDate.Date>=DateTime.Parse(startday)).Where(a=>a.IssuedDate.Date<=DateTime.Parse(endday)).ToList());
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpDelete("DeleteImportInvoice/{id}")]
         public async Task<IActionResult> DeleteImportInvoice(int id)
         {

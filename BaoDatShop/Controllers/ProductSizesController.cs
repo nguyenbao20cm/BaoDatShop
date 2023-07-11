@@ -63,19 +63,19 @@ namespace BaoDatShop.Controllers
         {
             return Ok(productSizeService.GetAll());
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpGet("GetAllProductSizeStatusFalse")]//  status false
         public async Task<IActionResult> GetAllProductTypeStatusFalse()
         {
             return Ok(productSizeService.GetAllProductTypeStatusFalse());
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpGet("GetAllImportPrice/{year}")]//  status false
         public async Task<IActionResult> GetAllImportPrice(string year)
         {
             return Ok(productSizeService.GetAllImportPrice(year));
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpGet("GetImportDayAllYear/{year}")]//  status false
         public async Task<IActionResult> GetImportDayAllYear(int year)
         {
@@ -87,8 +87,8 @@ namespace BaoDatShop.Controllers
             }    
             return Ok(tong);
         }
-       
-        [Authorize(Roles = UserRole.Admin)]
+
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpPost("CreateProductSize")]
         public async Task<IActionResult> CreateProductSize(CreateProductSize model)
         {
@@ -109,7 +109,7 @@ namespace BaoDatShop.Controllers
             else return Ok("Thất bại");
             return Ok(productSizeService.Create(GetCorrectUserId(),model));
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpPut("UpdateProductSize/{id}")]
         public async Task<IActionResult> UpdateProductType(int id, UpdateProductSize model)
         {
@@ -137,7 +137,7 @@ namespace BaoDatShop.Controllers
             else
                 return Ok("Thất bại");
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpPut("DeleteProductSize/{id}")]
         public async Task<IActionResult> DeleteProductType(int id)
         {

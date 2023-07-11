@@ -23,7 +23,7 @@ namespace BaoDatShop.Controllers
             this.productService = productService;
             this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpGet("GetQuailityProduct")]
         public async Task<IActionResult> GetQuailityProduct()
         {
@@ -81,7 +81,7 @@ namespace BaoDatShop.Controllers
 
         }
 
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpPost("CreateProduct")]
         public async Task<IActionResult> CreateProduct( CreateProductRequest model)
         {
@@ -100,7 +100,7 @@ namespace BaoDatShop.Controllers
             else
                 return Ok("Thất bại");
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpPut("UpdateProduct/{id}")]
         public async Task<IActionResult> UpdateProduct(int id,  CreateProductRequest model)
         {
@@ -115,7 +115,7 @@ namespace BaoDatShop.Controllers
             else
                 return Ok("Thất bại");
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpPut("DeleteProduct/{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
