@@ -117,6 +117,9 @@ builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddTransient<IImportInvoiceResponsitories, ImportInvoiceResponsitories>();
 
+builder.Services.AddTransient<IKhoHangResposirity, KhoHangResposirity>();
+
+
 
 // For Enity
 builder.Services.AddDbContext<AppDbContext>(options =>

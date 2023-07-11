@@ -42,7 +42,7 @@ namespace Eshop.Models
         public int OrderStatus { get; set; }//1 chưa xác nhận //2 la chua đang chuẩn bị //3 đang giao//6 đã giao//4 đã hủy,//5hoàn tất
 
         // Collection reference property cho khóa ngoại từ InvoiceDetail
-        public List<InvoiceDetail> InvoiceDetails { get; set; }
+        //public List<InvoiceDetail> InvoiceDetails { get; set; }
  
 
     }

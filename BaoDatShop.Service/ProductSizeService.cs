@@ -2,6 +2,7 @@
 using BaoDatShop.DTO.News;
 using BaoDatShop.DTO.ProductSize;
 using BaoDatShop.DTO.ProductType;
+using BaoDatShop.Model.Context;
 using BaoDatShop.Model.Model;
 using BaoDatShop.Responsitories;
 using Eshop.Models;
@@ -33,11 +34,15 @@ namespace BaoDatShop.Service
         private readonly IProductSizeResponsitories IProductSizeResponsitories;
         private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
         private readonly IImportInvoiceResponsitories IImportInvoiceResponsitories;
-        public ProductSizeService(IImportInvoiceResponsitories IImportInvoiceResponsitories,IProductSizeResponsitories IProductSizeResponsitories, IHistoryAccountResponsitories IHistoryAccountResponsitories)
+        private readonly AppDbContext context;
+        public ProductSizeService(IImportInvoiceResponsitories IImportInvoiceResponsitories,
+            AppDbContext context,
+            IProductSizeResponsitories IProductSizeResponsitories, IHistoryAccountResponsitories IHistoryAccountResponsitories)
         {
             this.IProductSizeResponsitories = IProductSizeResponsitories;
             this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
             this.IImportInvoiceResponsitories = IImportInvoiceResponsitories;
+            this.context = context;
         }
         public List<ProductSize> GetAllProductTypeStatusFalse()
         {
@@ -58,10 +63,15 @@ namespace BaoDatShop.Service
             result.ProductId = model.ProductId;
             result.Status = model.Status;
             //result.Stock = model.Stock;
-            result.Stock = 0;
+            
             var ab = IProductSizeResponsitories.Create(result);
             if (ab==true)
             {
+                KHoHang kho = new();
+                kho.ProductSizeId = result.Id;
+                kho.Stock = 0;
+                context.Add(kho);
+                context.SaveChanges();
                var tam= IProductSizeResponsitories.GetById(result.Id);
                 HistoryAccount a = new();
                 a.AccountID = id; a.Datetime = DateTime.Now;

@@ -42,10 +42,11 @@ namespace BaoDatShop.Controllers
            
             if ( IImportInvoiceResponsitories.Create(result)==true)
             {
-               var tam= IProductSizeResponsitories.GetById(model.ProductSizeId);
+               var tam= context.KHoHang.Include(a=>a.ProductSize).Where(a=>a.ProductSizeId==model.ProductSizeId).FirstOrDefault();
                 tam.Stock += model.Quantity;
-                var check =IProductSizeResponsitories.Update(tam);
-                if(check==true)
+                context.Update(tam);
+                var check =context.SaveChanges();
+                if(check>0)
                     return Ok(true);
                 else return Ok(false);
             }
@@ -82,7 +83,7 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> DeleteImportInvoice(int id)
         {
             var check=context.ImportInvoice.Where(a => a.Id == id).FirstOrDefault();
-            if (context.ProductSize.Where(a => a.Id == check.ProductSizeId).FirstOrDefault().Stock<check.Quantity)
+            if (context.KHoHang.Include(a=>a.ProductSize).Where(a => a.ProductSizeId == check.ProductSizeId).FirstOrDefault().Stock<check.Quantity)
                 return Ok("Thất bại vì sản phẩm đã xuất kho");
             context.Remove(check);
             var a= context.SaveChanges();

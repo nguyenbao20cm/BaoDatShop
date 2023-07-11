@@ -85,7 +85,10 @@ namespace BaoDatShop.Controllers
         [HttpPost("CreateProduct")]
         public async Task<IActionResult> CreateProduct( CreateProductRequest model)
         {
-            
+            if(model.PriceSales>model.Price)
+            {
+                return Ok("That bai");
+            }
             if (productService.Create(GetCorrectUserId(),model) == true)
             {
                 HistoryAccount ab = new();

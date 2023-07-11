@@ -4,6 +4,7 @@ using BaoDatShop.Model.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaoDatShop.Model.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230711033522_213")]
+    partial class _213
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -301,28 +303,6 @@ namespace BaoDatShop.Model.Migrations
                     b.ToTable("ImportInvoice");
                 });
 
-            modelBuilder.Entity("BaoDatShop.Model.Model.KHoHang", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("ProductSizeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Stock")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductSizeId")
-                        .IsUnique();
-
-                    b.ToTable("KHoHang");
-                });
-
             modelBuilder.Entity("BaoDatShop.Model.Model.ProductSize", b =>
                 {
                     b.Property<int>("Id")
@@ -339,6 +319,9 @@ namespace BaoDatShop.Model.Migrations
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
+
+                    b.Property<int>("Stock")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -892,17 +875,6 @@ namespace BaoDatShop.Model.Migrations
                     b.Navigation("ProductSize");
 
                     b.Navigation("Supplier");
-                });
-
-            modelBuilder.Entity("BaoDatShop.Model.Model.KHoHang", b =>
-                {
-                    b.HasOne("BaoDatShop.Model.Model.ProductSize", "ProductSize")
-                        .WithMany()
-                        .HasForeignKey("ProductSizeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ProductSize");
                 });
 
             modelBuilder.Entity("BaoDatShop.Model.Model.ProductSize", b =>

@@ -1,4 +1,5 @@
 ﻿using BaoDatShop.DTO.Invoice;
+using BaoDatShop.Model.Context;
 using BaoDatShop.Responsitories;
 using Eshop.Models;
 using System.Security.Claims;
@@ -34,9 +35,13 @@ namespace BaoDatShop.Service
         private readonly IProductSizeResponsitories IProductSizeResponsitories;
         private readonly IProductService productService;
         private readonly IInvoiceDetailResponsitories invoiceDetailResponsitories;
-        private readonly IProductSizeResponsitories productSizeResponsitories;
+        private readonly IKhoHangResposirity IKhoHangResposirity;
+       private readonly IProductSizeResponsitories productSizeResponsitories;
+        private readonly AppDbContext context;
         public InvoiceService(IImportInvoiceResponsitories IImportInvoiceResponsitories,IInvoiceResponsitories invoiceResponsitories, ICartResponsitories cartResponsitories, IProductService productService, 
             IInvoiceDetailResponsitories invoiceDetailResponsitories,
+            IKhoHangResposirity IKhoHangResposirity,
+            AppDbContext context,
             IProductSizeResponsitories productSizeResponsitories, IProductResponsitories IProductResponsitories, 
             IProductSizeService IProductSizeService ,IProductSizeResponsitories IProductSizeResponsitories)
         {
@@ -49,6 +54,8 @@ namespace BaoDatShop.Service
             this.IProductResponsitories = IProductResponsitories;
             this.IProductSizeService = IProductSizeService;
             this.IProductSizeResponsitories = IProductSizeResponsitories;
+            this.IKhoHangResposirity = IKhoHangResposirity;
+            this.context = context;
         }
 
         public bool Create(string AccountId, CreateInvoiceRequest model)
@@ -57,7 +64,7 @@ namespace BaoDatShop.Service
             var Cart = cartResponsitories.GetAll(AccountId);
             foreach (var c in Cart)
             {
-                var a = productSizeResponsitories.GetById(c.ProductSizeId);
+                var a = IKhoHangResposirity.GetAll().Where(a=>a.ProductSizeId==c.ProductSizeId).FirstOrDefault();
                 if (c.Quantity > a.Stock) return false;
             }
             if (Cart == null) return false;
@@ -84,10 +91,11 @@ namespace BaoDatShop.Service
 
                 foreach (var c in Cart)
                 {
-                    var a = productSizeResponsitories.GetById(c.ProductSizeId);
+                    var a = IKhoHangResposirity.GetAll().Where(a=>a.ProductSizeId==c.ProductSizeId).FirstOrDefault();
                     if(c.Quantity>a.Stock) return false;
                     a.Stock = a.Stock - c.Quantity;
-                    productSizeResponsitories.Update(a);
+                    context.Update(a);
+                    context.SaveChanges();
                     var productId = productSizeResponsitories.GetById(c.ProductSizeId).ProductId;
                     InvoiceDetail detal = new InvoiceDetail
                     {
@@ -126,11 +134,12 @@ namespace BaoDatShop.Service
             var tamp = invoiceResponsitories.Create(result);
             if (tamp == true)
             {
-                    var a = productSizeResponsitories.GetById(model.ProductSizeID);
-                    if (model.Quantity > a.Stock) return false;
+                    var a = IKhoHangResposirity.GetAll().Where(a => a.ProductSizeId == model.ProductSizeID).FirstOrDefault();
+                if (model.Quantity > a.Stock) return false;
                     a.Stock = a.Stock - model.Quantity;
-                    productSizeResponsitories.Update(a);
-                    var productId = productSizeResponsitories.GetById(model.ProductSizeID).ProductId;
+                context.Update(a);
+                context.SaveChanges();
+                var productId = productSizeResponsitories.GetById(model.ProductSizeID).ProductId;
                     InvoiceDetail detal = new InvoiceDetail
                     {
                         InvoiceId = result.Id,
@@ -163,9 +172,10 @@ namespace BaoDatShop.Service
             var a= invoiceDetailResponsitories.GetAll(id);
             foreach(var item in a)
             {
-                var b = IProductSizeService.GetById(item.ProductSizeId);
-                    b.Stock =+ item.Quantity;
-                IProductSizeResponsitories.Update(b);
+                var b = IKhoHangResposirity.GetAll().Where(a => a.ProductSizeId == item.ProductSizeId).FirstOrDefault();
+                b.Stock =+ item.Quantity;
+                context.Update(b);
+                context.SaveChanges();
             }
             return invoiceResponsitories.Update(result);
         }
@@ -180,9 +190,10 @@ namespace BaoDatShop.Service
                 var a = invoiceDetailResponsitories.GetAll(id);
                 foreach (var item in a)
                 {
-                    var b = IProductSizeService.GetById(item.ProductSizeId);
+                    var b = IKhoHangResposirity.GetAll().Where(a => a.ProductSizeId == item.ProductSizeId).FirstOrDefault();
                     b.Stock = +item.Quantity;
-                    IProductSizeResponsitories.Update(b);
+                    context.Update(b);
+                    context.SaveChanges();
                 }
                 return invoiceResponsitories.Update(result);
             }    

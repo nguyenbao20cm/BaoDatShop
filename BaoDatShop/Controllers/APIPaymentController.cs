@@ -1,5 +1,7 @@
-﻿using BaoDatShop.DTO.Invoice;
+﻿using BaoDatShop.DTO.AccountRequest;
+using BaoDatShop.DTO.Invoice;
 using BaoDatShop.DTO.Role;
+using BaoDatShop.DTO.Voucher;
 using BaoDatShop.Model.Context;
 using BaoDatShop.Model.Model;
 using BaoDatShop.Responsitories;
@@ -8,6 +10,7 @@ using CodeMegaVNPay.Services;
 using Eshop.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using System.Globalization;
 using System.Security.Claims;
@@ -27,12 +30,14 @@ namespace BaoDatShop.Controllers
         private readonly IInvoiceResponsitories IInvoiceResponsitories;
         private readonly ICartResponsitories ICartResponsitories;
         private readonly IProductSizeResponsitories IProductSizeResponsitories;
-    
+        private readonly IKhoHangResposirity IKhoHangResposirity;
+        private readonly IEmailSender IEmailSender;
         public APIPaymentController(IInvoiceService invoiceService, ICartResponsitories ICartResponsitories, IInvoiceResponsitories IInvoiceResponsitories,
             AppDbContext context,IConfiguration _configuration,
             IProductSizeResponsitories IProductSizeResponsitories,
             IProductResponsitories IProductResponsitories,
             IInvoiceDetailResponsitories IInvoiceDetailResponsitories,
+            IKhoHangResposirity IKhoHangResposirity,
             IProductService IProductService,
             IVnPayService _vnPayService)
         {
@@ -42,6 +47,7 @@ namespace BaoDatShop.Controllers
             this.ICartResponsitories = ICartResponsitories;
             this._configuration = _configuration;
             this.invoiceService = invoiceService;
+            this.IKhoHangResposirity = IKhoHangResposirity;
             this.IProductSizeResponsitories = IProductSizeResponsitories;
             this._vnPayService=  _vnPayService;
             this.IInvoiceResponsitories = IInvoiceResponsitories;
@@ -55,7 +61,7 @@ namespace BaoDatShop.Controllers
             var Cart = ICartResponsitories.GetAll(GetCorrectUserId());
             foreach (var c in Cart)
             {
-                var a = IProductSizeResponsitories.GetById(c.ProductSizeId);
+                var a = IKhoHangResposirity.GetAll().Where(a=>a.ProductSizeId==c.ProductSizeId).FirstOrDefault();
                 if (c.Quantity > a.Stock) return Ok(false);
             }
             var url = _vnPayService.CreatePaymentUrl(model, HttpContext);
@@ -88,7 +94,7 @@ namespace BaoDatShop.Controllers
                 var Cart = ICartResponsitories.GetAll(GetCorrectUserId());
                 foreach (var c in Cart)
                 {
-                    var a = IProductSizeResponsitories.GetById(c.ProductSizeId);
+                    var a = context.KHoHang.Include(a=>a.ProductSize).Where(a=>a.ProductSizeId==c.ProductSizeId).FirstOrDefault();
                     if (c.Quantity > a.Stock) return Ok("Thất bại");
                 }
                 Invoice result = new();
@@ -106,6 +112,11 @@ namespace BaoDatShop.Controllers
                 var tamp = IInvoiceResponsitories.Create(result);
                 if (tamp == true)
                 {
+                    SendVoucher mail = new();
+                    mail.subject = "Cảm ơn bạn đã lựa chọn dịch vụ của chúng tui";
+                    mail.message = "Bạn đã thanh toán thành công đơn hàng với mã ID là: "+result.Id;
+                    mail.email = context.Account.Where(a => a.Id == GetCorrectUserId()).FirstOrDefault().Email;
+                    IEmailSender.SendEmailAsync(mail);
                     VnpayBill a = new();
                     a.DateTime = FormatDate(response.DateTime);
                     a.CodeBank = response.CodeBank;
@@ -120,9 +131,10 @@ namespace BaoDatShop.Controllers
                     context.SaveChanges();
                     foreach (var c in Cart)
                     {
-                        var a1 = IProductSizeResponsitories.GetById(c.ProductSizeId);
+                        var a1 = IKhoHangResposirity.GetAll().Where(a=>a.ProductSizeId==c.ProductSizeId).FirstOrDefault();
                         a1.Stock = a1.Stock - c.Quantity;
-                        IProductSizeResponsitories.Update(a1);
+                        context.Update(a1);
+                        context.SaveChanges();
                         var productId = IProductSizeResponsitories.GetById(c.ProductSizeId).ProductId;
                         InvoiceDetail detal = new InvoiceDetail
                         {
@@ -166,7 +178,7 @@ namespace BaoDatShop.Controllers
                 var productsizeid = orderDescription[7];
                 var quanlity = orderDescription[6];
                 var Idacc = GetCorrectUserId();
-                var ab = IProductSizeResponsitories.GetById(int.Parse(productsizeid));
+                var ab = IKhoHangResposirity.GetAll().Where(a=>a.ProductSizeId==int.Parse(productsizeid)).FirstOrDefault();
                 if (int.Parse(quanlity) > ab.Stock) return Ok("thất bại");
                 Invoice result = new();
                 result.Pay = true;
@@ -182,9 +194,10 @@ namespace BaoDatShop.Controllers
                 var tamp = IInvoiceResponsitories.Create(result);
                 if (tamp == true)
                 {
-                    var a = IProductSizeResponsitories.GetById(int.Parse(productsizeid));
+                    var a = IKhoHangResposirity.GetAll().Where(a => a.ProductSizeId == int.Parse(productsizeid)).FirstOrDefault();
                     a.Stock = a.Stock - int.Parse(quanlity);
-                    IProductSizeResponsitories.Update(a);
+                    context.Update(a);
+                    context.SaveChanges();
                     var productId = IProductSizeResponsitories.GetById(int.Parse(productsizeid)).ProductId;
                     InvoiceDetail detal = new InvoiceDetail
                     {
@@ -199,7 +212,7 @@ namespace BaoDatShop.Controllers
                     IInvoiceDetailResponsitories.Create(detal);
 
                     VnpayBill a2 = new();
-                    a2.DateTime = FormatDate(response.DateTime);
+                    a2.DateTime = DateTime.Now;
                     a2.CodeBank = response.CodeBank;
                     a2.VNBillId = response.VNBillId;
                     a2.InvoiceBankID = response.InvoiceBankID;
