@@ -23,5 +23,11 @@ namespace BaoDatShop.Controllers
         {
             return Ok(IKhoHangResposirity.GetAll());
         }
+        [Authorize(Roles = UserRole.Costumer)]
+        [HttpGet("GetSizeOfProduct/{id}")]
+        public async Task<IActionResult> GetSizeOfProduct(int id)
+        {
+            return Ok(IKhoHangResposirity.GetAll().Where(a=>a.ProductSize.ProductId==id).ToList());
+        }
     }
 }
