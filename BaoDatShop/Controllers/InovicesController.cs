@@ -12,7 +12,9 @@ using System.Data;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Security.Claims;
-
+using PdfSharpCore;
+using PdfSharpCore.Pdf;
+using TheArtOfDev.HtmlRenderer.PdfSharp;
 namespace BaoDatShop.Controllers
 {
     [Route("api/[controller]")]
@@ -20,6 +22,8 @@ namespace BaoDatShop.Controllers
     public class InovicesController : ControllerBase
     {
         private readonly AppDbContext context;
+        private readonly IInvoiceDetailService IInvoiceDetailService;
+        private readonly IWebHostEnvironment IWebHostEnvironment;
         private readonly IProductService IProductService;
         private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
         private readonly IInvoiceService invoiceService;
@@ -29,19 +33,108 @@ namespace BaoDatShop.Controllers
         private readonly IImportInvoiceResponsitories IImportInvoiceResponsitories;
         public InovicesController(IInvoiceService invoiceService, IProductSizeService IProductSizeService,
             IImportInvoiceResponsitories IImportInvoiceResponsitories,
-            IProductService IProductService,
+            IProductService IProductService, IInvoiceDetailService IInvoiceDetailService,
+            IWebHostEnvironment IWebHostEnvironment,
             AppDbContext context, IInvoiceResponsitories IInvoiceResponsitories, IProductSizeResponsitories IProductSizeResponsitories, IHistoryAccountResponsitories IHistoryAccountResponsitories)
         {
             this.IProductService = IProductService;
+            this.IInvoiceDetailService = IInvoiceDetailService;
             this.IImportInvoiceResponsitories = IImportInvoiceResponsitories;
             this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
             this.IProductSizeService = IProductSizeService;
             this.context = context;
+            this.IWebHostEnvironment = IWebHostEnvironment;
             this.invoiceService = invoiceService;
             this.IInvoiceResponsitories = IInvoiceResponsitories;
             this.IProductSizeResponsitories = IProductSizeResponsitories;
         }
-   
+     
+        //[Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
+        [HttpGet("GeneratePDF")]
+        public async Task<IActionResult> GeneratePDF(int InvoiceNo)
+        {
+            var document = new PdfDocument();
+            string[] copies = { "Customer copy", "Comapny Copy" };
+            for (int i = 0; i < copies.Length; i++)
+            {
+                var header = invoiceService.GetAll().Where(a=>a.Id==InvoiceNo).FirstOrDefault();
+                List<InvoiceDetail> detail = IInvoiceDetailService.GetAll().Where(a=>a.InvoiceId==InvoiceNo).ToList();
+                string htmlcontent = "<div style='width:100%; text-align:center'>";
+                htmlcontent += "<img style='width:80px;height:80%' src=''https://localhost:7067/wwwroot/Image/Footer/'" + "1.jpg" + "'   />";
+                htmlcontent += "<h2>" + copies[i] + "</h2>";
+                htmlcontent += "<h2>Welcome to Nihira Techiees</h2>";
+
+                if (header != null)
+                {
+                    htmlcontent += "<h2> Invoice No:" + header.Id + " & Invoice Date:" + header.IssuedDate + "</h2>";
+                    htmlcontent += "<h3> Customer : " + header.NameCustomer + "</h3>";
+                    htmlcontent += "<p>" + header.ShippingAddress + "</p>";
+                    htmlcontent += "<h3> Contact : 9898989898 & Email :ts@in.com </h3>";
+                    htmlcontent += "<div>";
+                }
+                htmlcontent += "<table style ='width:100%; border: 1px solid #000'>";
+                htmlcontent += "<thead style='font-weight:bold'>";
+                htmlcontent += "<tr>";
+                htmlcontent += "<td style='border:1px solid #000'> Product Code </td>";
+                htmlcontent += "<td style='border:1px solid #000'> Description </td>";
+                htmlcontent += "<td style='border:1px solid #000'>Qty</td>";
+                htmlcontent += "<td style='border:1px solid #000'>Price</td >";
+                htmlcontent += "<td style='border:1px solid #000'>Total</td>";
+                htmlcontent += "</tr>";
+                htmlcontent += "</thead >";
+
+                htmlcontent += "<tbody>";
+                if (detail != null && detail.Count > 0)
+                {
+                    detail.ForEach(item =>
+                    {
+                        htmlcontent += "<tr>";
+                        htmlcontent += "<td>" + item.ProductSize.Product.SKU + "</td>";
+                        htmlcontent += "<td>" + item.ProductSize.Product.Name + "</td>";
+                        htmlcontent += "<td>" + item.Quantity + "</td >";
+                        htmlcontent += "<td>" + item.UnitPrice + "</td>";
+                        htmlcontent += "<td> " + item.UnitPrice*item.Quantity + "</td >";
+                        htmlcontent += "</tr>";
+                    });
+                }
+                htmlcontent += "</tbody>";
+
+                htmlcontent += "</table>";
+                htmlcontent += "</div>";
+
+                htmlcontent += "<div style='text-align:right'>";
+                htmlcontent += "<h1> Summary Info </h1>";
+                htmlcontent += "<table style='border:1px solid #000;float:right' >";
+                htmlcontent += "<tr>";
+                htmlcontent += "<td style='border:1px solid #000'> Summary Total </td>";
+                htmlcontent += "<td style='border:1px solid #000'> Summary Tax </td>";
+                htmlcontent += "<td style='border:1px solid #000'> Summary NetTotal </td>";
+                htmlcontent += "</tr>";
+                if (header != null)
+                {
+                    htmlcontent += "<tr>";
+                    htmlcontent += "<td style='border: 1px solid #000'> " + header.Total + " </td>";
+                    //htmlcontent += "<td style='border: 1px solid #000'>" + header.Tax + "</td>";
+                    //htmlcontent += "<td style='border: 1px solid #000'> " + header.NetTotal + "</td>";
+                    htmlcontent += "</tr>";
+                }
+                htmlcontent += "</table>";
+                htmlcontent += "</div>";
+
+                htmlcontent += "</div>";
+
+                PdfGenerator.AddPdfPages(document, htmlcontent, PageSize.A4);
+            }
+            byte[]? response = null;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                document.Save(ms);
+                response = ms.ToArray();
+            }
+            string Filename = "Invoice_" + InvoiceNo + ".pdf";
+            return File(response, "application/pdf", Filename);
+        }
+
         [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
         [HttpGet("GetAllChiPhi")]
         public async Task<IActionResult> GetAllChiPhi( )
