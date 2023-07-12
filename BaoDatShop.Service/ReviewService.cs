@@ -33,14 +33,19 @@ namespace BaoDatShop.Service
     {
         private readonly IReviewResponsitories reviewResponsitories;
         private readonly IWebHostEnvironment _environment;
-        public ReviewService(IWebHostEnvironment _environment,IReviewResponsitories reviewResponsitories)
+        private readonly IInvoiceDetailService IInvoiceDetailService;
+        public ReviewService(IWebHostEnvironment _environment,
+            IInvoiceDetailService IInvoiceDetailServicem,
+            IReviewResponsitories reviewResponsitories)
         {
             this.reviewResponsitories = reviewResponsitories;
             this._environment = _environment;
+            this.IInvoiceDetailService = IInvoiceDetailService;
         }
 
         public Review Create(string AccountID,ReviewRequest model)
         {
+                 
             Review result = new();
             result.Image = null;
             result.Star = model.Star;
