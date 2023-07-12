@@ -23,6 +23,12 @@ namespace BaoDatShop.Controllers
         {
             return Ok(IKhoHangResposirity.GetAll());
         }
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
+        [HttpGet("GEtSLTonKho")]
+        public async Task<IActionResult> GEtSLTonKho()
+        {
+            return Ok(IKhoHangResposirity.GetAll().Sum(a=>a.Stock));
+        }
         [HttpGet("GetSizeOfProduct/{id}")]
         public async Task<IActionResult> GetSizeOfProduct(int id)
         {

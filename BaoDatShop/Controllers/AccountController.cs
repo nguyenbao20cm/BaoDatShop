@@ -67,6 +67,16 @@ namespace BaoDatShop.Controllers
         {
             return Ok(context.Account.Where(a => a.Status == true).Where(a => a.Permission == 3).ToList());
         }
+        [HttpGet("GetAllAccountStaffKhoStatusFalse")]
+        public async Task<IActionResult> GetAllAccountStaffKhoStatusFalse()
+        {
+            return Ok(context.Account.Where(a => a.Status == false).Where(a => a.Permission == 4).ToList());
+        }
+        [HttpGet("GetAllAccountStaffKhoStatusTrue")]
+        public async Task<IActionResult> GetAllAccountStaffKhoStatusTrue()
+        {
+            return Ok(context.Account.Where(a => a.Status == true).Where(a => a.Permission == 4).ToList());
+        }
         [HttpGet("GetAllAccountStaffStatusFalse")]
         public async Task<IActionResult> GetAllAccountStaffStatusFalse()
         {
@@ -325,7 +335,7 @@ namespace BaoDatShop.Controllers
                 if (model.Phone == item.Phone) return Ok(2);
                 if (model.Email == item.Email) return Ok(3);
             }
-            var result = await _accountService.RegisterStaff(model);
+            var result = await _accountService.RegisterStaffKho(model);
             if (result.Succeeded)
             {
                 var user = await userManager.FindByNameAsync(model.Username);
@@ -357,7 +367,7 @@ namespace BaoDatShop.Controllers
             var a = _accountService.CreateAvatarImage(model);
             return Ok(a);
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer + "," + UserRole.Staff + "," + UserRole.StaffKHO)]  
         [HttpGet("GetQuantityAccount")]
         public async Task<IActionResult> GetQuantityAccount()
         {

@@ -191,7 +191,7 @@ namespace BaoDatShop.Controllers
         {
             return Ok(invoiceService.GetAll());
         }
-        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff+","+UserRole.StaffKHO)]
         [HttpGet("GetQuanlityAllInovice")]
         public async Task<IActionResult> GetQuanlityAllInovice()
         {
@@ -239,13 +239,13 @@ namespace BaoDatShop.Controllers
         {
             return Ok(invoiceService.GetById(id));
         }
-        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
+        [Authorize(Roles = UserRole.Admin  + "," + UserRole.Staff + "," + UserRole.StaffKHO)]
         [HttpGet("ProfitForyear/{year}")]
         public async Task<IActionResult> ProfitForyear(int year)
         {
             return Ok(invoiceService.ProfitForyear(year));
         }
-        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer + "," + UserRole.Staff)]
         [HttpGet("ProfitForYearAgo/{year}")]
         public async Task<IActionResult> ProfitForYearAgo(int year)
         {
@@ -257,7 +257,7 @@ namespace BaoDatShop.Controllers
         {
             return Ok(invoiceService.GetAllInoviceTotalMonth(year));
         }
-        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO + "," + UserRole.Staff)]
         [HttpGet("GetAllInoviceTotal/{year}")]
         public async Task<IActionResult> GetAllInoviceTotal(int year)
         {

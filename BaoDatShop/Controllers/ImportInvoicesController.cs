@@ -28,7 +28,12 @@ namespace BaoDatShop.Controllers
             this.IImportInvoiceResponsitories = IImportInvoiceResponsitories;
             this.IHistoryAccountResponsitories =IHistoryAccountResponsitories;
         }
-   
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
+        [HttpGet("GetQuanlityProductImport")]
+        public async Task<IActionResult> GetQuanlityProductImport()
+        {
+            return Ok(context.ImportInvoice.Sum(a => a.Quantity));
+        }
         [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpPost("CreateImportInvoice")]
         public async Task<IActionResult> CreateImportInvoice(ImportInvoice model)

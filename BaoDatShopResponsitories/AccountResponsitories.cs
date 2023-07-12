@@ -33,8 +33,8 @@ namespace BaoDatShop.Responsitories
         public Task<IdentityResult> RegisterStaff(ReuqestSignUp model);
         public bool CreateAvatarImage(  IFormFile model);
         public  Task<bool> ActiveAccount(string idacc,string id);
-
-
+        public Task<IdentityResult> RegisterStaffKHO(ReuqestSignUp model);
+        
     }
 
     public class AccountResponsitories : IAccountResponsitories
@@ -219,7 +219,6 @@ namespace BaoDatShop.Responsitories
 
         public async Task<string> SignIn(LoginRequest model)
         {
-       
             var user = await userManager.FindByNameAsync(model.Username);
             if (user == null)
                 return "Thất bại";
@@ -449,7 +448,7 @@ namespace BaoDatShop.Responsitories
                 Phone = model.Phone,
                 Avatar = model.image,
                 Status = model.status,
-                Permission = 2,
+                Permission = 4,
             };
             var result = await userManager.CreateAsync(user, model.Password);
             //if (!await _roleManager.RoleExistsAsync(UserRole.Staff))
@@ -480,7 +479,7 @@ namespace BaoDatShop.Responsitories
                 tamp.Phone = model.Phone;
                 tamp.Avatar = user1.Id + ".jpg";
                 tamp.Status = model.status;
-                tamp.Permission = 2;
+                tamp.Permission = 4;
 
                 context.Account.Add(tamp);
                 context.SaveChanges();
@@ -580,8 +579,8 @@ namespace BaoDatShop.Responsitories
         public async Task<bool> ActiveAccount(string idacc,string id)
         {
             var user = await userManager.FindByIdAsync(id);
-            user.Status = false;
-          await  userManager.UpdateAsync(user);
+            user.Status = true;
+              await  userManager.UpdateAsync(user);
             var a = context.Account.Where(a => a.Id == id).FirstOrDefault();
             a.Status = true;
             context.Account.Update(a);

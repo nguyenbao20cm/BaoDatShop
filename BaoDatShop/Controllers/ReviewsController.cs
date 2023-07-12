@@ -30,7 +30,7 @@ namespace BaoDatShop.Controllers
         [HttpPost("CreateReview")]
         public async Task<IActionResult> CreateReview(ReviewRequest model)
         {
-            var tam = IInvoiceDetailService.GetAll().Where(a => a.Invoice.AccountId == GetCorrectUserId()).ToList();
+            var tam = IInvoiceDetailService.GetAll().Where(a=>a.Invoice.OrderStatus==5).Where(a => a.Invoice.AccountId == GetCorrectUserId()).ToList();
             var co = 0;
             foreach(var t in tam)
             {

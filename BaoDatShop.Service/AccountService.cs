@@ -26,6 +26,7 @@ namespace BaoDatShop.Service
         public Task<string> DeleteAccount(string idacc,string id);
         public List<Account> GetAllAcountCustomer();
         public Task<IdentityResult> RegisterStaff(ReuqestSignUp model);
+        public Task<IdentityResult> RegisterStaffKho(ReuqestSignUp model);
         public bool CreateAvatarImage( IFormFile model);
         public Task<bool> ActiveAccount(string idacc,string id);
 
@@ -74,6 +75,11 @@ namespace BaoDatShop.Service
         public Task<IdentityResult> RegisterStaff(ReuqestSignUp model)
         {
             return accountResponsitories.RegisterStaff(model);
+        }
+
+        public Task<IdentityResult> RegisterStaffKho(ReuqestSignUp model)
+        {
+            return accountResponsitories.RegisterStaffKHO(model);
         }
 
         public Task<string> SignIn(LoginRequest model)

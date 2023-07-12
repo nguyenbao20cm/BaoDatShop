@@ -40,8 +40,8 @@ namespace BaoDatShop.Controllers
         {
             return Ok(IHistoryAccountResponsitories.GetAll().Where(a => a.AccountID == GetCorrectUserId()).Where(a => a.Datetime.Date >= DateTime.Parse(startday)).Where(a => a.Datetime.Date <= DateTime.Parse(endday)).ToList());
         }
-        [Authorize(Roles = UserRole.Admin)]
-        [HttpGet("GetHistoryAccountAdmin")]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer + "," + UserRole.Staff + "," + UserRole.StaffKHO)]
+        [HttpGet("GetHistoryAllAccount")]
         public async Task<IActionResult> GetHistoryAccountAdmin()
         {
             var a = IHistoryAccountResponsitories.GetAll();
