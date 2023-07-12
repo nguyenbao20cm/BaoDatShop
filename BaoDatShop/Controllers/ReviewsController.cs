@@ -41,7 +41,7 @@ namespace BaoDatShop.Controllers
             }
             if (co == 0)
                 return Ok("Bạn chưa mua sản phẩm nên chưa được đánh giá");
-            var tam2 = reviewService.GetAll().Where(a => a.AccountId==GetCorrectUserId()).Where(a=>a.ProductId==model.ProductId);
+            var tam2 = reviewService.GetAll().Where(a => a.AccountId==GetCorrectUserId()).Where(a=>a.ProductId==model.ProductId).FirstOrDefault();
             if (tam2!=null)
                 return Ok("Bạn đã đánh giá sản phẩm rồi");
             return Ok(reviewService.Create(GetCorrectUserId(),model));
