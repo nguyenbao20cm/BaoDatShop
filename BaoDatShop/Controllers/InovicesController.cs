@@ -360,7 +360,7 @@ namespace BaoDatShop.Controllers
             else
                 return Ok("Thất bại");
         }
-        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]  
         [HttpGet("GetAllInoviceFilterByDate/{startDate},{endDate}")]
         public async Task<IActionResult> GetAllInoviceFilterByDate(string startDate, string endDate)
         {

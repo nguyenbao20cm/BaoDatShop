@@ -32,6 +32,7 @@ namespace BaoDatShop.Controllers
         private readonly IProductSizeResponsitories IProductSizeResponsitories;
         private readonly IKhoHangResposirity IKhoHangResposirity;
         private readonly IEmailSender IEmailSender;
+      
         public APIPaymentController(IInvoiceService invoiceService, ICartResponsitories ICartResponsitories, IInvoiceResponsitories IInvoiceResponsitories,
             AppDbContext context,IConfiguration _configuration,
             IEmailSender IEmailSender,
@@ -116,7 +117,7 @@ namespace BaoDatShop.Controllers
                 {
                     SendVoucher mail = new();
                     mail.subject = "Xác nhận thanh toán trực tuyến thành công";
-                    mail.message = "Chúng tôi xin thông báo rằng thanh toán trực tuyến của bạn đã thành công. Dưới đây là mã hóa đơn giao dịch:" + result.Id;
+                    mail.message = "Cảm ơn bạn đã mua hàng ở "+context.Footer.FirstOrDefault().Title    +".Đơn hàng của bạn thanh toán trực tuyến của bạn đã thành công. Dưới đây là mã hóa đơn giao dịch:" + result.Id;
                     mail.email = context.Account.Where(a => a.Id == GetCorrectUserId()).FirstOrDefault().Email;
                     IEmailSender.SendEmailPayOnline(mail);
                     VnpayBill a = new();

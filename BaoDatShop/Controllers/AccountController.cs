@@ -455,6 +455,15 @@ namespace BaoDatShop.Controllers
 
         }
         [Authorize(Roles = UserRole.Admin)]
+        [HttpGet]
+        [Route("GetAllAccountStaffKho")]
+        public async Task<IActionResult> GetAllAccountStaffKho()
+        {
+            var result = _accountService.GetAllAccount().Where(a => a.Permission == 4).ToList();
+            return Ok(result);
+
+        }
+        [Authorize(Roles = UserRole.Admin)]
         [HttpPut]
         [Route("DeleteAccount/{id}")]
         public async Task<IActionResult> DeleteAccount(string id)
