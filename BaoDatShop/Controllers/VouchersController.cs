@@ -149,7 +149,7 @@ namespace BaoDatShop.Controllers
         [HttpGet("GetALLVOucherOnCustomer")]
         public async Task<IActionResult> GetALLVOucherOnCustomer()
         {
-                return Ok(IVoucherService.GetAll().Where(a=>a.Status==true).Where(a=>a.EndDay<DateTime.Now).ToList());
+                return Ok(IVoucherService.GetAll().Where(a=>a.Status==true).Where(a=>a.EndDay>DateTime.Now).ToList());
         }
     }
 }
