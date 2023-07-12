@@ -60,7 +60,7 @@ namespace BaoDatShop.Controllers
         {
             try {
                 var fileName = "1.jpg";
-                var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "AvatarWebsite");
+                var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Footer");
                 var uploadPath = Path.Combine(uploadFolder, fileName);
                 using (FileStream fs = System.IO.File.Create(uploadPath))
                 {

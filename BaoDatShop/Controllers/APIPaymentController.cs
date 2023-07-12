@@ -34,6 +34,7 @@ namespace BaoDatShop.Controllers
         private readonly IEmailSender IEmailSender;
         public APIPaymentController(IInvoiceService invoiceService, ICartResponsitories ICartResponsitories, IInvoiceResponsitories IInvoiceResponsitories,
             AppDbContext context,IConfiguration _configuration,
+            IEmailSender IEmailSender,
             IProductSizeResponsitories IProductSizeResponsitories,
             IProductResponsitories IProductResponsitories,
             IInvoiceDetailResponsitories IInvoiceDetailResponsitories,
@@ -41,6 +42,7 @@ namespace BaoDatShop.Controllers
             IProductService IProductService,
             IVnPayService _vnPayService)
         {
+            this.IEmailSender = IEmailSender;
             this.IInvoiceDetailResponsitories = IInvoiceDetailResponsitories;
             this.IProductResponsitories = IProductResponsitories;
             this.IProductService = IProductService;
