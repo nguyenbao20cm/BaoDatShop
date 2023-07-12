@@ -124,7 +124,7 @@ namespace BaoDatShop.Controllers
             else
                 return Ok(false);
         }
-        [HttpPut("GetALLVOucherOnCustomer")]
+        [HttpGet("GetALLVOucherOnCustomer")]
         public async Task<IActionResult> GetALLVOucherOnCustomer()
         {
 
