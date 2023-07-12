@@ -15,11 +15,13 @@ namespace BaoDatShop.Service
         public bool Create(CreateVoucher model);
         public bool Update(int id, CreateVoucher model);
         public bool Delete(int id);
+        public bool ActiveVoucher(int id);
+        
         public List<Voucher> GetAll();
         public List<Voucher> GetAllStatusFalse();
         public List<Voucher> GetAllStatusTrue();
         
-        public Voucher ValidationVoucher(string Name);
+        public Voucher ValidationVoucher(int total,string Name);
     }
     public class VoucherService: IVoucherService
     {
@@ -29,18 +31,28 @@ namespace BaoDatShop.Service
         {
             this.IVoucherRespositories = IVoucherRespositories;
         }
+
+        public bool ActiveVoucher(int id)
+        {
+            var a = IVoucherRespositories.GetById(id);
+            a.Status = true;
+            return IVoucherRespositories.Update(a);
+        }
+
         public bool Create(CreateVoucher model)
         {
             Voucher a = new();
-            a.Disscount=model.Disscount;
-            a.Title = model.Title;
             a.Name = model.Name;
+            a.Disscount = model.Disscount;
+            a.MinMoney = model.MinMoney;
+            a.EndDay = model.EndDay;
+            a.Status = model.Status;
+            a.Title = model.Title;
             return IVoucherRespositories.Create(a);
         }
 
         public bool Delete(int id)
         {
-         
             return IVoucherRespositories.Delete(id);
         }
 
@@ -71,15 +83,17 @@ namespace BaoDatShop.Service
                 }    
             }
             a.Name = model.Name;
-            //a.Status = model.Status;
+            a.Status = model.Status;
             a.Disscount = model.Disscount;
+            a.MinMoney = model.MinMoney;
+            a.EndDay = model.EndDay;
             a.Title = model.Title;
           return  IVoucherRespositories.Update(a);
         }
 
-        public Voucher ValidationVoucher(string Name)
+        public Voucher ValidationVoucher(int total, string Name)
         {
-            var a = IVoucherRespositories.GetByName(Name);
+            var a = IVoucherRespositories.GetByName(total,Name);
             if (a == null)
                 return null;
             else

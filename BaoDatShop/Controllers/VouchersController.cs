@@ -54,21 +54,36 @@ namespace BaoDatShop.Controllers
         [HttpPost("ValidationVoucher")]
         public async Task<IActionResult> ValidationVoucher(ValidationVoucher ValidationVoucher)
         {
-            if (IVoucherService.ValidationVoucher(ValidationVoucher.Name) == null) return Ok("null");
-            return Ok(IVoucherService.ValidationVoucher(ValidationVoucher.Name));
+            if (IVoucherService.ValidationVoucher(ValidationVoucher.Total, ValidationVoucher.Name) == null) return Ok("null");
+            return Ok(IVoucherService.ValidationVoucher(ValidationVoucher.Total,ValidationVoucher.Name));
         }
         [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
-        [HttpDelete("DeleteVoucher/{id}")]
+        [HttpPut("DeleteVoucher/{id}")]
         public async Task<IActionResult> DeleteVoucher(int id)
         {
             if(IVoucherService.Delete(id)==true)
             {
                 HistoryAccount ab = new();
                 ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
-                ab.Content = "Đã xóa đi Voucher có id=" + id;
+                ab.Content = "Đã khóa đi Voucher có id=" + id;
                 IHistoryAccountResponsitories.Create(ab);
                 return Ok(true);
             }   
+            else
+                return Ok(false);
+        }
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
+        [HttpPut("ActiveVoucher/{id}")]
+        public async Task<IActionResult> ActiveVoucher(int id)
+        {
+            if (IVoucherService.ActiveVoucher(id) == true)
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã kích hoạt lại Voucher có id=" + id;
+                IHistoryAccountResponsitories.Create(ab);
+                return Ok(true);
+            }
             else
                 return Ok(false);
         }
@@ -108,6 +123,12 @@ namespace BaoDatShop.Controllers
             }
             else
                 return Ok(false);
+        }
+        [HttpPut("GetALLVOucherOnCustomer")]
+        public async Task<IActionResult> GetALLVOucherOnCustomer()
+        {
+
+                return Ok(IVoucherService.GetAll().Where(a=>a.Status==true));
         }
     }
 }

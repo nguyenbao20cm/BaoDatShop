@@ -9,5 +9,6 @@ namespace BaoDatShop.DTO.Voucher
     public class ValidationVoucher
     {
         public string Name { get; set; }
+        public int Total { get; set; }
     }
 }
