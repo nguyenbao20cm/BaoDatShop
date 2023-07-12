@@ -50,7 +50,7 @@ namespace Eshop.Models
 
        
 
-        public List<Invoice> Invoices { get; set; }
+        //public List<Invoice> Invoices { get; set; }
 
         // Collection reference property cho khóa ngoại từ Cart
        

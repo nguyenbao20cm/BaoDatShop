@@ -56,7 +56,12 @@ namespace BaoDatShop.Controllers
         //    return Unauthorized(result);
         //}
 
-   
+        //[Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer  + "," + UserRole.StaffKHO + "," + UserRole.Staff)]
+        //[HttpPut("ChangePassWord")]
+        //public async Task<IActionResult> ChangePassWord()
+        //{
+            
+        //}
         [HttpGet("GetAllAccountCustomerStatusFalse")]
         public async Task<IActionResult> GetAllAccountCustomerStatusFalse()
         {
