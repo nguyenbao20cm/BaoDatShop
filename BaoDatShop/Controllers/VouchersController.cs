@@ -2,6 +2,7 @@
 using BaoDatShop.DTO.CreateFavoriteProduct;
 using BaoDatShop.DTO.Role;
 using BaoDatShop.DTO.Voucher;
+using BaoDatShop.Model.Context;
 using BaoDatShop.Model.Model;
 using BaoDatShop.Responsitories;
 using BaoDatShop.Service;
@@ -18,19 +19,40 @@ namespace BaoDatShop.Controllers
     public class VouchersController : ControllerBase
     {
         private readonly IVoucherService IVoucherService;
+        private readonly AppDbContext AppDbContext;
         private readonly IEmailSender IEmailSender;
         private readonly IHistoryAccountResponsitories IHistoryAccountResponsitories;
-        public VouchersController(IHistoryAccountResponsitories IHistoryAccountResponsitories,IVoucherService IVoucherService, IEmailSender IEmailSender)
+        public VouchersController(IHistoryAccountResponsitories IHistoryAccountResponsitories,
+            AppDbContext AppDbContext,
+            IVoucherService IVoucherService, IEmailSender IEmailSender)
         {
             this.IVoucherService = IVoucherService;
+            this.AppDbContext = AppDbContext;
             this.IEmailSender = IEmailSender;
             this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
         }
+
         [HttpPost("SendVoucher")]
         public async Task<IActionResult> Index(SendVoucher model)
         {
             IEmailSender.SendEmailAsync(model);
             return Ok("ok");
+        }
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
+        [HttpPost("SendVoucherToAllCustomer/{id}")]
+        public async Task<IActionResult> SendVoucherToAllCustomer(int id)
+        {
+            var AllAccount = AppDbContext.Account.Where(a => a.Status == true).ToList();
+            var voucher = AppDbContext.Voucher.Where(a => a.Id == id).Where(a => a.Status == true).FirstOrDefault();
+            SendVoucher a = new();
+            a.subject =voucher.Title;
+            a.message ="Chúc mừng bạn đã nhận được Voucher: "+voucher.Name;
+            foreach(var item in AllAccount)
+            {
+                a.email =item.Email;
+                IEmailSender.SendEmailAsync(a);
+            }    
+            return Ok("Thành công");
         }
         private string GetCorrectUserId()
         {
@@ -38,7 +60,7 @@ namespace BaoDatShop.Controllers
             var result = a.FindFirst("UserId").Value;
             return result;
         }
-        [Authorize(Roles = UserRole.Admin)]
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
         [HttpGet("GetAllVoucher")]
         public async Task<IActionResult> GetAllVoucher()
         {
@@ -127,8 +149,7 @@ namespace BaoDatShop.Controllers
         [HttpGet("GetALLVOucherOnCustomer")]
         public async Task<IActionResult> GetALLVOucherOnCustomer()
         {
-
-                return Ok(IVoucherService.GetAll().Where(a=>a.Status==true));
+                return Ok(IVoucherService.GetAll().Where(a=>a.Status==true).Where(a=>a.EndDay<DateTime.Now).ToList());
         }
     }
 }

@@ -38,11 +38,11 @@ namespace BaoDatShop.Model.Context
         public DbSet<BrandProduct> BrandProduct { get; set; }
         public DbSet<VnpayBill> VnpayBill { get; set; }
         public DbSet<ImportInvoice> ImportInvoice { get; set; }
-        public DbSet<KHoHang> KHoHang { get; set; }
+        public DbSet<Warehouse> KHoHang { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<KHoHang>()
+            modelBuilder.Entity<Warehouse>()
                     .HasIndex(p => p.ProductSizeId).IsUnique();
             modelBuilder.Entity<BrandProduct>()
                       .HasIndex(p => p.Name).IsUnique();

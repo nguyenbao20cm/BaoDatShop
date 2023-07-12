@@ -11,8 +11,8 @@ namespace BaoDatShop.Responsitories
 {
     public interface IKhoHangResposirity
     {
-        public List<KHoHang> GetAll();
-        public KHoHang GetById(int id);
+        public List<Warehouse> GetAll();
+        public Warehouse GetById(int id);
     }
     public class KhoHangResposirity : IKhoHangResposirity
     {
@@ -22,12 +22,12 @@ namespace BaoDatShop.Responsitories
             this.context = context;
         }
 
-        public List<KHoHang> GetAll()
+        public List<Warehouse> GetAll()
         {
             return context.KHoHang.Include(a=>a.ProductSize.Product).Include(a => a.ProductSize).ToList();
         }
 
-        public KHoHang GetById(int id)
+        public Warehouse GetById(int id)
         {
             return context.KHoHang.Include(a => a.ProductSize.Product).Include(a => a.ProductSize).Where(a=>a.Id==id).FirstOrDefault();
         }

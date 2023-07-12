@@ -118,7 +118,7 @@ namespace BaoDatShop.Controllers
                     mail.subject = "Xác nhận thanh toán trực tuyến thành công";
                     mail.message = "Chúng tôi xin thông báo rằng thanh toán trực tuyến của bạn đã thành công. Dưới đây là mã hóa đơn giao dịch:" + result.Id;
                     mail.email = context.Account.Where(a => a.Id == GetCorrectUserId()).FirstOrDefault().Email;
-                    IEmailSender.SendEmailAsync(mail);
+                    IEmailSender.SendEmailPayOnline(mail);
                     VnpayBill a = new();
                     a.DateTime = FormatDate(response.DateTime);
                     a.CodeBank = response.CodeBank;
@@ -196,6 +196,11 @@ namespace BaoDatShop.Controllers
                 var tamp = IInvoiceResponsitories.Create(result);
                 if (tamp == true)
                 {
+                    SendVoucher mail = new();
+                    mail.subject = "Xác nhận thanh toán trực tuyến thành công";
+                    mail.message = "Chúng tôi xin thông báo rằng thanh toán trực tuyến của bạn đã thành công. Dưới đây là mã hóa đơn giao dịch:" + result.Id;
+                    mail.email = context.Account.Where(a => a.Id == GetCorrectUserId()).FirstOrDefault().Email;
+                    IEmailSender.SendEmailPayOnline(mail);
                     var a = IKhoHangResposirity.GetAll().Where(a => a.ProductSizeId == int.Parse(productsizeid)).FirstOrDefault();
                     a.Stock = a.Stock - int.Parse(quanlity);
                     context.Update(a);

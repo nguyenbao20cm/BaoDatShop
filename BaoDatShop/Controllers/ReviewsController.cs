@@ -39,16 +39,8 @@ namespace BaoDatShop.Controllers
                     co = 1;
                 }    
             }
-            var tam2 = reviewService.GetAll().Where(a => a.AccountId==GetCorrectUserId());
-            var co2 = 0;
-            foreach(var item in tam2)
-            {
-                if (item.ProductId==model.ProductId)
-                {
-                    co = 1;
-                }
-            }
-            if (co2 == 0)
+            var tam2 = reviewService.GetAll().Where(a => a.AccountId==GetCorrectUserId()).Where(a=>a.ProductId==model.ProductId);
+            if (tam2!=null)
                 return Ok("Bạn đã đánh giá sản phẩm rồi");
             if (co == 0)
                 return Ok("Bạn chưa mua sản phẩm nên chưa được đánh giá");

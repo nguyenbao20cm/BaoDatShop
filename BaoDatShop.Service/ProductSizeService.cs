@@ -67,7 +67,7 @@ namespace BaoDatShop.Service
             var ab = IProductSizeResponsitories.Create(result);
             if (ab==true)
             {
-                KHoHang kho = new();
+                Warehouse kho = new();
                 kho.ProductSizeId = result.Id;
                 kho.Stock = 0;
                 context.Add(kho);
