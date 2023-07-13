@@ -10,6 +10,7 @@ using Eshop.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Data;
 using System.Security.Claims;
 using System.Text;
@@ -51,63 +52,67 @@ namespace BaoDatShop.Controllers
             this.IProductSizeResponsitories = IProductSizeResponsitories;
         }
 
-
-        [HttpGet("GeneratePDF")]
-        public async Task<IActionResult> GeneratePDF(int InvoiceNo)
-        {
-            string fileName = "Persons.pdf";
-            var glb = new GlobalSettings
-            {
-                ColorMode = ColorMode.Color,
-                Orientation = Orientation.Landscape,
-                PaperSize = PaperKind.A4,
-                Margins = new MarginSettings()
-                {
-                    Bottom = 20,
-                    Left = 20,
-                    Right = 20,
-                    Top = 30
-                },
-                DocumentTitle = "Persons",
-                Out = Path.Combine("C:\\Users\\ADMIN\\source\\repos\\BaoDatShop\\BaoDatShop\\wwwroot\\", "Exports", fileName)
-
-            };
-            var objectSettings = new ObjectSettings
-            {
-                PagesCount = true,
-                HtmlContent = ToHtmlFile(InvoiceNo),
-                WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = null }
-            };
-            var pdf = new HtmlToPdfDocument
-            {
-                GlobalSettings = glb,
-                Objects = { objectSettings }
-            };
-            _convert.Convert(pdf);
-            string result = $"Files{fileName}";
-            await Task.Yield();
-            return Ok(result);
-        }
-        //[Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
-        private string ToHtmlFile(int InvoiceNo)
+        private string ReplaceDynamicValues(string htmlContent,int InvoiceNo)
         {
             var a = context.InvoiceDetail
-                .Include(a => a.ProductSize)
-                .Include(a => a.ProductSize.Product)
-                .Where(a => a.Id == InvoiceNo).ToList();
-            string templatePath = "C:\\Users\\ADMIN\\source\\repos\\BaoDatShop\\BaoDatShop\\wwwroot\\TempletePDFInvoice\\template_invoice.html";
-            string tempHtml = System.IO.File.ReadAllText(templatePath);
+               .Include(a => a.ProductSize)
+               .Include(a => a.ProductSize.Product)
+               .Where(a => a.InvoiceId == InvoiceNo).ToList();
+            // Thay thế các giá trị động trong HTML template
             StringBuilder stringData = new StringBuilder(String.Empty);
             for (int i = 0; i < a.Count; i++)
             {
                 stringData.Append($"<tr>");
                 stringData.Append($"<td class=\"col-md-9\"> {a[i].ProductSize.Product.Name} </td>");
-                stringData.Append($"<td class=\"col-md-3\"><i class=\"fa fa-inr\"></i> {a[i].ProductSize.Product.Name} </td>");
+                stringData.Append($"<td class=\"col-md-9\"> {a[i].Quantity} </td>");
+                stringData.Append($"<td class=\"col-md-3\"><i class=\"fa fa-inr\"></i> {(a[i].ProductSize.Product.PriceSales* a[i].Quantity).ToString("NO")+" VNĐ"} </td>");
                 stringData.Append($"</tr>");
             }
-            return tempHtml.Replace("{data}", stringData.ToString());
-        }
+            htmlContent = htmlContent.Replace("{{ data.company.name }}", context.Footer.FirstOrDefault().Title.ToString());
+            htmlContent = htmlContent.Replace("{{ data.company.phone }}", context.Footer.FirstOrDefault().Phone.ToString());
+            htmlContent = htmlContent.Replace("{{ data.company.email }}", context.Footer.FirstOrDefault().Email.ToString());
+            htmlContent = htmlContent.Replace("{{ data.company.location }}", context.Footer.FirstOrDefault().Adress.ToString());
 
+
+            htmlContent = htmlContent.Replace("{{ data.customer.name}}", context.Invoice.Where(a=>a.Id==InvoiceNo).FirstOrDefault().NameCustomer);
+            htmlContent = htmlContent.Replace("{{ data.customer.mobile }}", context.Invoice.Where(a => a.Id == InvoiceNo).FirstOrDefault().ShippingPhone);
+            htmlContent = htmlContent.Replace("{{ data.customer.email }}", context.Invoice.Include(a=>a.Account).Where(a => a.Id == InvoiceNo).FirstOrDefault().Account.Email);
+            htmlContent = htmlContent.Replace("{{ data.customer.address }}", context.Invoice.Where(a => a.Id == InvoiceNo).FirstOrDefault().ShippingAddress);
+            htmlContent = htmlContent.Replace("{{ data.num_invoice }}", InvoiceNo.ToString());
+
+            htmlContent = htmlContent.Replace("{{ data.total }}", context.Invoice.Where(a => a.Id == InvoiceNo).FirstOrDefault().Total.ToString("N0") + " VNĐ");
+            htmlContent = htmlContent.Replace("{{ data.date }}", context.Invoice.Where(a => a.Id == InvoiceNo).FirstOrDefault().IssuedDate.ToShortDateString());
+            htmlContent = htmlContent.Replace("{{ data }}", stringData.ToString());
+            // Thêm các thay thế khác tại đây
+
+            return htmlContent;
+        }
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
+        [HttpGet("GeneratePDF/{InvoiceNo}")]
+        public async Task<IActionResult> GeneratePDF(int InvoiceNo)
+        {
+
+            var htmlContent = System.IO.File.ReadAllText("C:\\Users\\ADMIN\\source\\repos\\BaoDatShop\\BaoDatShop\\wwwroot\\TempletePDFInvoice\\template_invoice.html");
+            var replacedHtml = ReplaceDynamicValues(htmlContent, InvoiceNo);
+
+            var document = new HtmlToPdfDocument()
+            {
+                GlobalSettings = {
+                    PaperSize = PaperKind.A4,
+                    Orientation = Orientation.Portrait
+                },
+                Objects = {
+                    new ObjectSettings() {
+                        HtmlContent = replacedHtml
+                    }
+                }
+            };
+            var pdfBytes = _convert.Convert(document);
+            return File(pdfBytes, "application/pdf", "output.pdf");
+        }
+       
+  
+      
         [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
         [HttpGet("GetAllChiPhi")]
         public async Task<IActionResult> GetAllChiPhi( )
