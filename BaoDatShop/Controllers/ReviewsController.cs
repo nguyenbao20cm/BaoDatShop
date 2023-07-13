@@ -50,11 +50,13 @@ namespace BaoDatShop.Controllers
         [HttpDelete("DeleteReview/{id}")]
         public async Task<IActionResult> DeleteReview(int id)
         {
-            if(reviewService.Delete(id)==true)
+            if (reviewService.GetById(id).AccountId != GetCorrectUserId())
+                return Ok("Không phải review của bạn");
+            if (reviewService.Delete(id)==true)
             {
                 HistoryAccount ab = new();
                 ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
-                ab.Content = "Đã ẩn bình luận có id: "+id ;
+                ab.Content = "Đã xóa bình luận có id: "+id ;
                 IHistoryAccountResponsitories.Create(ab);
                 return Ok("Thành công");
             }    
@@ -77,9 +79,15 @@ namespace BaoDatShop.Controllers
         [HttpDelete("DeleteReviewByAdmin/{id}")]
         public async Task<IActionResult> DeleteReviewByAdmin(int id)
         {
-          
+            
             if (reviewService.Delete(id) == true)
+            {
+                HistoryAccount ab = new();
+                ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
+                ab.Content = "Đã xóa bình luận có id: " + id;
+                IHistoryAccountResponsitories.Create(ab);
                 return Ok("Thành công");
+            }    
             else
                 return Ok("Thất bại");
         }
