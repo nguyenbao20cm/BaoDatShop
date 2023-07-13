@@ -65,7 +65,7 @@ namespace BaoDatShop.Controllers
                 stringData.Append($"<tr>");
                 stringData.Append($"<td class=\"col-md-9\"> {a[i].ProductSize.Product.Name} </td>");
                 stringData.Append($"<td class=\"col-md-9\"> {a[i].Quantity} </td>");
-                stringData.Append($"<td class=\"col-md-3\"><i class=\"fa fa-inr\"></i> {(a[i].ProductSize.Product.PriceSales* a[i].Quantity).ToString("NO")+" VNĐ"} </td>");
+                stringData.Append($"<td class=\"col-md-3\"><i class=\"fa fa-inr\"></i> {(a[i].ProductSize.Product.PriceSales* a[i].Quantity).ToString("N0") +" VNĐ"} </td>");
                 stringData.Append($"</tr>");
             }
             htmlContent = htmlContent.Replace("{{ data.company.name }}", context.Footer.FirstOrDefault().Title.ToString());

@@ -78,7 +78,11 @@ namespace BaoDatShop.Controllers
         [HttpGet("GetFooter")]
         public async Task<IActionResult> GetFooter()
         {
-            return Ok(context.Footer.FirstOrDefault());
+            if(context.Footer==null) return Ok(null);
+            if (context.Footer.FirstOrDefault() != null)
+                return Ok(context.Footer.FirstOrDefault());
+            else
+                return Ok(null);
         }
     }
 }

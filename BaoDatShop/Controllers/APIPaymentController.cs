@@ -30,7 +30,7 @@ namespace BaoDatShop.Controllers
         private readonly IInvoiceResponsitories IInvoiceResponsitories;
         private readonly ICartResponsitories ICartResponsitories;
         private readonly IProductSizeResponsitories IProductSizeResponsitories;
-        private readonly IKhoHangResposirity IKhoHangResposirity;
+        private readonly IWarehouseResposirity IWarehouseResposirity;
         private readonly IEmailSender IEmailSender;
       
         public APIPaymentController(IInvoiceService invoiceService, ICartResponsitories ICartResponsitories, IInvoiceResponsitories IInvoiceResponsitories,
@@ -39,7 +39,7 @@ namespace BaoDatShop.Controllers
             IProductSizeResponsitories IProductSizeResponsitories,
             IProductResponsitories IProductResponsitories,
             IInvoiceDetailResponsitories IInvoiceDetailResponsitories,
-            IKhoHangResposirity IKhoHangResposirity,
+            IWarehouseResposirity IWarehouseResposirity,
             IProductService IProductService,
             IVnPayService _vnPayService)
         {
@@ -50,7 +50,7 @@ namespace BaoDatShop.Controllers
             this.ICartResponsitories = ICartResponsitories;
             this._configuration = _configuration;
             this.invoiceService = invoiceService;
-            this.IKhoHangResposirity = IKhoHangResposirity;
+            this.IWarehouseResposirity = IWarehouseResposirity;
             this.IProductSizeResponsitories = IProductSizeResponsitories;
             this._vnPayService=  _vnPayService;
             this.IInvoiceResponsitories = IInvoiceResponsitories;
@@ -64,7 +64,7 @@ namespace BaoDatShop.Controllers
             var Cart = ICartResponsitories.GetAll(GetCorrectUserId());
             foreach (var c in Cart)
             {
-                var a = IKhoHangResposirity.GetAll().Where(a=>a.ProductSizeId==c.ProductSizeId).FirstOrDefault();
+                var a = IWarehouseResposirity.GetAll().Where(a=>a.ProductSizeId==c.ProductSizeId).FirstOrDefault();
                 if (c.Quantity > a.Stock) return Ok(false);
             }
             var url = _vnPayService.CreatePaymentUrl(model, HttpContext);
@@ -97,7 +97,7 @@ namespace BaoDatShop.Controllers
                 var Cart = ICartResponsitories.GetAll(GetCorrectUserId());
                 foreach (var c in Cart)
                 {
-                    var a = context.KHoHang.Include(a=>a.ProductSize).Where(a=>a.ProductSizeId==c.ProductSizeId).FirstOrDefault();
+                    var a = context.Warehouse.Include(a=>a.ProductSize).Where(a=>a.ProductSizeId==c.ProductSizeId).FirstOrDefault();
                     if (c.Quantity > a.Stock) return Ok("Thất bại");
                 }
                 Invoice result = new();
@@ -134,7 +134,7 @@ namespace BaoDatShop.Controllers
                     context.SaveChanges();
                     foreach (var c in Cart)
                     {
-                        var a1 = IKhoHangResposirity.GetAll().Where(a=>a.ProductSizeId==c.ProductSizeId).FirstOrDefault();
+                        var a1 = IWarehouseResposirity.GetAll().Where(a=>a.ProductSizeId==c.ProductSizeId).FirstOrDefault();
                         a1.Stock = a1.Stock - c.Quantity;
                         context.Update(a1);
                         context.SaveChanges();
@@ -181,7 +181,7 @@ namespace BaoDatShop.Controllers
                 var productsizeid = orderDescription[7];
                 var quanlity = orderDescription[6];
                 var Idacc = GetCorrectUserId();
-                var ab = IKhoHangResposirity.GetAll().Where(a=>a.ProductSizeId==int.Parse(productsizeid)).FirstOrDefault();
+                var ab = IWarehouseResposirity.GetAll().Where(a=>a.ProductSizeId==int.Parse(productsizeid)).FirstOrDefault();
                 if (int.Parse(quanlity) > ab.Stock) return Ok("thất bại");
                 Invoice result = new();
                 result.Pay = true;
@@ -202,7 +202,7 @@ namespace BaoDatShop.Controllers
                     mail.message = "Chúng tôi xin thông báo rằng thanh toán trực tuyến của bạn đã thành công. Dưới đây là mã hóa đơn giao dịch:#" + result.Id;
                     mail.email = context.Account.Where(a => a.Id == GetCorrectUserId()).FirstOrDefault().Email;
                     IEmailSender.SendEmailPayOnline(mail);
-                    var a = IKhoHangResposirity.GetAll().Where(a => a.ProductSizeId == int.Parse(productsizeid)).FirstOrDefault();
+                    var a = IWarehouseResposirity.GetAll().Where(a => a.ProductSizeId == int.Parse(productsizeid)).FirstOrDefault();
                     a.Stock = a.Stock - int.Parse(quanlity);
                     context.Update(a);
                     context.SaveChanges();

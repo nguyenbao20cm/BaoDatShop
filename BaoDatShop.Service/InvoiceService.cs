@@ -35,12 +35,12 @@ namespace BaoDatShop.Service
         private readonly IProductSizeResponsitories IProductSizeResponsitories;
         private readonly IProductService productService;
         private readonly IInvoiceDetailResponsitories invoiceDetailResponsitories;
-        private readonly IKhoHangResposirity IKhoHangResposirity;
+        private readonly IWarehouseResposirity IWarehouseResposirity;
        private readonly IProductSizeResponsitories productSizeResponsitories;
         private readonly AppDbContext context;
         public InvoiceService(IImportInvoiceResponsitories IImportInvoiceResponsitories,IInvoiceResponsitories invoiceResponsitories, ICartResponsitories cartResponsitories, IProductService productService, 
             IInvoiceDetailResponsitories invoiceDetailResponsitories,
-            IKhoHangResposirity IKhoHangResposirity,
+            IWarehouseResposirity IWarehouseResposirity,
             AppDbContext context,
             IProductSizeResponsitories productSizeResponsitories, IProductResponsitories IProductResponsitories, 
             IProductSizeService IProductSizeService ,IProductSizeResponsitories IProductSizeResponsitories)
@@ -54,17 +54,16 @@ namespace BaoDatShop.Service
             this.IProductResponsitories = IProductResponsitories;
             this.IProductSizeService = IProductSizeService;
             this.IProductSizeResponsitories = IProductSizeResponsitories;
-            this.IKhoHangResposirity = IKhoHangResposirity;
+            this.IWarehouseResposirity = IWarehouseResposirity;
             this.context = context;
         }
 
         public bool Create(string AccountId, CreateInvoiceRequest model)
         {
-           
             var Cart = cartResponsitories.GetAll(AccountId);
             foreach (var c in Cart)
             {
-                var a = IKhoHangResposirity.GetAll().Where(a=>a.ProductSizeId==c.ProductSizeId).FirstOrDefault();
+                var a = IWarehouseResposirity.GetAll().Where(a=>a.ProductSizeId==c.ProductSizeId).FirstOrDefault();
                 if (c.Quantity > a.Stock) return false;
             }
             if (Cart == null) return false;
@@ -88,10 +87,9 @@ namespace BaoDatShop.Service
             var tamp = invoiceResponsitories.Create(result);
             if (tamp == true)
             {
-
                 foreach (var c in Cart)
                 {
-                    var a = IKhoHangResposirity.GetAll().Where(a=>a.ProductSizeId==c.ProductSizeId).FirstOrDefault();
+                    var a = IWarehouseResposirity.GetAll().Where(a=>a.ProductSizeId==c.ProductSizeId).FirstOrDefault();
                     if(c.Quantity>a.Stock) return false;
                     a.Stock = a.Stock - c.Quantity;
                     context.Update(a);
@@ -134,7 +132,7 @@ namespace BaoDatShop.Service
             var tamp = invoiceResponsitories.Create(result);
             if (tamp == true)
             {
-                    var a = IKhoHangResposirity.GetAll().Where(a => a.ProductSizeId == model.ProductSizeID).FirstOrDefault();
+                    var a = IWarehouseResposirity.GetAll().Where(a => a.ProductSizeId == model.ProductSizeID).FirstOrDefault();
                 if (model.Quantity > a.Stock) return false;
                     a.Stock = a.Stock - model.Quantity;
                 context.Update(a);
@@ -172,7 +170,7 @@ namespace BaoDatShop.Service
             var a= invoiceDetailResponsitories.GetAll(id);
             foreach(var item in a)
             {
-                var b = IKhoHangResposirity.GetAll().Where(a => a.ProductSizeId == item.ProductSizeId).FirstOrDefault();
+                var b = IWarehouseResposirity.GetAll().Where(a => a.ProductSizeId == item.ProductSizeId).FirstOrDefault();
                 b.Stock =+ item.Quantity;
                 context.Update(b);
                 context.SaveChanges();
@@ -190,7 +188,7 @@ namespace BaoDatShop.Service
                 var a = invoiceDetailResponsitories.GetAll(id);
                 foreach (var item in a)
                 {
-                    var b = IKhoHangResposirity.GetAll().Where(a => a.ProductSizeId == item.ProductSizeId).FirstOrDefault();
+                    var b = IWarehouseResposirity.GetAll().Where(a => a.ProductSizeId == item.ProductSizeId).FirstOrDefault();
                     b.Stock = +item.Quantity;
                     context.Update(b);
                     context.SaveChanges();

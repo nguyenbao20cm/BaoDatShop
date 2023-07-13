@@ -12,27 +12,27 @@ namespace BaoDatShop.Controllers
     [ApiController]
     public class KhoHangController : ControllerBase
     {
-        private readonly IKhoHangResposirity IKhoHangResposirity;
-        public KhoHangController(IKhoHangResposirity IKhoHangResposirity)
+        private readonly IWarehouseResposirity IWarehouseResposirity;
+        public KhoHangController(IWarehouseResposirity IWarehouseResposirity)
         {
-            this.IKhoHangResposirity = IKhoHangResposirity;
+            this.IWarehouseResposirity = IWarehouseResposirity;
         }
         [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpGet("GetAllKhoHang")]
         public async Task<IActionResult> GetAllKhoHang()
         {
-            return Ok(IKhoHangResposirity.GetAll());
+            return Ok(IWarehouseResposirity.GetAll());
         }
         [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpGet("GEtSLTonKho")]
         public async Task<IActionResult> GEtSLTonKho()
         {
-            return Ok(IKhoHangResposirity.GetAll().Sum(a=>a.Stock));
+            return Ok(IWarehouseResposirity.GetAll().Sum(a=>a.Stock));
         }
         [HttpGet("GetSizeOfProduct/{id}")]
         public async Task<IActionResult> GetSizeOfProduct(int id)
         {
-            return Ok(IKhoHangResposirity.GetAll().Where(a=>a.ProductSize.ProductId==id).ToList());
+            return Ok(IWarehouseResposirity.GetAll().Where(a=>a.ProductSize.ProductId==id).ToList());
         }
     }
 }

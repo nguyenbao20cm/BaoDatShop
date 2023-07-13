@@ -56,12 +56,21 @@ namespace BaoDatShop.Controllers
         //    return Unauthorized(result);
         //}
 
-        //[Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer  + "," + UserRole.StaffKHO + "," + UserRole.Staff)]
-        //[HttpPut("ChangePassWord")]
-        //public async Task<IActionResult> ChangePassWord()
-        //{
-            
-        //}
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer + "," + UserRole.StaffKHO + "," + UserRole.Staff)]
+        [HttpPost("ChangePassWord")]
+        public async Task<IActionResult> ChangePassWord(ChangePass model)
+        {
+            if (model.Password != model.ConfirmPassword) return Ok("Mật khẩu xác thực không khớp");
+            var user = await userManager.FindByIdAsync(GetCorrectUserId());
+            if (user == null && await userManager.CheckPasswordAsync(user, model.Password)==false) return Ok("Mật khẩu không hợp lệ");
+            if (user != null)
+            {
+                var a = await userManager.ChangePasswordAsync(user, model.Password, model.PasswordNew);
+                if (a.Succeeded)
+                    return Ok("Thành công");
+            }
+            return Ok("Thất bại");
+        }
         [HttpGet("GetAllAccountCustomerStatusFalse")]
         public async Task<IActionResult> GetAllAccountCustomerStatusFalse()
         {
