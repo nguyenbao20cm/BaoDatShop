@@ -4,17 +4,16 @@ using BaoDatShop.Model.Context;
 using BaoDatShop.Model.Model;
 using BaoDatShop.Responsitories;
 using BaoDatShop.Service;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using Eshop.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-using System.Linq;
-using System.Net.WebSockets;
 using System.Security.Claims;
-using PdfSharpCore;
-using PdfSharpCore.Pdf;
-using TheArtOfDev.HtmlRenderer.PdfSharp;
+using System.Text;
+
 namespace BaoDatShop.Controllers
 {
     [Route("api/[controller]")]
@@ -31,10 +30,12 @@ namespace BaoDatShop.Controllers
         private readonly IProductSizeResponsitories IProductSizeResponsitories;
         private readonly IProductSizeService IProductSizeService;
         private readonly IImportInvoiceResponsitories IImportInvoiceResponsitories;
+        private readonly IConverter _convert;
+
         public InovicesController(IInvoiceService invoiceService, IProductSizeService IProductSizeService,
             IImportInvoiceResponsitories IImportInvoiceResponsitories,
             IProductService IProductService, IInvoiceDetailService IInvoiceDetailService,
-            IWebHostEnvironment IWebHostEnvironment,
+            IWebHostEnvironment IWebHostEnvironment, IConverter convert,
             AppDbContext context, IInvoiceResponsitories IInvoiceResponsitories, IProductSizeResponsitories IProductSizeResponsitories, IHistoryAccountResponsitories IHistoryAccountResponsitories)
         {
             this.IProductService = IProductService;
@@ -45,94 +46,66 @@ namespace BaoDatShop.Controllers
             this.context = context;
             this.IWebHostEnvironment = IWebHostEnvironment;
             this.invoiceService = invoiceService;
+            _convert = convert;
             this.IInvoiceResponsitories = IInvoiceResponsitories;
             this.IProductSizeResponsitories = IProductSizeResponsitories;
         }
-     
-        //[Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
+
+
         [HttpGet("GeneratePDF")]
         public async Task<IActionResult> GeneratePDF(int InvoiceNo)
         {
-            var document = new PdfDocument();
-            string[] copies = { "Customer copy", "Comapny Copy" };
-            for (int i = 0; i < copies.Length; i++)
+            string fileName = "Persons.pdf";
+            var glb = new GlobalSettings
             {
-                var header = invoiceService.GetAll().Where(a=>a.Id==InvoiceNo).FirstOrDefault();
-                List<InvoiceDetail> detail = IInvoiceDetailService.GetAll().Where(a=>a.InvoiceId==InvoiceNo).ToList();
-                string htmlcontent = "<div style='width:100%; text-align:center'>";
-                htmlcontent += "<img style='width:80px;height:80%' src=''https://localhost:7067/wwwroot/Image/Footer/'" + "1.jpg" + "'   />";
-                htmlcontent += "<h2>" + copies[i] + "</h2>";
-                htmlcontent += "<h2>Welcome to Nihira Techiees</h2>";
-
-                if (header != null)
+                ColorMode = ColorMode.Color,
+                Orientation = Orientation.Landscape,
+                PaperSize = PaperKind.A4,
+                Margins = new MarginSettings()
                 {
-                    htmlcontent += "<h2> Invoice No:" + header.Id + " & Invoice Date:" + header.IssuedDate + "</h2>";
-                    htmlcontent += "<h3> Customer : " + header.NameCustomer + "</h3>";
-                    htmlcontent += "<p>" + header.ShippingAddress + "</p>";
-                    htmlcontent += "<h3> Contact : 9898989898 & Email :ts@in.com </h3>";
-                    htmlcontent += "<div>";
-                }
-                htmlcontent += "<table style ='width:100%; border: 1px solid #000'>";
-                htmlcontent += "<thead style='font-weight:bold'>";
-                htmlcontent += "<tr>";
-                htmlcontent += "<td style='border:1px solid #000'> Product Code </td>";
-                htmlcontent += "<td style='border:1px solid #000'> Description </td>";
-                htmlcontent += "<td style='border:1px solid #000'>Qty</td>";
-                htmlcontent += "<td style='border:1px solid #000'>Price</td >";
-                htmlcontent += "<td style='border:1px solid #000'>Total</td>";
-                htmlcontent += "</tr>";
-                htmlcontent += "</thead >";
+                    Bottom = 20,
+                    Left = 20,
+                    Right = 20,
+                    Top = 30
+                },
+                DocumentTitle = "Persons",
+                Out = Path.Combine("C:\\Users\\ADMIN\\source\\repos\\BaoDatShop\\BaoDatShop\\wwwroot\\", "Exports", fileName)
 
-                htmlcontent += "<tbody>";
-                if (detail != null && detail.Count > 0)
-                {
-                    detail.ForEach(item =>
-                    {
-                        htmlcontent += "<tr>";
-                        htmlcontent += "<td>" + item.ProductSize.Product.SKU + "</td>";
-                        htmlcontent += "<td>" + item.ProductSize.Product.Name + "</td>";
-                        htmlcontent += "<td>" + item.Quantity + "</td >";
-                        htmlcontent += "<td>" + item.UnitPrice + "</td>";
-                        htmlcontent += "<td> " + item.UnitPrice*item.Quantity + "</td >";
-                        htmlcontent += "</tr>";
-                    });
-                }
-                htmlcontent += "</tbody>";
-
-                htmlcontent += "</table>";
-                htmlcontent += "</div>";
-
-                htmlcontent += "<div style='text-align:right'>";
-                htmlcontent += "<h1> Summary Info </h1>";
-                htmlcontent += "<table style='border:1px solid #000;float:right' >";
-                htmlcontent += "<tr>";
-                htmlcontent += "<td style='border:1px solid #000'> Summary Total </td>";
-                htmlcontent += "<td style='border:1px solid #000'> Summary Tax </td>";
-                htmlcontent += "<td style='border:1px solid #000'> Summary NetTotal </td>";
-                htmlcontent += "</tr>";
-                if (header != null)
-                {
-                    htmlcontent += "<tr>";
-                    htmlcontent += "<td style='border: 1px solid #000'> " + header.Total + " </td>";
-                    //htmlcontent += "<td style='border: 1px solid #000'>" + header.Tax + "</td>";
-                    //htmlcontent += "<td style='border: 1px solid #000'> " + header.NetTotal + "</td>";
-                    htmlcontent += "</tr>";
-                }
-                htmlcontent += "</table>";
-                htmlcontent += "</div>";
-
-                htmlcontent += "</div>";
-
-                PdfGenerator.AddPdfPages(document, htmlcontent, PageSize.A4);
-            }
-            byte[]? response = null;
-            using (MemoryStream ms = new MemoryStream())
+            };
+            var objectSettings = new ObjectSettings
             {
-                document.Save(ms);
-                response = ms.ToArray();
+                PagesCount = true,
+                HtmlContent = ToHtmlFile(InvoiceNo),
+                WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = null }
+            };
+            var pdf = new HtmlToPdfDocument
+            {
+                GlobalSettings = glb,
+                Objects = { objectSettings }
+            };
+            _convert.Convert(pdf);
+            string result = $"Files{fileName}";
+            await Task.Yield();
+            return Ok(result);
+        }
+        //[Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]
+        private string ToHtmlFile(int InvoiceNo)
+        {
+            var a = context.InvoiceDetail
+                .Include(a => a.ProductSize)
+                .Include(a => a.ProductSize.Product)
+                .Where(a => a.Id == InvoiceNo).ToList();
+            string templatePath = "C:\\Users\\ADMIN\\source\\repos\\BaoDatShop\\BaoDatShop\\wwwroot\\TempletePDFInvoice\\template_invoice.html";
+            string tempHtml = System.IO.File.ReadAllText(templatePath);
+            StringBuilder stringData = new StringBuilder(String.Empty);
+            for (int i = 0; i < a.Count; i++)
+            {
+                stringData.Append($"<tr>");
+                stringData.Append($"<td class=\"col-md-9\"> {a[i].ProductSize.Product.Name} </td>");
+                stringData.Append($"<td class=\"col-md-3\"><i class=\"fa fa-inr\"></i> {a[i].ProductSize.Product.Name} </td>");
+                stringData.Append($"</tr>");
             }
-            string Filename = "Invoice_" + InvoiceNo + ".pdf";
-            return File(response, "application/pdf", Filename);
+            return tempHtml.Replace("{data}", stringData.ToString());
         }
 
         [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]

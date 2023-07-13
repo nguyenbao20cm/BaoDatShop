@@ -33,7 +33,9 @@ namespace BaoDatShop.Responsitories
         public List<Invoice> GetAll()
         {
             if (context.Invoice.Where(a => a.Status == true).ToList() == null) return null;
-            return context.Invoice.Where(a => a.Status == true).ToList();
+            return context.Invoice.Include(a=>a.Account).Where(a => a.Status == true).ToList();
+
+
             var query = context.Invoice
                .GroupBy(hoadon => hoadon.IssuedDate.Date)
                .Select(g => new
