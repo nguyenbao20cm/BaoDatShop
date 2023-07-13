@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BaoDatShop.DTO", "BaoDatSho
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BaoDatShop.Model", "BaoDatShop.Model\BaoDatShop.Model.csproj", "{FE1039C4-B6B6-4EA9-9713-0589ECCAA5F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaoDatShop.Service", "BaoDatShop.Service\BaoDatShop.Service.csproj", "{8FBE10AA-EBDA-4429-8F79-F3D00AF12861}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BaoDatShop.Service", "BaoDatShop.Service\BaoDatShop.Service.csproj", "{8FBE10AA-EBDA-4429-8F79-F3D00AF12861}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaoDatShop.Responsitories", "BaoDatShopResponsitories\BaoDatShop.Responsitories.csproj", "{44AA0D95-0DB5-4E16-B85B-0456D53BBF12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BaoDatShop.Responsitories", "BaoDatShopResponsitories\BaoDatShop.Responsitories.csproj", "{44AA0D95-0DB5-4E16-B85B-0456D53BBF12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -4,6 +4,8 @@ using BaoDatShop.Model.Context;
 using BaoDatShop.Responsitories;
 using BaoDatShop.Service;
 using CodeMegaVNPay.Services;
+using DinkToPdf.Contracts;
+using DinkToPdf;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +31,9 @@ builder.Services.Configure<IdentityOptions>(
 //token Confirm pass
 builder.Services.Configure<DataProtectionTokenProviderOptions>(
     a => a.TokenLifespan = TimeSpan.FromHours(10));
+
+
+builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 //builder.Services.AddCors(options =>
 //{
 //    options.AddPolicy("AllowOrigin", options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
@@ -175,3 +180,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+

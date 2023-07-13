@@ -47,7 +47,7 @@ namespace BaoDatShop.Controllers
             return Ok(reviewService.Create(GetCorrectUserId(),model));
         }
         [Authorize(Roles = UserRole.Costumer)]
-        [HttpPut("DeleteReview/{id}")]
+        [HttpDelete("DeleteReview/{id}")]
         public async Task<IActionResult> DeleteReview(int id)
         {
             if(reviewService.Delete(id)==true)
