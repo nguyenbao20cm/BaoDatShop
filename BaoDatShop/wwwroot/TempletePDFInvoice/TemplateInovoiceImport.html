@@ -162,16 +162,16 @@
 					<div class="receipt-header receipt-header-mid">
 						<div class="col-xs-8 col-sm-8 col-md-8 text-left">
 							<div class="receipt-right">
-								<h5>Nhà cung cấp :{{ data.customer.name}} </h5>
-								<p><b>Mã số thuế :</b> {{ data.customer.mobile }}</p>
-								<p><b>SĐT Nhà cung cấp :</b> {{ data.customer.email }} </p>
-								<p><b>Địa chỉ nhà cung cấp :</b> {{ data.customer.address }}</p>
+								<h5>Người nhận :{{ data.customer.name}} </h5>
+								<p><b>Số điện thoại :</b> {{ data.customer.mobile }}</p>
+								<p><b>Email :</b> {{ data.customer.email }} </p>
+								<p><b>Địa chỉ :</b> {{ data.customer.address }}</p>
 								<p><b>Ngày lập :</b> {{ data.date }}</p>
 							</div>
 						</div>
 						<div class="col-xs-4 col-sm-4 col-md-4">
 							<div class="receipt-left">
-								<h3>Mã hóa đơn nhập # {{ data.num_invoice }}</h3>
+								<h3>Mã hóa đơn # {{ data.num_invoice }}</h3>
 							</div>
 						</div>
 					</div>
@@ -183,53 +183,49 @@
 							<tr>
 								<th style="background: #9f181c !important; color: #fff !important;">Sản phẩm</th>
 								<th style="background: #9f181c !important; color: #fff !important;">Số lượng</th>
-								<th style="background:  #9f181c !important; color: #fff !important;">Thành tiền</th>
+								<th style="background:  #9f181c !important; color: #fff !important;">Giá tiền</th>
 							</tr>
 						</thead>
 						<tbody>
 							{{ data }}
 							<!--<tr>
-				<td class="col-md-9"> {{ product.name }} </td>
-				<td class="col-md-3"><i class="fa fa-inr"></i> {{ product.price_as_string }} </td>
-			</tr>-->
-							<!--<tr>
-				<td class="text-right">
-					<p>
-						<strong>Thành tiền sản phẩm: </strong>
-					</p>
-					<p>
-						<strong>Phí vận chuyển: </strong>
-					</p>
-					 <p>
-						<strong>Thuế VAT: </strong>
-					</p>
-				</td>
-				<td>
-					<p>
-						<strong><i class="fa fa-inr"></i> {{ data.fee.total }}</strong>
-					</p>
-					<p>
-						<strong><i class="fa fa-inr"></i> {{ data.fee.transit }} </strong>
-					</p>
-					 <p>
-						<strong><i class="fa fa-inr"></i> {{ data.fee.tax}}</strong>
-					</p>
-				</td>
-			</tr>-->
+                    <td class="col-md-9"> {{ product.name }} </td>
+                    <td class="col-md-3"><i class="fa fa-inr"></i> {{ product.price_as_string }} </td>
+                </tr>-->
 						</tbody>
 					</table>
 				</div>
-				<!--<h2 style="float: right;">
-					<strong>
-						Tổng thành tiền:
-						<h2 style='color: #9f181c !important;font-weight: bold;'>
-							<strong>
-								<i class="fa fa-inr"></i>
-								{{ data.total }}
-							</strong>
-						</h2>
-					</strong>
-				</h2>-->
+				<div style="float: right">
+					<tr>
+						<td class="text-right" style="flex: right">
+							<p style="flex: right">
+								<strong>Thành tiền sản phẩm: </strong><strong>
+									<i class="fa fa-inr"></i>
+									{{ data.fee.total }}
+								</strong>
+							</p>
+							<p style="flex: right">
+								<strong>Phí vận chuyển: </strong><strong>
+									<i class="fa fa-inr"></i>
+									{{ data.fee.transit }}
+								</strong>
+							</p>
+							<p style="flex: right">
+								<strong>Giảm giá: </strong><strong>
+									<i class="fa fa-inr"></i> {{ data.fee.tax }}
+								</strong>
+							</p>
+							<h2 >
+								Tổng thành tiền:
+								<h2 style='color: #9f181c !important;font-weight: bold;'>
+									<strong>
+										{{ data.total }}
+									</strong>
+								</h2>
+							</h2>
+						</td>
+					</tr>
+				</div>
 			</div>
 		</div>
 	</div>

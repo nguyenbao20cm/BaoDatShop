@@ -59,19 +59,31 @@ namespace BaoDatShop.Controllers
                .Include(a => a.ProductSize.Product)
                .Where(a => a.InvoiceId == InvoiceNo).ToList();
             // Thay thế các giá trị động trong HTML template
+            int tongtien = 0;
             StringBuilder stringData = new StringBuilder(String.Empty);
             for (int i = 0; i < a.Count; i++)
             {
+                tongtien += a[i].ProductSize.Product.PriceSales * a[i].Quantity;
                 stringData.Append($"<tr>");
                 stringData.Append($"<td class=\"col-md-9\"> {a[i].ProductSize.Product.Name} </td>");
                 stringData.Append($"<td class=\"col-md-9\"> {a[i].Quantity} </td>");
-                stringData.Append($"<td class=\"col-md-3\"><i class=\"fa fa-inr\"></i> {(a[i].ProductSize.Product.PriceSales* a[i].Quantity).ToString("N0") +" VNĐ"} </td>");
+                stringData.Append($"<td class=\"col-md-3\"><i class=\"fa fa-inr\"></i> {(a[i].ProductSize.Product.PriceSales).ToString("N0") +" VNĐ"} </td>");
                 stringData.Append($"</tr>");
             }
             htmlContent = htmlContent.Replace("{{ data.company.name }}", context.Footer.FirstOrDefault().Title.ToString());
             htmlContent = htmlContent.Replace("{{ data.company.phone }}", context.Footer.FirstOrDefault().Phone.ToString());
             htmlContent = htmlContent.Replace("{{ data.company.email }}", context.Footer.FirstOrDefault().Email.ToString());
             htmlContent = htmlContent.Replace("{{ data.company.location }}", context.Footer.FirstOrDefault().Adress.ToString());
+
+            var phivanchuyen = 0;
+            if(context.Invoice.Where(a => a.Id == InvoiceNo).FirstOrDefault().PaymentMethods==true)
+                phivanchuyen = 35000;
+            var voucher = 0;
+            if (context.Invoice.Where(a => a.Id == InvoiceNo).FirstOrDefault().VoucherId != null)
+                voucher = context.Invoice.Where(a => a.Id == InvoiceNo).FirstOrDefault().Voucher.Disscount;
+            htmlContent = htmlContent.Replace("{{ data.fee.total }}", tongtien.ToString("N0") + " VNĐ");
+            htmlContent = htmlContent.Replace("{{ data.fee.transit }}", phivanchuyen.ToString("N0") + " VNĐ");
+            htmlContent = htmlContent.Replace("{{ data.fee.tax }}", voucher.ToString()+"%");
 
 
             htmlContent = htmlContent.Replace("{{ data.customer.name}}", context.Invoice.Where(a=>a.Id==InvoiceNo).FirstOrDefault().NameCustomer);
@@ -133,7 +145,7 @@ namespace BaoDatShop.Controllers
                 {
                     tong1++;
                 }    
-                tam.ChiPhiVanChuyen= tong1*20000;
+                tam.ChiPhiVanChuyen= tong1*35000;
                 var tong2 = 0;
                 var ab12 = context.ImportInvoice.
                     Where(a => a.IssuedDate.Date == tam.DateTime.Date && a.IssuedDate.Year == tam.DateTime.Year && a.IssuedDate.Month == tam.DateTime.Month).ToList();
@@ -175,7 +187,7 @@ namespace BaoDatShop.Controllers
                 {
                     tong1++;
                 }
-                tam.ChiPhiVanChuyen = tong1 * 20000;
+                tam.ChiPhiVanChuyen = tong1 * 35000;
                 var tong2 = 0;
                 var ab12 = context.ImportInvoice.
                     Where(a => a.IssuedDate.Date == tam.DateTime.Date && a.IssuedDate.Year == tam.DateTime.Year && a.IssuedDate.Month == tam.DateTime.Month).ToList();
@@ -346,7 +358,7 @@ namespace BaoDatShop.Controllers
             int tong = 0;
             foreach(var item in a)
             {
-                    tong += 20000;
+                    tong += 35000;
             }
             return tong;
         }
@@ -357,7 +369,7 @@ namespace BaoDatShop.Controllers
             int tong = 0;
             foreach (var item in a)
             {
-                    tong += 20000;
+                    tong += 35000;
             }
             return tong;
         }
