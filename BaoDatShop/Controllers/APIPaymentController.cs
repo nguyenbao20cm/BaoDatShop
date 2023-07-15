@@ -106,9 +106,9 @@ namespace BaoDatShop.Controllers
                 Invoice result = new();
                 result.Pay =true;
                 if(VoucherId!=null)
-                    result.VoucherId = null;
+                 result.VoucherId = int.Parse(VoucherId);
                 if (VoucherId == null)
-                    result.VoucherId = int.Parse(VoucherId);
+                    result.VoucherId = null;
                 result.NameCustomer = name;
                 result.PaymentMethods = bool.Parse(paymentmethod);
                 result.AccountId = GetCorrectUserId();
@@ -196,9 +196,9 @@ namespace BaoDatShop.Controllers
                 Invoice result = new();
                 result.Pay = true;
                 if (VoucherId != null)
-                    result.VoucherId = null;
-                if (VoucherId == null)
                     result.VoucherId = int.Parse(VoucherId);
+                if (VoucherId == null)
+                    result.VoucherId = null;
                 result.PaymentMethods = bool.Parse(paymentmethod);
                 result.AccountId = GetCorrectUserId();
                 result.NameCustomer = name;
