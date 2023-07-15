@@ -13,7 +13,7 @@ namespace BaoDatShop.DTO.Invoice
     {
 
 
-        public int VoucherId { get; set; }
+        public int? VoucherId { get; set; }
 
         public string NameCustomer { get; set; }
         // public string AccountId { get; set; }
