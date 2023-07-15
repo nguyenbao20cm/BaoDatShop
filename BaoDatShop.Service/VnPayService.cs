@@ -32,7 +32,7 @@ namespace CodeMegaVNPay.Services
             pay.AddRequestData("vnp_CurrCode", _configuration["Vnpay:CurrCode"]);
             pay.AddRequestData("vnp_IpAddr", pay.GetIpAddress(context));
             pay.AddRequestData("vnp_Locale", _configuration["Vnpay:Locale"]);
-            pay.AddRequestData("vnp_OrderInfo", $"{model.PaymentMethods}/{model.Pay}/{model.total}/{model.ShippingAddress}/{model.ShippingPhone}/{model.NameCustomer}");
+            pay.AddRequestData("vnp_OrderInfo", $"{model.PaymentMethods}/{model.Pay}/{model.total}/{model.ShippingAddress}/{model.ShippingPhone}/{model.NameCustomer}/{model.VoucherId}");
             pay.AddRequestData("vnp_OrderType", model.NameCustomer);
             pay.AddRequestData("vnp_ReturnUrl", urlCallBack);
             pay.AddRequestData("vnp_TxnRef", tick);
@@ -65,7 +65,7 @@ namespace CodeMegaVNPay.Services
             pay.AddRequestData("vnp_CurrCode", _configuration["Vnpay:CurrCode"]);
             pay.AddRequestData("vnp_IpAddr", pay.GetIpAddress(context));
             pay.AddRequestData("vnp_Locale", _configuration["Vnpay:Locale"]);
-            pay.AddRequestData("vnp_OrderInfo", $"{model.PaymentMethods}/{model.Pay}/{model.total}/{model.ShippingAddress}/{model.ShippingPhone}/{model.NameCustomer}/{model.Quantity}/{model.ProductSizeID}");
+            pay.AddRequestData("vnp_OrderInfo", $"{model.PaymentMethods}/{model.Pay}/{model.total}/{model.ShippingAddress}/{model.ShippingPhone}/{model.NameCustomer}/{model.Quantity}/{model.ProductSizeID}/{model.VoucherId}");
             pay.AddRequestData("vnp_OrderType", model.NameCustomer);
             pay.AddRequestData("vnp_ReturnUrl", urlCallBack);
             pay.AddRequestData("vnp_TxnRef", tick);
