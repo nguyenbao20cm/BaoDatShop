@@ -32,7 +32,7 @@ namespace BaoDatShop.Controllers
         private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
         private readonly UserManager<ApplicationUser> userManager;
-      
+
         public AccountController(
             AppDbContext context,
             IAccountService accountService,
@@ -56,16 +56,25 @@ namespace BaoDatShop.Controllers
         //    return Unauthorized(result);
         //}
 
-        //[Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer  + "," + UserRole.StaffKHO + "," + UserRole.Staff)]
-        //[HttpPut("ChangePassWord")]
-        //public async Task<IActionResult> ChangePassWord()
-        //{
-            
-        //}
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer + "," + UserRole.StaffKHO + "," + UserRole.Staff)]
+        [HttpPost("ChangePassWord")]
+        public async Task<IActionResult> ChangePassWord(ChangePass model)
+        {
+            if (model.Password != model.ConfirmPassword) return Ok("Mật khẩu xác thực không khớp");
+            var user = await userManager.FindByIdAsync(GetCorrectUserId());
+            if (user == null && await userManager.CheckPasswordAsync(user, model.Password) == false) return Ok("Mật khẩu không hợp lệ");
+            if (user != null)
+            {
+                var a = await userManager.ChangePasswordAsync(user, model.Password, model.PasswordNew);
+                if (a.Succeeded)
+                    return Ok("Thành công");
+            }
+            return Ok("Thất bại");
+        }
         [HttpGet("GetAllAccountCustomerStatusFalse")]
         public async Task<IActionResult> GetAllAccountCustomerStatusFalse()
         {
-            return Ok(context.Account.Where(a=>a.Status==false).Where(a=>a.Permission==3).ToList());
+            return Ok(context.Account.Where(a => a.Status == false).Where(a => a.Permission == 3).ToList());
         }
         [HttpGet("GetAllAccountCustomerStatusTrue")]
         public async Task<IActionResult> GetAllAccountCustomerStatusTrue()
@@ -98,14 +107,14 @@ namespace BaoDatShop.Controllers
 
             if (model.Password != model.ConfirmPassword) return Ok("Mật khẩu xác thực không khớp");
             var abbb = _accountService.GetAllAccount();
-         
+
             var ba = _accountService.GetAllAccount().Where(a => a.Email == model.Email).FirstOrDefault();
             var user = await userManager.FindByIdAsync(ba.Id);
             if (user != null)
             {
                 var a = await userManager.ResetPasswordAsync(user, model.Token, model.Password);
-                if(a.Succeeded)
-                return Ok("Thành công");
+                if (a.Succeeded)
+                    return Ok("Thành công");
             }
             return Ok("Thất bại");
         }
@@ -124,7 +133,7 @@ namespace BaoDatShop.Controllers
         {
             var ua = this.Url;
             var ba = _accountService.GetAllAccount().Where(a => a.Email == email.Email).FirstOrDefault();
-            if(ba==null) return Ok("Email này không khớp với tài khoản nào cả");
+            if (ba == null) return Ok("Email này không khớp với tài khoản nào cả");
             var user = await userManager.FindByIdAsync(ba.Id);
             if (user.EmailConfirmed == false) return Ok("Thất bại, vì tài khoản này chưa được kích hoạt");
             if (user != null)
@@ -163,7 +172,7 @@ namespace BaoDatShop.Controllers
                 //string url = this.Url.ActionLink("TokenForgotPass", "Account",
                 //   new { token, email = email });
                 // cua gia bao
-               // string url = "http://localhost:3001/auth/DoiMatKhau?Token=" + token + "&Email=" + email.Email;
+                // string url = "http://localhost:3001/auth/DoiMatKhau?Token=" + token + "&Email=" + email.Email;
 
 
                 //cua tao Dat
@@ -181,7 +190,7 @@ namespace BaoDatShop.Controllers
         [HttpGet("TokenForgotPass")]
         public async Task<IActionResult> TokenForgotPass(TokenResetPassword model)
         {
-            return Ok(new { Email = model.Email, Token = model.Token  });
+            return Ok(new { Email = model.Email, Token = model.Token });
         }
         [HttpPost]
         [Route("register-Admin")]
@@ -241,8 +250,8 @@ namespace BaoDatShop.Controllers
         [HttpPut("ActiveAccount/{id}")]
         public async Task<IActionResult> ActiveAccount(string id)
         {
-            var check= await _accountService.ActiveAccount(GetCorrectUserId(),id);
-            if(check==true)
+            var check = await _accountService.ActiveAccount(GetCorrectUserId(), id);
+            if (check == true)
             {
                 return Ok(true);
             }
@@ -372,7 +381,7 @@ namespace BaoDatShop.Controllers
             var a = _accountService.CreateAvatarImage(model);
             return Ok(a);
         }
-        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer + "," + UserRole.Staff + "," + UserRole.StaffKHO)]  
+        [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer + "," + UserRole.Staff + "," + UserRole.StaffKHO)]
         [HttpGet("GetQuantityAccount")]
         public async Task<IActionResult> GetQuantityAccount()
         {
@@ -401,7 +410,7 @@ namespace BaoDatShop.Controllers
         [Authorize(Roles = UserRole.Admin + "," + UserRole.Costumer)]
         [HttpPost]
         [Route("UpdateAccountCustomer/{Phone}&{Address}&{FullName}")]
-        public async Task<IActionResult> UpdateAccountWithImage(string Phone,string Address,string FullName,  IFormFile model)
+        public async Task<IActionResult> UpdateAccountWithImage(string Phone, string Address, string FullName, IFormFile model)
         {
 
             var a = context.Account.Where(a => a.Id == GetCorrectUserId()).FirstOrDefault();
@@ -415,17 +424,17 @@ namespace BaoDatShop.Controllers
             a.Phone = Phone;
             a.Address = Address;
             a.FullName = FullName;
-            a.Avatar = a.Id+".jpg";
+            a.Avatar = a.Id + ".jpg";
             context.Update(a);
             var check1 = context.SaveChanges();
-            if(check1 == 0) return Ok("Thất bại");
+            if (check1 == 0) return Ok("Thất bại");
             var user = await userManager.FindByIdAsync(GetCorrectUserId());
             user.Phone = Phone;
             user.Address = Address;
             user.Avatar = user.Id + ".jpg";
             user.FullName = FullName;
-            var check= await userManager.UpdateAsync(user);
-            if(check.Succeeded)
+            var check = await userManager.UpdateAsync(user);
+            if (check.Succeeded)
             {
                 var fileName = a.Id + ".jpg";
                 var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Avatar");
@@ -483,7 +492,7 @@ namespace BaoDatShop.Controllers
         [Route("DeleteAccount/{id}")]
         public async Task<IActionResult> DeleteAccount(string id)
         {
-            var result = await _accountService.DeleteAccount(GetCorrectUserId(),id);
+            var result = await _accountService.DeleteAccount(GetCorrectUserId(), id);
             return Ok(result);
         }
         [Authorize(Roles = UserRole.Admin)]

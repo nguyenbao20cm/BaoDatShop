@@ -18,11 +18,11 @@ namespace BaoDatShop.Service
         public List<Invoice> GetAll();
         public Month GetAllInoviceTotalMonth(string year);
         public List<Invoice> GetAllInoviceFilterByDate(string startDate, string endDate);
-        public bool UpdateInovice(int id, UpdateInvoice model); 
+        public bool UpdateInovice(int id, UpdateInvoice model);
         //     public bool UpdateInoviceDelivering(int id);
         public int ProfitForyear(int year);
         public List<Invoice> GetAllInvoiceOfAccount(string id);
-        
+
 
     }
     public class InvoiceService : IInvoiceService
@@ -35,15 +35,15 @@ namespace BaoDatShop.Service
         private readonly IProductSizeResponsitories IProductSizeResponsitories;
         private readonly IProductService productService;
         private readonly IInvoiceDetailResponsitories invoiceDetailResponsitories;
-        private readonly IKhoHangResposirity IKhoHangResposirity;
-       private readonly IProductSizeResponsitories productSizeResponsitories;
+        private readonly IWarehouseResposirity IWarehouseResposirity;
+        private readonly IProductSizeResponsitories productSizeResponsitories;
         private readonly AppDbContext context;
-        public InvoiceService(IImportInvoiceResponsitories IImportInvoiceResponsitories,IInvoiceResponsitories invoiceResponsitories, ICartResponsitories cartResponsitories, IProductService productService, 
+        public InvoiceService(IImportInvoiceResponsitories IImportInvoiceResponsitories, IInvoiceResponsitories invoiceResponsitories, ICartResponsitories cartResponsitories, IProductService productService,
             IInvoiceDetailResponsitories invoiceDetailResponsitories,
-            IKhoHangResposirity IKhoHangResposirity,
+            IWarehouseResposirity IWarehouseResposirity,
             AppDbContext context,
-            IProductSizeResponsitories productSizeResponsitories, IProductResponsitories IProductResponsitories, 
-            IProductSizeService IProductSizeService ,IProductSizeResponsitories IProductSizeResponsitories)
+            IProductSizeResponsitories productSizeResponsitories, IProductResponsitories IProductResponsitories,
+            IProductSizeService IProductSizeService, IProductSizeResponsitories IProductSizeResponsitories)
         {
             this.IImportInvoiceResponsitories = IImportInvoiceResponsitories;
             this.invoiceResponsitories = invoiceResponsitories;
@@ -54,17 +54,16 @@ namespace BaoDatShop.Service
             this.IProductResponsitories = IProductResponsitories;
             this.IProductSizeService = IProductSizeService;
             this.IProductSizeResponsitories = IProductSizeResponsitories;
-            this.IKhoHangResposirity = IKhoHangResposirity;
+            this.IWarehouseResposirity = IWarehouseResposirity;
             this.context = context;
         }
 
         public bool Create(string AccountId, CreateInvoiceRequest model)
         {
-           
             var Cart = cartResponsitories.GetAll(AccountId);
             foreach (var c in Cart)
             {
-                var a = IKhoHangResposirity.GetAll().Where(a=>a.ProductSizeId==c.ProductSizeId).FirstOrDefault();
+                var a = IWarehouseResposirity.GetAll().Where(a => a.ProductSizeId == c.ProductSizeId).FirstOrDefault();
                 if (c.Quantity > a.Stock) return false;
             }
             if (Cart == null) return false;
@@ -88,11 +87,10 @@ namespace BaoDatShop.Service
             var tamp = invoiceResponsitories.Create(result);
             if (tamp == true)
             {
-
                 foreach (var c in Cart)
                 {
-                    var a = IKhoHangResposirity.GetAll().Where(a=>a.ProductSizeId==c.ProductSizeId).FirstOrDefault();
-                    if(c.Quantity>a.Stock) return false;
+                    var a = IWarehouseResposirity.GetAll().Where(a => a.ProductSizeId == c.ProductSizeId).FirstOrDefault();
+                    if (c.Quantity > a.Stock) return false;
                     a.Stock = a.Stock - c.Quantity;
                     context.Update(a);
                     context.SaveChanges();
@@ -118,7 +116,7 @@ namespace BaoDatShop.Service
 
         public bool CreateInvoiceNow(string AccountId, CreateInvoiceNow model)
         {
-       
+
             Invoice result = new();
             result.Pay = model.Pay;
             result.PaymentMethods = model.PaymentMethods;
@@ -134,23 +132,23 @@ namespace BaoDatShop.Service
             var tamp = invoiceResponsitories.Create(result);
             if (tamp == true)
             {
-                    var a = IKhoHangResposirity.GetAll().Where(a => a.ProductSizeId == model.ProductSizeID).FirstOrDefault();
+                var a = IWarehouseResposirity.GetAll().Where(a => a.ProductSizeId == model.ProductSizeID).FirstOrDefault();
                 if (model.Quantity > a.Stock) return false;
-                    a.Stock = a.Stock - model.Quantity;
+                a.Stock = a.Stock - model.Quantity;
                 context.Update(a);
                 context.SaveChanges();
                 var productId = productSizeResponsitories.GetById(model.ProductSizeID).ProductId;
-                    InvoiceDetail detal = new InvoiceDetail
-                    {
-                        InvoiceId = result.Id,
-                        ProductSizeId = model.ProductSizeID,
-                        Quantity = model.Quantity,
-                        UnitPrice = productService.GetById(productId).PriceSales,
-                    };
-                    //var b = productService.GetById(productId);
-                    //b.CountSell = b.CountSell + model.Quantity;
-                    //IProductResponsitories.Update(b);
-                    invoiceDetailResponsitories.Create(detal);
+                InvoiceDetail detal = new InvoiceDetail
+                {
+                    InvoiceId = result.Id,
+                    ProductSizeId = model.ProductSizeID,
+                    Quantity = model.Quantity,
+                    UnitPrice = productService.GetById(productId).PriceSales,
+                };
+                //var b = productService.GetById(productId);
+                //b.CountSell = b.CountSell + model.Quantity;
+                //IProductResponsitories.Update(b);
+                invoiceDetailResponsitories.Create(detal);
                 return true;
             }
             else return false;
@@ -160,20 +158,20 @@ namespace BaoDatShop.Service
         {
             Invoice result = invoiceResponsitories.GetById(id);
             result.Status = false;
-            
+
             return invoiceResponsitories.Update(result);
         }
-      
+
         public bool DeleteInvoice(int id)
         {
             Invoice result = invoiceResponsitories.GetById(id);
             result.OrderStatus = 4;
             result.Pay = false;
-            var a= invoiceDetailResponsitories.GetAll(id);
-            foreach(var item in a)
+            var a = invoiceDetailResponsitories.GetAll(id);
+            foreach (var item in a)
             {
-                var b = IKhoHangResposirity.GetAll().Where(a => a.ProductSizeId == item.ProductSizeId).FirstOrDefault();
-                b.Stock =+ item.Quantity;
+                var b = IWarehouseResposirity.GetAll().Where(a => a.ProductSizeId == item.ProductSizeId).FirstOrDefault();
+                b.Stock = +item.Quantity;
                 context.Update(b);
                 context.SaveChanges();
             }
@@ -183,26 +181,25 @@ namespace BaoDatShop.Service
         public bool DeleteInvoiceByCostumer(int id)
         {
             Invoice result = invoiceResponsitories.GetById(id);
-            if(result.OrderStatus==1|| result.OrderStatus == 2)
+            if (result.OrderStatus == 1 || result.OrderStatus == 2)
             {
                 result.OrderStatus = 4;
-                result.Pay = false;
                 var a = invoiceDetailResponsitories.GetAll(id);
                 foreach (var item in a)
                 {
-                    var b = IKhoHangResposirity.GetAll().Where(a => a.ProductSizeId == item.ProductSizeId).FirstOrDefault();
-                    b.Stock = +item.Quantity;
+                    var b = IWarehouseResposirity.GetAll().Where(a => a.ProductSizeId == item.ProductSizeId).FirstOrDefault();
+                    b.Stock +=item.Quantity;
                     context.Update(b);
                     context.SaveChanges();
                 }
                 return invoiceResponsitories.Update(result);
-            }    
+            }
             return false;
         }
 
         public List<Invoice> GetAll()
         {
-            return invoiceResponsitories.GetAll().OrderByDescending(a=>a.IssuedDate).ToList();
+            return invoiceResponsitories.GetAll().OrderByDescending(a => a.IssuedDate).ToList();
         }
 
         public List<Invoice> GetAllInoviceFilterByDate(string startDate, string endDate)
@@ -214,8 +211,8 @@ namespace BaoDatShop.Service
         public Month GetAllInoviceTotalMonth(string year)
         {
             Month result = new Month();
-            var moth1 = invoiceResponsitories.GetAll().Where(a => a.OrderStatus == 5).Where(a=>a.IssuedDate.Year== int.Parse(year)).Where(a => a.IssuedDate.Month < 2).ToList();
-            var moth12 = invoiceResponsitories.GetAll().Where(a=>a.OrderStatus==5).Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 13&& a.IssuedDate.Month >11).ToList();
+            var moth1 = invoiceResponsitories.GetAll().Where(a => a.OrderStatus == 5).Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 2).ToList();
+            var moth12 = invoiceResponsitories.GetAll().Where(a => a.OrderStatus == 5).Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 13 && a.IssuedDate.Month > 11).ToList();
             var moth2 = invoiceResponsitories.GetAll().Where(a => a.OrderStatus == 5).Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 3 && a.IssuedDate.Month > 1).ToList();
             var moth3 = invoiceResponsitories.GetAll().Where(a => a.OrderStatus == 5).Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 4 && a.IssuedDate.Month > 2).ToList();
             var moth4 = invoiceResponsitories.GetAll().Where(a => a.OrderStatus == 5).Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 5 && a.IssuedDate.Month > 3).ToList();
@@ -227,7 +224,7 @@ namespace BaoDatShop.Service
             var moth10 = invoiceResponsitories.GetAll().Where(a => a.OrderStatus == 5).Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 11 && a.IssuedDate.Month > 9).ToList();
             var moth11 = invoiceResponsitories.GetAll().Where(a => a.OrderStatus == 5).Where(a => a.IssuedDate.Year == int.Parse(year)).Where(a => a.IssuedDate.Month < 12 && a.IssuedDate.Month > 10).ToList();
             var total1 = 0;
-            foreach(var a in moth1)
+            foreach (var a in moth1)
             {
                 total1 += a.Total;
             }
@@ -292,12 +289,12 @@ namespace BaoDatShop.Service
             }
             result.Month12 = total12;
             return result;
-           
+
         }
 
         public List<Invoice> GetAllInvoiceOfAccount(string id)
         {
-            return invoiceResponsitories.GetAll().Where(a=>a.AccountId==id).ToList();
+            return invoiceResponsitories.GetAll().Where(a => a.AccountId == id).ToList();
         }
 
         public Invoice GetById(int id)
@@ -308,20 +305,20 @@ namespace BaoDatShop.Service
         public int ProfitForyear(int year)
         {
 
-          var ImportPrice = 0;
-          var ImportPiceList= IImportInvoiceResponsitories.GetAll().Where(a => a.IssuedDate.Year == year).ToList();
-            foreach(var a in ImportPiceList)
+            var ImportPrice = 0;
+            var ImportPiceList = IImportInvoiceResponsitories.GetAll().Where(a => a.IssuedDate.Year == year).ToList();
+            foreach (var a in ImportPiceList)
             {
-                ImportPrice+=a.ImportPrice*a.Quantity;
+                ImportPrice += a.ImportPrice * a.Quantity;
             }
             var Total = 0;
-            var TotalList = invoiceResponsitories.GetAll().Where(a=>a.OrderStatus==5).Where(a => a.IssuedDate.Year == year).ToList();
+            var TotalList = invoiceResponsitories.GetAll().Where(a => a.OrderStatus == 5).Where(a => a.IssuedDate.Year == year).ToList();
             foreach (var a in TotalList)
             {
                 Total += a.Total;
             }
-            var b= Total - ImportPrice;
-            return Total- ImportPrice;
+            var b = Total - ImportPrice;
+            return Total - ImportPrice;
         }
 
         // dang lam
@@ -343,10 +340,10 @@ namespace BaoDatShop.Service
         {
             Invoice result = invoiceResponsitories.GetById(id);
             result.OrderStatus = model.orderStatus;
- 
+
             result.ShippingAddress = model.shippingadress;
             result.ShippingPhone = model.shippingphone;
-            if(model.orderStatus==5) result.Pay = true;
+            if (model.orderStatus == 5) result.Pay = true;
             //else
             //result.Pay = model.pay;
             return invoiceResponsitories.Update(result);

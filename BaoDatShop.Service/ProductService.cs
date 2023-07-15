@@ -74,11 +74,11 @@ namespace BaoDatShop.Service
             bool ab = productResponsitories.Create(result);
             if (ab == true)
             {
-                var tam = productResponsitories.GetById(result.Id);
-                HistoryAccount a = new();
-                a.AccountID = id; a.Datetime = DateTime.Now;
-                a.Content = "Đã thêm sản phẩm " + model.Name +" thuộc loại sản phẩm "+tam.ProductType.Name;
-                IHistoryAccountResponsitories.Create(a);
+                //var tam = productResponsitories.GetById(result.Id);
+                //HistoryAccount a = new();
+                //a.AccountID = id; a.Datetime = DateTime.Now;
+                //a.Content = "Đã thêm sản phẩm " + model.Name +" thuộc loại sản phẩm "+tam.ProductType.Name;
+                //IHistoryAccountResponsitories.Create(a);
             }
             return ab;
         }
@@ -168,11 +168,11 @@ namespace BaoDatShop.Service
             bool ab = productResponsitories.Update(result);
             if (ab == true)
             {
-                var tam = productResponsitories.GetById(result.Id);
-                HistoryAccount a = new();
-                a.AccountID = ida; a.Datetime = DateTime.Now;
-                a.Content = "Đã chỉnh sửa sản phẩm " + model.Name + " thuộc loại sản phẩm " + tam.ProductType.Name;
-                IHistoryAccountResponsitories.Create(a);
+                //var tam = productResponsitories.GetById(result.Id);
+                //HistoryAccount a = new();
+                //a.AccountID = ida; a.Datetime = DateTime.Now;
+                //a.Content = "Đã chỉnh sửa sản phẩm " + model.Name + " thuộc loại sản phẩm " + tam.ProductType.Name;
+                //IHistoryAccountResponsitories.Create(a);
             }
             return ab;
         }

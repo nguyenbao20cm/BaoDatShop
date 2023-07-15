@@ -12,6 +12,8 @@ namespace Eshop.Models
     public class Invoice
     {
         public int Id { get; set; }
+        public int? VoucherId { get; set; }
+        public Voucher Voucher { get; set; }
 
         public string NameCustomer { get; set; }
         public bool PaymentMethods { get; set; }// true là COD flase la lay hang tai shop

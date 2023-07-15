@@ -30,12 +30,12 @@ namespace BaoDatShop.Service
         private readonly ICartResponsitories cartResponsitories;
         private readonly IProductResponsitories IProductResponsitories;
         private readonly IProductSizeService IProductSizeService;
-        private readonly IKhoHangResposirity IKhoHangResposirity;
-        public CartService(ICartResponsitories cartResponsitories, IKhoHangResposirity IKhoHangResposirity,
+        private readonly IWarehouseResposirity IWarehouseResposirity;
+        public CartService(ICartResponsitories cartResponsitories, IWarehouseResposirity IWarehouseResposirity,
             IProductResponsitories IProductResponsitories, IProductSizeService IProductSizeService)
         {
             this.cartResponsitories = cartResponsitories;
-            this.IKhoHangResposirity = IKhoHangResposirity;
+            this.IWarehouseResposirity = IWarehouseResposirity;
             this.IProductResponsitories = IProductResponsitories;
             this.IProductSizeService = IProductSizeService;
 
@@ -43,7 +43,7 @@ namespace BaoDatShop.Service
 
         public bool Create(CreateCartRequest model)
         {
-            if (model.Quantity > IKhoHangResposirity.GetAll().Where(a=>a.ProductSizeId==model.ProductSizeId).FirstOrDefault().Stock) return false;
+            if (model.Quantity > IWarehouseResposirity.GetAll().Where(a=>a.ProductSizeId==model.ProductSizeId).FirstOrDefault().Stock) return false;
            Cart result = new();
             result.ProductSizeId = model.ProductSizeId;
             result.AccountId = model.AccountId;

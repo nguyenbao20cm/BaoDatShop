@@ -9,27 +9,27 @@ using System.Threading.Tasks;
 
 namespace BaoDatShop.Responsitories
 {
-    public interface IKhoHangResposirity
+    public interface IWarehouseResposirity
     {
         public List<Warehouse> GetAll();
         public Warehouse GetById(int id);
     }
-    public class KhoHangResposirity : IKhoHangResposirity
+    public class WarehouseResposirity : IWarehouseResposirity
     {
         private readonly AppDbContext context;
-        public KhoHangResposirity(AppDbContext context)
+        public WarehouseResposirity(AppDbContext context)
         {
             this.context = context;
         }
 
         public List<Warehouse> GetAll()
         {
-            return context.KHoHang.Include(a=>a.ProductSize.Product).Include(a => a.ProductSize).ToList();
+            return context.Warehouse.Include(a=>a.ProductSize.Product).Include(a => a.ProductSize).ToList();
         }
 
         public Warehouse GetById(int id)
         {
-            return context.KHoHang.Include(a => a.ProductSize.Product).Include(a => a.ProductSize).Where(a=>a.Id==id).FirstOrDefault();
+            return context.Warehouse.Include(a => a.ProductSize.Product).Include(a => a.ProductSize).Where(a=>a.Id==id).FirstOrDefault();
         }
     }
 }

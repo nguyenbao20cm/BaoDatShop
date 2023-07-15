@@ -48,7 +48,7 @@ namespace BaoDatShop.Controllers
                 stringData.Append($"<tr>");
                 stringData.Append($"<td class=\"col-md-9\"> {a.ProductSize.Product.Name} </td>");
                 stringData.Append($"<td class=\"col-md-9\"> {a.Quantity} </td>");
-                stringData.Append($"<td class=\"col-md-3\"><i class=\"fa fa-inr\"></i> {(a.ProductSize.Product.PriceSales * a.Quantity).ToString("NO") + " VNĐ"} </td>");
+                stringData.Append($"<td class=\"col-md-3\"><i class=\"fa fa-inr\"></i> {(a.ImportPrice * a.Quantity).ToString("NO") + " VNĐ"} </td>");
                 stringData.Append($"</tr>");
           
             htmlContent = htmlContent.Replace("{{ data.company.name }}", context.Footer.FirstOrDefault().Title.ToString());
@@ -61,7 +61,7 @@ namespace BaoDatShop.Controllers
             htmlContent = htmlContent.Replace("{{ data.customer.address }}", a.Supplier.Address);
             htmlContent = htmlContent.Replace("{{ data.num_invoice }}", a.Id.ToString());
             //htmlContent = htmlContent.Replace("{{ data.total }}", context.Invoice.Where(a => a.Id == InvoiceNo).FirstOrDefault().Total.ToString("N0") + " VNĐ");
-            htmlContent = htmlContent.Replace("{{ data.date }}", context.Invoice.Where(a => a.Id == InvoiceNo).FirstOrDefault().IssuedDate.ToShortDateString());
+            htmlContent = htmlContent.Replace("{{ data.date }}", context.ImportInvoice.Where(a => a.Id == InvoiceNo).FirstOrDefault().IssuedDate.ToShortDateString());
             htmlContent = htmlContent.Replace("{{ data }}", stringData.ToString());
             // Thêm các thay thế khác tại đây
 
@@ -72,7 +72,7 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> GeneratePDF(int InvoiceNo)
         {
 
-            var htmlContent = System.IO.File.ReadAllText("C:\\Users\\ADMIN\\source\\repos\\BaoDatShop\\BaoDatShop\\wwwroot\\TempletePDFInvoice\\template_invoice.html");
+            var htmlContent = System.IO.File.ReadAllText("C:\\Users\\ADMIN\\source\\repos\\BaoDatShop\\BaoDatShop\\wwwroot\\TempletePDFInvoice\\TemplateInovoiceImport.html");
             var replacedHtml = ReplaceDynamicValues(htmlContent, InvoiceNo);
 
             var document = new HtmlToPdfDocument()
@@ -110,7 +110,7 @@ namespace BaoDatShop.Controllers
            
             if ( IImportInvoiceResponsitories.Create(result)==true)
             {
-               var tam= context.KHoHang.Include(a=>a.ProductSize).Where(a=>a.ProductSizeId==model.ProductSizeId).FirstOrDefault();
+               var tam= context.Warehouse.Include(a=>a.ProductSize).Where(a=>a.ProductSizeId==model.ProductSizeId).FirstOrDefault();
                 tam.Stock += model.Quantity;
                 context.Update(tam);
                 var check =context.SaveChanges();
@@ -151,7 +151,7 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> DeleteImportInvoice(int id)
         {
             var check=context.ImportInvoice.Where(a => a.Id == id).FirstOrDefault();
-            if (context.KHoHang.Include(a=>a.ProductSize).Where(a => a.ProductSizeId == check.ProductSizeId).FirstOrDefault().Stock<check.Quantity)
+            if (context.Warehouse.Include(a=>a.ProductSize).Where(a => a.ProductSizeId == check.ProductSizeId).FirstOrDefault().Stock<check.Quantity)
                 return Ok("Thất bại vì sản phẩm đã xuất kho");
             context.Remove(check);
             var a= context.SaveChanges();

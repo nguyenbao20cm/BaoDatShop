@@ -122,7 +122,7 @@ builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddTransient<IImportInvoiceResponsitories, ImportInvoiceResponsitories>();
 
-builder.Services.AddTransient<IKhoHangResposirity, KhoHangResposirity>();
+builder.Services.AddTransient<IWarehouseResposirity, WarehouseResposirity>();
 
 
 

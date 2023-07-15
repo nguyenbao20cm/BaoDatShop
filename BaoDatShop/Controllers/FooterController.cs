@@ -54,11 +54,12 @@ namespace BaoDatShop.Controllers
             }
             return check > 0 ? Ok(true) : Ok(false);
         }
-       
+
         [HttpPost("CreateImageFooter")]
         public async Task<IActionResult> CreateImageFooter(IFormFile model)
         {
-            try {
+            try
+            {
                 var fileName = "1.jpg";
                 var uploadFolder = Path.Combine(_environment.WebRootPath, "Image", "Footer");
                 var uploadPath = Path.Combine(uploadFolder, fileName);
@@ -73,12 +74,16 @@ namespace BaoDatShop.Controllers
             {
                 return Ok(false);
             }
-           
+
         }
         [HttpGet("GetFooter")]
         public async Task<IActionResult> GetFooter()
         {
-            return Ok(context.Footer.FirstOrDefault());
+            if (context.Footer == null) return Ok(null);
+            if (context.Footer.FirstOrDefault() != null)
+                return Ok(context.Footer.FirstOrDefault());
+            else
+                return Ok(null);
         }
     }
 }

@@ -4,6 +4,7 @@ using BaoDatShop.Model.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaoDatShop.Model.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230713163322_2")]
+    partial class _2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -589,14 +591,9 @@ namespace BaoDatShop.Model.Migrations
                     b.Property<int>("Total")
                         .HasColumnType("int");
 
-                    b.Property<int?>("VoucherId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
-
-                    b.HasIndex("VoucherId");
 
                     b.ToTable("Invoice");
                 });
@@ -987,13 +984,7 @@ namespace BaoDatShop.Model.Migrations
                         .WithMany()
                         .HasForeignKey("AccountId");
 
-                    b.HasOne("BaoDatShop.Model.Model.Voucher", "Voucher")
-                        .WithMany()
-                        .HasForeignKey("VoucherId");
-
                     b.Navigation("Account");
-
-                    b.Navigation("Voucher");
                 });
 
             modelBuilder.Entity("Eshop.Models.InvoiceDetail", b =>
