@@ -16,7 +16,8 @@ namespace CodeMegaVNPay.Services
         {
             _configuration = configuration;
         }
-        public string CreatePaymentUrl(CreateInvoiceRequest model, HttpContext context)
+        public string 
+            CreatePaymentUrl(CreateInvoiceRequest model, HttpContext context)
         {
             var timeZoneById = TimeZoneInfo.FindSystemTimeZoneById(_configuration["TimeZoneId"]);
             var timeNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneById);
