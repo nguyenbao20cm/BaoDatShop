@@ -1,7 +1,10 @@
 ﻿using BaoDatShop.DTO.Invoice;
 using BaoDatShop.Model.Context;
+using BaoDatShop.Model.DTO.Invoice;
 using BaoDatShop.Responsitories;
 using Eshop.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Security.Claims;
 
 namespace BaoDatShop.Service
@@ -21,7 +24,7 @@ namespace BaoDatShop.Service
         public bool UpdateInovice(int id, UpdateInvoice model);
         //     public bool UpdateInoviceDelivering(int id);
         public int ProfitForyear(int year);
-        public List<Invoice> GetAllInvoiceOfAccount(string id);
+        public List<GetInvoiceForCustomer> GetAllInvoiceOfAccount(string id);
 
 
     }
@@ -294,9 +297,30 @@ namespace BaoDatShop.Service
 
         }
 
-        public List<Invoice> GetAllInvoiceOfAccount(string id)
+        public List<GetInvoiceForCustomer> GetAllInvoiceOfAccount(string id)
         {
-            return invoiceResponsitories.GetAll().Where(a => a.AccountId == id).ToList();
+            List<GetInvoiceForCustomer> result = new();
+            var tam = invoiceResponsitories.GetAll().Where(a => a.AccountId == id).ToList();
+            foreach (var a in tam)
+            {
+                GetInvoiceForCustomer tam1 = new();
+                tam1.Total = a.Total;
+                tam1.VoucherId = a.VoucherId;
+                tam1.Id = a.Id;
+                tam1.AccountId = a.AccountId;
+                tam1.PaymentMethods = a.PaymentMethods;
+                tam1.Account = a.Account;
+                tam1.NameCustomer = a.NameCustomer;
+                tam1.Voucher = a.Voucher;
+                tam1.IssuedDate = a.IssuedDate;
+                tam1.ShippingAddress = a.ShippingAddress;
+                tam1.ShippingPhone = a.ShippingPhone;
+                tam1.Pay = a.Pay;
+                tam1.OrderStatus = a.OrderStatus;
+                tam1.GiaCu = context.InvoiceDetail.Include(a=>a.ProductSize).Include(a => a.ProductSize.Product).Where(a => a.InvoiceId == tam1.Id).Sum(a => a.ProductSize.Product.PriceSales);
+                result.Add(tam1);
+            }    
+            return result;
         }
 
         public Invoice GetById(int id)
