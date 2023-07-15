@@ -15,7 +15,7 @@ namespace BaoDatShop.DTO.Invoice
         public bool PaymentMethods { get; set; }
         public bool Pay { get; set; }
         public int total { get; set; }
-        public int VoucherId { get; set; }
+        public int? VoucherId { get; set; }
 
         public string ShippingAddress { get; set; }
 
