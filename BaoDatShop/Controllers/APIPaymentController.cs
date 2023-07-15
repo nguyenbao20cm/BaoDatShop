@@ -92,6 +92,8 @@ namespace BaoDatShop.Controllers
                 var phone = orderDescription[4];
                 var name = orderDescription[5];
                 var VoucherId = orderDescription[6];
+                if (VoucherId == "")
+                    VoucherId = null;
                 var Idacc = GetCorrectUserId();
 
 
@@ -103,7 +105,10 @@ namespace BaoDatShop.Controllers
                 }
                 Invoice result = new();
                 result.Pay =true;
-                result.VoucherId = int.Parse(VoucherId);
+                if(VoucherId!=null)
+                    result.VoucherId = null;
+                if (VoucherId == null)
+                    result.VoucherId = int.Parse(VoucherId);
                 result.NameCustomer = name;
                 result.PaymentMethods = bool.Parse(paymentmethod);
                 result.AccountId = GetCorrectUserId();
@@ -183,12 +188,17 @@ namespace BaoDatShop.Controllers
                 var productsizeid = orderDescription[7];
                 var quanlity = orderDescription[6];
                 var VoucherId = orderDescription[8];
+                if (VoucherId == "")
+                    VoucherId = null;
                 var Idacc = GetCorrectUserId();
                 var ab = IWarehouseResposirity.GetAll().Where(a=>a.ProductSizeId==int.Parse(productsizeid)).FirstOrDefault();
                 if (int.Parse(quanlity) > ab.Stock) return Ok("thất bại");
                 Invoice result = new();
                 result.Pay = true;
-                result.VoucherId = int.Parse(VoucherId);
+                if (VoucherId != null)
+                    result.VoucherId = null;
+                if (VoucherId == null)
+                    result.VoucherId = int.Parse(VoucherId);
                 result.PaymentMethods = bool.Parse(paymentmethod);
                 result.AccountId = GetCorrectUserId();
                 result.NameCustomer = name;
