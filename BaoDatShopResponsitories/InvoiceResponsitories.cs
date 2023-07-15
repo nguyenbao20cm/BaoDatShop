@@ -33,7 +33,7 @@ namespace BaoDatShop.Responsitories
         public List<Invoice> GetAll()
         {
             if (context.Invoice.ToList() == null) return null;
-            return context.Invoice.Include(a=>a.Account).ToList();
+            return context.Invoice.Include(a=>a.Voucher).Include(a=>a.Account).ToList();
         }
 
         public Invoice GetById(int id)
