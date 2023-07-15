@@ -319,8 +319,15 @@ namespace BaoDatShop.Service
             {
                 Total += a.Total;
             }
-            var b = Total - ImportPrice;
-            return Total - ImportPrice;
+            var Ship = 0;
+            var ShipList = invoiceResponsitories.GetAll().Where(a => a.PaymentMethods == true).Where(a => a.OrderStatus == 3 || a.OrderStatus == 5)
+                .Where(a => a.IssuedDate.Year == year).ToList();
+            foreach (var a in ShipList)
+            {
+                Ship += +1;
+            }
+            var b = Total - ImportPrice- Ship*35000;
+            return b;
         }
 
         // dang lam
