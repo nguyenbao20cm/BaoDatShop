@@ -60,9 +60,9 @@ namespace BaoDatShop.Controllers
         [HttpPost("ChangePassWord")]
         public async Task<IActionResult> ChangePassWord(ChangePass model)
         {
-            if (model.Password != model.ConfirmPassword) return Ok("Mật khẩu xác thực không khớp");
+            if (model.PasswordNew != model.ConfirmPassword) return Ok("Mật khẩu xác thực không khớp");
             var user = await userManager.FindByIdAsync(GetCorrectUserId());
-            if (user == null && await userManager.CheckPasswordAsync(user, model.Password) == false) return Ok("Mật khẩu không hợp lệ");
+            if(await userManager.CheckPasswordAsync(user, model.Password) == false) return Ok("Bạn đã nhập sai mật khẩu");
             if (user != null)
             {
                 var a = await userManager.ChangePasswordAsync(user, model.Password, model.PasswordNew);

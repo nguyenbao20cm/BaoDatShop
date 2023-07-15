@@ -32,22 +32,8 @@ namespace BaoDatShop.Responsitories
 
         public List<Invoice> GetAll()
         {
-            if (context.Invoice.Where(a => a.Status == true).ToList() == null) return null;
-            return context.Invoice.Include(a=>a.Account).Where(a => a.Status == true).ToList();
-
-
-            var query = context.Invoice
-               .GroupBy(hoadon => hoadon.IssuedDate.Date)
-               .Select(g => new
-               {
-                   NgayLap = g.Key,
-                   TongTien = g.Sum(hd => hd.Total)
-               });
-
-            foreach (var result in query)
-            {
-                Console.WriteLine($"Ngày: {result.NgayLap.ToShortDateString()}, Tổng tiền: {result.TongTien}");
-            }
+            if (context.Invoice.ToList() == null) return null;
+            return context.Invoice.Include(a=>a.Account).ToList();
         }
 
         public Invoice GetById(int id)
