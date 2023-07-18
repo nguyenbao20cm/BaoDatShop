@@ -23,6 +23,11 @@ namespace BaoDatShop.Controllers
         {
             return Ok(IWarehouseResposirity.GetAll());
         }
+        [HttpGet("GetStockByProductSizeId/{id}")]
+        public async Task<IActionResult> GetStockByProductSizeId(int id)
+        {
+            return Ok(IWarehouseResposirity.GetAll().Where(a => a.ProductSizeId == id).FirstOrDefault());
+        }
         [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpGet("GEtSLTonKho")]
         public async Task<IActionResult> GEtSLTonKho()
@@ -32,7 +37,7 @@ namespace BaoDatShop.Controllers
         [HttpGet("GetSizeOfProduct/{id}")]
         public async Task<IActionResult> GetSizeOfProduct(int id)
         {
-            return Ok(IWarehouseResposirity.GetAll().Where(a=>a.ProductSize.ProductId==id).ToList());
+            return Ok(IWarehouseResposirity.GetAll().Where(a=>a.ProductSize.Status==true).Where(a=>a.ProductSize.ProductId==id).ToList());
         }
     }
 }

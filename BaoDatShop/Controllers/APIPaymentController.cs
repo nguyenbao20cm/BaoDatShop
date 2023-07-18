@@ -65,7 +65,7 @@ namespace BaoDatShop.Controllers
             foreach (var c in Cart)
             {
                 var a = IWarehouseResposirity.GetAll().Where(a=>a.ProductSizeId==c.ProductSizeId).FirstOrDefault();
-                if (c.Quantity > a.Stock) return Ok(false);
+                if (c.Quantity > a.Stock) return Ok("Sản phẩm không đủ số lượng tồn kho");
             }
             var url = _vnPayService.CreatePaymentUrl(model, HttpContext);
             return Ok(url);
@@ -167,6 +167,12 @@ namespace BaoDatShop.Controllers
         [HttpPost("CreateVNPAYURLBuyNow")]
         public async Task<IActionResult> CreatePaymentUrlNow(CreateInvoiceNow model)
         {
+            var Cart = ICartResponsitories.GetAll(GetCorrectUserId());
+            foreach (var c in Cart)
+            {
+                var a = IWarehouseResposirity.GetAll().Where(a => a.ProductSizeId == c.ProductSizeId).FirstOrDefault();
+                if (c.Quantity > a.Stock) return Ok("Sản phẩm không đủ số lượng tồn kho");
+            }
             var url = _vnPayService.CreatePaymentUrlBuyNow(model, HttpContext);
             return Ok(url);
 

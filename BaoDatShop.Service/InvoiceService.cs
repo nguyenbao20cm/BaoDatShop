@@ -317,7 +317,13 @@ namespace BaoDatShop.Service
                 tam1.ShippingPhone = a.ShippingPhone;
                 tam1.Pay = a.Pay;
                 tam1.OrderStatus = a.OrderStatus;
-                tam1.GiaCu = context.InvoiceDetail.Include(a=>a.ProductSize).Include(a => a.ProductSize.Product).Where(a => a.InvoiceId == tam1.Id).Sum(a => a.ProductSize.Product.PriceSales);
+                var giacu = 0;
+                var a1= context.InvoiceDetail.Include(a => a.ProductSize).Include(a => a.ProductSize.Product).Where(a => a.InvoiceId == tam1.Id).ToList();
+                foreach(var item in a1)
+                {
+                    giacu += item.ProductSize.Product.PriceSales * item.Quantity;
+                }
+                tam1.GiaCu = giacu;
                 result.Add(tam1);
             }    
             return result;

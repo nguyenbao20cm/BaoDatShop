@@ -89,7 +89,7 @@ namespace BaoDatShop.Controllers
         }
         [Authorize(Roles = UserRole.Admin)]
         [HttpPut("UpdateAdvertisingPanel/{ProductId},{Title},{Content},{id}")]
-        public async Task<IActionResult> UpdateAdvertisingPanel(int id,int ProductId, string Title, string Content, IFormFile model)
+        public async Task<IActionResult> UpdateAdvertisingPanel(int ProductId, string Title, string Content, int id, IFormFile model)
         {
             AdvertisingPanel result = context.AdvertisingPanel.Where(a=>a.AdvertisingPanelID==id).FirstOrDefault();
             result.ProductId = ProductId;

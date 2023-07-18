@@ -46,6 +46,7 @@ namespace BaoDatShop.Controllers
         [HttpPut("UpdateCart+1/{id}")]
         public async Task<IActionResult> UpdateCartUp1(int id)
         {
+           
             return Ok(cartService.Up(id));
         }
         [HttpPut("UpdateCart-1/{id}")]

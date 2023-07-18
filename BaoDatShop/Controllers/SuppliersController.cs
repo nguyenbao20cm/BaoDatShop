@@ -20,7 +20,7 @@ namespace BaoDatShop.Controllers
         private readonly AppDbContext context;
         public SuppliersController(AppDbContext context, IHistoryAccountResponsitories IHistoryAccountResponsitories)
         {
-            this.IHistoryAccountResponsitories =IHistoryAccountResponsitories;
+            this.IHistoryAccountResponsitories = IHistoryAccountResponsitories;
             this.context = context;
         }
         [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
@@ -33,22 +33,26 @@ namespace BaoDatShop.Controllers
         [HttpPost("CreateSupplier")]
         public async Task<IActionResult> CreateSupplier(Supplier model)
         {
-                Supplier a = new();
-                a.Name= model.Name; a.Phone = model.Phone;
+            if(context.Supplier.Where(a => a.TaxCode == model.TaxCode).FirstOrDefault()!=null) return Ok("Mã thuế đã tồn tại");
+            if (context.Supplier.Where(a => a.Phone == model.Phone).FirstOrDefault() != null) return Ok("Số điện thoại nhà cung cấp đã tồn tại");
+            if (context.Supplier.Where(a => a.Email == model.Email).FirstOrDefault() != null) return Ok("Emal nhà cung cấp đã tồn tại");
+            if (context.Supplier.Where(a => a.Name == model.Name).FirstOrDefault() != null) return Ok("Tên nhà cung cấp đã tồn tại");
+            Supplier a = new();
+            a.Name = model.Name; a.Phone = model.Phone;
             a.Email = model.Email;
-                a.Address = model.Address;
+            a.Address = model.Address;
             a.TaxCode = model.TaxCode;
             context.Add(a);
-                int check = context.SaveChanges();
-            if(check>0)
+            int check = context.SaveChanges();
+            if (check > 0)
             {
                 HistoryAccount ab = new();
                 ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
-                ab.Content = "Đã tạo nhà cung cấp "+model.Name;
+                ab.Content = "Đã tạo nhà cung cấp " + model.Name;
                 IHistoryAccountResponsitories.Create(ab);
                 return Ok(true);
-            }    
-                return check > 0 ? Ok(true) : Ok(false);
+            }
+            return check > 0 ? Ok(true) : Ok(false);
         }
         private string GetCorrectUserId()
         {
@@ -58,9 +62,25 @@ namespace BaoDatShop.Controllers
         }
         [Authorize(Roles = UserRole.Admin + "," + UserRole.StaffKHO)]
         [HttpPut("UpdateSupplier/{id}")]
-        public async Task<IActionResult> UpdateSupplier(int id,Supplier model)
-        {
-            Supplier a = context.Supplier.Where(a=>a.Id==id).FirstOrDefault();
+        public async Task<IActionResult> UpdateSupplier(int id, Supplier model)
+        {   
+            if(context.Supplier.Where(a => a.Id == id).FirstOrDefault().TaxCode !=model.TaxCode)
+            {
+                if (context.Supplier.Where(a => a.TaxCode == model.TaxCode).FirstOrDefault() != null) return Ok("Mã thuế đã tồn tại");
+            }
+            if (context.Supplier.Where(a => a.Id == id).FirstOrDefault().Phone != model.Phone)
+            {
+                if (context.Supplier.Where(a => a.Phone == model.Phone).FirstOrDefault() != null) return Ok("Số điện thoại nhà cung cấp đã tồn tại");
+            }
+            if (context.Supplier.Where(a => a.Id == id).FirstOrDefault().Email != model.Email)
+            {
+                if (context.Supplier.Where(a => a.Email == model.Email).FirstOrDefault() != null) return Ok("Emal nhà cung cấp đã tồn tại");
+            }
+            if (context.Supplier.Where(a => a.Id == id).FirstOrDefault().Name != model.Name)
+            {
+                if (context.Supplier.Where(a => a.Name == model.Name).FirstOrDefault() != null) return Ok("Tên nhà cung cấp đã tồn tại");
+            }
+            Supplier a = context.Supplier.Where(a => a.Id == id).FirstOrDefault();
             a.Name = model.Name;
             a.Phone = model.Phone;
             a.Email = model.Email; a.TaxCode = model.TaxCode;

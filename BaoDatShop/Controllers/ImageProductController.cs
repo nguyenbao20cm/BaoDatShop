@@ -127,7 +127,7 @@ namespace BaoDatShop.Controllers
                 HistoryAccount ab = new();
                 ab.AccountID = GetCorrectUserId(); ab.Datetime = DateTime.Now;
                 ab.Content = "Đã tạo ảnh phụ của sản phẩm "+ context.Product.Where(a=>a.Id== ProductId).FirstOrDefault().Name;
-                IHistoryAccountResponsitories.Create(ab);
+                var a1=IHistoryAccountResponsitories.Create(ab);
                 return Ok(true);
             }
             return Ok("Thất bại");

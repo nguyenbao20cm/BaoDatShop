@@ -56,8 +56,15 @@ namespace BaoDatShop.Model.Context
 
             modelBuilder.Entity<ProductTypes>()
            .HasIndex(p => new { p.Name }).IsUnique();
-          
-           
+
+            modelBuilder.Entity<Supplier>()
+          .HasIndex(p => new { p.Name }).IsUnique();
+            modelBuilder.Entity<Supplier>()
+         .HasIndex(p => new { p.Email }).IsUnique();
+            modelBuilder.Entity<Supplier>()
+         .HasIndex(p => new { p.Phone }).IsUnique();
+            modelBuilder.Entity<Supplier>()
+         .HasIndex(p => new { p.TaxCode }).IsUnique();
         }
     }
 }

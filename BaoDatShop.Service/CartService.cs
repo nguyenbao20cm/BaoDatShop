@@ -122,6 +122,7 @@ namespace BaoDatShop.Service
         public bool Up(int id)
         {
             var result = cartResponsitories.GetById(id);
+            if (IWarehouseResposirity.GetAll().Where(a=>a.ProductSizeId==result.ProductSizeId).FirstOrDefault().Stock > result.Quantity )
             result.Quantity++;
             return cartResponsitories.Update(result);
         }

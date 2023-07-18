@@ -32,11 +32,14 @@ namespace BaoDatShop.Controllers
         private readonly IProductSizeService IProductSizeService;
         private readonly IImportInvoiceResponsitories IImportInvoiceResponsitories;
         private readonly IConverter _convert;
+        private readonly ICartResponsitories ICartResponsitories;
+        private readonly IWarehouseResposirity IWarehouseResposirity;
 
         public InovicesController(IInvoiceService invoiceService, IProductSizeService IProductSizeService,
             IImportInvoiceResponsitories IImportInvoiceResponsitories,
             IProductService IProductService, IInvoiceDetailService IInvoiceDetailService,
-            IWebHostEnvironment IWebHostEnvironment, IConverter convert,
+            IWebHostEnvironment IWebHostEnvironment, IConverter convert, IWarehouseResposirity IWarehouseResposirity,
+            ICartResponsitories ICartResponsitories,
             AppDbContext context, IInvoiceResponsitories IInvoiceResponsitories, IProductSizeResponsitories IProductSizeResponsitories, IHistoryAccountResponsitories IHistoryAccountResponsitories)
         {
             this.IProductService = IProductService;
@@ -47,7 +50,9 @@ namespace BaoDatShop.Controllers
             this.context = context;
             this.IWebHostEnvironment = IWebHostEnvironment;
             this.invoiceService = invoiceService;
+            this.ICartResponsitories = ICartResponsitories;
             _convert = convert;
+            this.IWarehouseResposirity = IWarehouseResposirity;
             this.IInvoiceResponsitories = IInvoiceResponsitories;
             this.IProductSizeResponsitories = IProductSizeResponsitories;
         }
@@ -80,7 +85,7 @@ namespace BaoDatShop.Controllers
                 phivanchuyen = 35000;
             var voucher = 0;
             if (context.Invoice.Where(a => a.Id == InvoiceNo).FirstOrDefault().VoucherId != null)
-                voucher = context.Invoice.Where(a => a.Id == InvoiceNo).FirstOrDefault().Voucher.Disscount;
+                voucher = context.Invoice.Include(a=>a.Voucher).Where(a => a.Id == InvoiceNo).FirstOrDefault().Voucher.Disscount;
             htmlContent = htmlContent.Replace("{{ data.fee.total }}", tongtien.ToString("N0") + " VNĐ");
             htmlContent = htmlContent.Replace("{{ data.fee.transit }}", phivanchuyen.ToString("N0") + " VNĐ");
             htmlContent = htmlContent.Replace("{{ data.fee.tax }}", voucher.ToString() + "%");
@@ -104,8 +109,10 @@ namespace BaoDatShop.Controllers
         public async Task<IActionResult> GeneratePDF(int InvoiceNo)
         {
 
-            var htmlContent = System.IO.File.ReadAllText("C:\\Users\\ADMIN\\source\\repos\\BaoDatShop\\BaoDatShop\\wwwroot\\TempletePDFInvoice\\template_invoice.html");
-            var replacedHtml = ReplaceDynamicValues(htmlContent, InvoiceNo);
+            //var htmlContent = System.IO.File.ReadAllText("C:\\Users\\ADMIN\\source\\repos\\BaoDatShop\\BaoDatShop\\wwwroot\\TempletePDFInvoice\\template_invoice.html");
+            var htmlContent = System.IO.File.ReadAllText("E:\\BaoDatShop\\BaoDatShop\\wwwroot\\TempletePDFInvoice\\template_invoice.html");
+      
+        var replacedHtml = ReplaceDynamicValues(htmlContent, InvoiceNo);
 
             var document = new HtmlToPdfDocument()
             {
@@ -213,6 +220,12 @@ namespace BaoDatShop.Controllers
         [HttpPost("CreateInvoice")]
         public async Task<IActionResult> CreateInvoice(CreateInvoiceRequest model)
         {
+            var Cart = ICartResponsitories.GetAll(GetCorrectUserId());
+            foreach (var c in Cart)
+            {
+                var a = IWarehouseResposirity.GetAll().Where(a => a.ProductSizeId == c.ProductSizeId).FirstOrDefault();
+                if (c.Quantity > a.Stock) return Ok("Sản phẩm hiện không đủ số lượng trong kho");
+            }
             return Ok(invoiceService.Create(GetCorrectUserId(), model));
         }
         [Authorize(Roles = UserRole.Admin + "," + UserRole.Staff)]

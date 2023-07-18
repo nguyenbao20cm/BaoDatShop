@@ -91,6 +91,11 @@ namespace BaoDatShop.Controllers
         [HttpGet("GetAllBrandProducts")]
         public async Task<IActionResult> GetAllBrandProducts()
         {
+            return Ok(context.BrandProduct.Where(a=>a.Status==true).ToList());
+        }
+        [HttpGet("GetAllBrandProductsAdmin")]
+        public async Task<IActionResult> GetAllBrandProductsAdmin()
+        {
             return Ok(context.BrandProduct.ToList());
         }
     }
